@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Indovina la parola</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    button {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Indovina la parola</h1>
+
+  <label for="guess-input">Inserisci una parola:</label>
+  <input type="text" id="guess-input">
+  <button onclick="checkGuess()">Indovina</button>
+
+  <p id="result"></p>
+
+  <script>
+    var targetWord = "banana";
+
+    function checkGuess() {
+      var guessInput = document.getElementById('guess-input');
+      var guess = guessInput.value.toLowerCase();
+      guessInput.value = '';
+
+      var resultElement = document.getElementById('result');
+      if (guess === targetWord) {
+        resultElement.textContent = "Congratulazioni! Hai indovinato la parola.";
+      } else {
+        resultElement.textContent = "Sbagliato. Prova di nuovo.";
+      }
+    }
+  </script>
+</body>
+</html>
