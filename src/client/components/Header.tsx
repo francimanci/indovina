@@ -25,6 +25,12 @@ export function Header() {
         </Link>
 
         <nav className="flex items-center gap-1 text-sm">
+          <Link
+            href="/offices"
+            className="rounded-lg px-3 py-2 font-medium text-ink-soft hover:bg-slate-100"
+          >
+            Offices
+          </Link>
           {user ? (
             <>
               <Link

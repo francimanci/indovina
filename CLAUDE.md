@@ -67,8 +67,10 @@ npm start                     # run production server (serves built client)
 
 ## Routes
 
-Client: `/` landing · `/login` · `/signup` · `/intake` wizard* ·
-`/plan/:profileId`* · `/dashboard`* (*protected — redirect to `/login?next=…`).
+Client: `/` landing · `/offices` (public Questure directory) · `/login` ·
+`/signup` · `/intake` wizard* · `/plan/:profileId`* ·
+`/codice-fiscale/:profileId`* · `/step/:stepKey/:profileId`* · `/dashboard`*
+(*protected — redirect to `/login?next=…`).
 API:
 - `POST /api/auth/signup` · `POST /api/auth/login` · `POST /api/auth/logout` ·
   `GET /api/auth/me`

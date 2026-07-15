@@ -9,6 +9,7 @@ import { StepKitPage } from "@client/pages/StepKitPage";
 import { Login } from "@client/pages/Login";
 import { Signup } from "@client/pages/Signup";
 import { Dashboard } from "@client/pages/Dashboard";
+import { Offices } from "@client/pages/Offices";
 import { NotFound } from "@client/pages/NotFound";
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
     <Layout>
       <Switch>
         <Route path="/" component={Landing} />
+        <Route path="/offices" component={Offices} />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/intake">
