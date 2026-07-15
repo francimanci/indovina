@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d9488">
+</head>
+<body>
+<title>Buddy — Preview</title>
+<style>
+  :root {
+    --bg: #f4f7f7;
+    --card: #ffffff;
+    --ink: #0f172a;
+    --soft: #334155;
+    --muted: #64748b;
+    --line: #e6ecec;
+    --line-soft: #f1f5f5;
+    --accent: #0d9488;
+    --accent-600: #0d9488;
+    --accent-700: #0f766e;
+    --accent-50: #ecfdf9;
+    --accent-100: #d1f5ee;
+    --amber-bg: #fdf6e7;
+    --amber-line: #f3e2b8;
+    --amber-ink: #8a6d1f;
+    --shadow: 0 1px 2px rgba(15,23,42,.05), 0 8px 24px rgba(15,23,42,.06);
+    --radius: 16px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b1220;
+      --card: #111a2b;
+      --ink: #eef2f7;
+      --soft: #c3ccd8;
+      --muted: #8b97a7;
+      --line: #223047;
+      --line-soft: #1a2438;
+      --accent: #2dd4bf;
+      --accent-600: #14b8a6;
+      --accent-700: #5eead4;
+      --accent-50: #10241f;
+      --accent-100: #14312a;
+      --amber-bg: #2a2210;
+      --amber-line: #4a3c17;
+      --amber-ink: #e4c96a;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b1220; --card: #111a2b; --ink: #eef2f7; --soft: #c3ccd8;
+    --muted: #8b97a7; --line: #223047; --line-soft: #1a2438;
+    --accent: #2dd4bf; --accent-600: #14b8a6; --accent-700: #5eead4;
+    --accent-50: #10241f; --accent-100: #14312a;
+    --amber-bg: #2a2210; --amber-line: #4a3c17; --amber-ink: #e4c96a;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"] {
+    --bg: #f4f7f7; --card: #ffffff; --ink: #0f172a; --soft: #334155;
+    --muted: #64748b; --line: #e6ecec; --line-soft: #f1f5f5;
+    --accent: #0d9488; --accent-600: #0d9488; --accent-700: #0f766e;
+    --accent-50: #ecfdf9; --accent-100: #d1f5ee;
+    --amber-bg: #fdf6e7; --amber-line: #f3e2b8; --amber-ink: #8a6d1f;
+    --shadow: 0 1px 2px rgba(15,23,42,.05), 0 8px 24px rgba(15,23,42,.06);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  .app { max-width: 640px; margin: 0 auto; padding-bottom: 92px; }
+
+  /* App bar */
+  .appbar {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 14px 18px;
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .brand { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 17px; letter-spacing: -.01em; }
+  .logo { width: 30px; height: 30px; border-radius: 9px; background: var(--accent-600); color: #fff; display: grid; place-items: center; font-weight: 800; }
+  .preview-tag { font-size: 11px; font-weight: 600; color: var(--accent-700); background: var(--accent-50); border: 1px solid var(--accent-100); padding: 3px 8px; border-radius: 999px; }
+  .theme-btn { border: 1px solid var(--line); background: var(--card); color: var(--soft); border-radius: 10px; padding: 6px 10px; font-size: 13px; cursor: pointer; }
+
+  main { padding: 18px; }
+  section[hidden] { display: none; }
+
+  .eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--accent-700); background: var(--accent-50); border: 1px solid var(--accent-100); padding: 4px 10px; border-radius: 999px; }
+  h1 { font-size: 26px; line-height: 1.15; letter-spacing: -.02em; margin: 14px 0 8px; text-wrap: balance; }
+  h2 { font-size: 18px; letter-spacing: -.01em; margin: 0 0 4px; }
+  h3 { font-size: 15px; margin: 0; }
+  .lead { color: var(--soft); font-size: 15px; margin: 0 0 6px; }
+  .muted { color: var(--muted); }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; }
+  .card + .card, .stack > * + * { margin-top: 14px; }
+  .stack > * + * { margin-top: 14px; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; font-weight: 600; font-size: 15px; padding: 11px 16px; border: 1px solid transparent; cursor: pointer; text-decoration: none; transition: background .15s, border-color .15s; }
+  .btn-primary { background: var(--accent-600); color: #fff; }
+  .btn-primary:hover { background: var(--accent-700); }
+  .btn-secondary { background: var(--card); color: var(--ink); border-color: var(--line); }
+  .btn-secondary:hover { border-color: var(--muted); }
+  .btn-sm { font-size: 13px; padding: 7px 12px; border-radius: 10px; }
+  .btn-block { width: 100%; }
+
+  label.field { display: block; }
+  .field-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .field-hint { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  input, select, textarea {
+    width: 100%; font: inherit; color: var(--ink);
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 11px 12px; font-size: 15px;
+  }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-50); }
+  textarea { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; line-height: 1.55; resize: vertical; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 460px) { .grid2 { grid-template-columns: 1fr; } }
+
+  .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .between { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+
+  .badge { font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 999px; }
+  .badge-accent { background: var(--accent-50); color: var(--accent-700); }
+  .badge-neutral { background: var(--line-soft); color: var(--muted); }
+
+  .callout { background: var(--accent-50); color: var(--accent-700); border: 1px solid var(--accent-100); border-radius: 12px; padding: 12px 14px; font-size: 14px; }
+  .warn { background: var(--amber-bg); border: 1px solid var(--amber-line); color: var(--amber-ink); border-radius: 12px; padding: 12px 14px; font-size: 14px; }
+  .warn ul { margin: 6px 0 0; padding-left: 18px; }
+
+  dl.fields { margin: 0; }
+  dl.fields > div { padding: 10px 0; border-top: 1px solid var(--line-soft); }
+  dl.fields > div:first-child { border-top: 0; }
+  dl.fields dt { font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--muted); }
+  dl.fields dd { margin: 3px 0 0; font-size: 14.5px; }
+  dl.fields dd.note { font-size: 12px; color: var(--muted); }
+  .todo { color: var(--amber-ink); font-style: italic; }
+
+  ul.bring { list-style: none; margin: 8px 0 0; padding: 0; }
+  ul.bring li { display: flex; gap: 8px; font-size: 14px; color: var(--soft); padding: 3px 0; }
+  ul.bring li b { color: var(--accent); }
+  .say { background: var(--line-soft); border-radius: 12px; padding: 12px 14px; font-size: 14px; color: var(--soft); }
+
+  /* Chips (provinces) */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { border: 1px solid var(--line); background: var(--card); color: var(--soft); border-radius: 10px; padding: 7px 11px; font-size: 14px; cursor: pointer; }
+  .chip small { color: var(--muted); }
+  .chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-50); color: var(--accent-700); }
+  .region-label { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin: 16px 0 8px; }
+  .region-label:first-child { margin-top: 4px; }
+  .province-list { max-height: 46vh; overflow-y: auto; padding-right: 4px; }
+
+  .link { color: var(--accent-700); font-weight: 600; text-decoration: none; }
+  .link:hover { text-decoration: underline; }
+
+  .disclaimer { margin-top: 18px; background: var(--line-soft); border-radius: 12px; padding: 14px; font-size: 12px; color: var(--muted); }
+
+  /* Bottom tab bar */
+  .tabbar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+    display: flex; justify-content: center; gap: 4px;
+    padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+    background: color-mix(in srgb, var(--card) 92%, transparent);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--line);
+  }
+  .tabbar-inner { display: flex; gap: 2px; width: 100%; max-width: 640px; }
+  .tab { flex: 1; border: 0; background: transparent; color: var(--muted); cursor: pointer; border-radius: 12px; padding: 7px 4px; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; font-weight: 600; }
+  .tab svg { width: 22px; height: 22px; }
+  .tab[aria-selected="true"] { color: var(--accent-700); background: var(--accent-50); }
+
+  .hero-cta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  .feature { display: flex; gap: 12px; align-items: flex-start; }
+  .feature .dot { margin-top: 4px; width: 8px; height: 8px; border-radius: 999px; background: var(--accent); flex: none; }
+  .plan-step { display: flex; gap: 14px; }
+  .plan-num { flex: none; width: 34px; height: 34px; border-radius: 999px; background: var(--accent-50); color: var(--accent-700); display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+  .plan-num.primary { background: var(--accent-600); color: #fff; }
+  a { color: var(--accent-700); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+
+<div class="app">
+  <div class="appbar">
+    <div class="brand"><span class="logo">B</span> Buddy <span class="preview-tag">Preview</span></div>
+    <button class="theme-btn" id="themeBtn" type="button">Theme</button>
+  </div>
+
+  <main>
+    <!-- HOME -->
+    <section id="home">
+      <span class="eyebrow">Interactive preview · runs in your browser</span>
+      <h1>Stop reading endless guides.</h1>
+      <p class="lead">Tell Buddy your situation once and get the exact forms, emails, and steps for Italian bureaucracy — starting with the one document everything depends on: your <b>Codice Fiscale</b>.</p>
+      <div class="callout" style="margin-top:14px">This is a live preview. The <b>Codice Fiscale generator</b> and the <b>Questure directory</b> below work fully offline, on your phone. Nothing you type is sent or saved.</div>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#" data-go="cf">Try the Codice Fiscale →</a>
+        <a class="btn btn-secondary" href="#" data-go="questure">Find your Questura</a>
+      </div>
+
+      <div class="card" style="margin-top:22px">
+        <div class="stack">
+          <div class="feature"><span class="dot"></span><div><h3>One short intake</h3><p class="muted" style="margin:2px 0 0;font-size:14px">A few questions about your nationality, status and city — once.</p></div></div>
+          <div class="feature"><span class="dot"></span><div><h3>Artifacts, not essays</h3><p class="muted" style="margin:2px 0 0;font-size:14px">Pre-filled form fields, ready-to-send emails, appointment scripts.</p></div></div>
+          <div class="feature"><span class="dot"></span><div><h3>The right office, first time</h3><p class="muted" style="margin:2px 0 0;font-size:14px">The competent Questura / Ufficio Immigrazione for any province.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CODICE FISCALE -->
+    <section id="cf" hidden>
+      <span class="eyebrow">Modello AA4/8 · Agenzia delle Entrate</span>
+      <h1>Request your Codice Fiscale</h1>
+      <p class="lead">Fill this once. Buddy maps it onto the official Modello AA4/8 and builds a ready-to-send request — field values, the email (Italian + English), and what to say at the office.</p>
+
+      <div class="card">
+        <h2>Your details</h2>
+        <div class="grid2" style="margin-top:12px">
+          <label class="field"><span class="field-label">First name</span><input id="firstName" value="João"></label>
+          <label class="field"><span class="field-label">Last name</span><input id="lastName" value="Silva"></label>
+          <label class="field"><span class="field-label">Sex</span><select id="sex"><option value="M">M — Male</option><option value="F">F — Female</option></select></label>
+          <label class="field"><span class="field-label">Date of birth</span><input id="dateOfBirth" type="date" value="1992-05-14"></label>
+          <label class="field"><span class="field-label">Nationality</span><input id="nationality" value="Brazilian"></label>
+          <label class="field"><span class="field-label">EU status</span><select id="euStatus"><option value="non_eu">Non-EU</option><option value="eu">EU / EEA / Swiss</option></select></label>
+          <label class="field"><span class="field-label">Where are you now?</span><select id="location"><option value="in_italy">Already in Italy</option><option value="abroad">Still abroad</option></select></label>
+          <label class="field"><span class="field-label">Reason</span><select id="reason"><option value="work">Work</option><option value="study">Study</option><option value="family">Family</option><option value="elective_residence">Elective residence</option></select></label>
+          <label class="field"><span class="field-label">Country of birth</span><input id="countryOfBirth" value="Brazil"></label>
+          <label class="field"><span class="field-label">City / town of birth</span><input id="cityOfBirth" value="São Paulo"></label>
+          <label class="field"><span class="field-label">Province of birth</span><span class="field-hint">Only if born in Italy (sigla)</span><input id="provinceOfBirth" placeholder="e.g. MI"></label>
+          <label class="field"><span class="field-label">Comune of residence</span><input id="addressComune" value="Milano"></label>
+          <label class="field"><span class="field-label">Province</span><input id="addressProvincia" value="MI" placeholder="e.g. MI"></label>
+          <label class="field"><span class="field-label">Street + number</span><input id="addressStreet" value="Via Roma 12"></label>
+          <label class="field"><span class="field-label">CAP</span><input id="addressCap" value="20121" placeholder="5 digits"></label>
+          <label class="field"><span class="field-label">Contact email</span><input id="contactEmail" type="email" value="joao@example.com"></label>
+          <label class="field"><span class="field-label">Identity document</span><select id="documentType"><option value="passport">Passport</option><option value="id_card">National ID card</option><option value="permesso">Permesso di soggiorno</option></select></label>
+          <label class="field"><span class="field-label">Document number</span><input id="documentNumber" value="BR1234567"></label>
+        </div>
+        <button class="btn btn-primary btn-block" id="genBtn" type="button" style="margin-top:16px">Generate my request</button>
+      </div>
+
+      <div id="cfOut" class="stack" style="margin-top:20px"></div>
+    </section>
+
+    <!-- QUESTURE -->
+    <section id="questure" hidden>
+      <span class="eyebrow">Polizia di Stato · Ufficio Immigrazione</span>
+      <h1>Immigration offices (Questure)</h1>
+      <p class="lead">The Ufficio Immigrazione sits inside the Questura and handles your permesso di soggiorno. The competent office is the one for the <b>province where you live</b>. Pick your province (<span id="pcount"></span> covered).</p>
+      <input id="provSearch" placeholder="Search province, sigla or region (e.g. Milano, MI, Lombardia)" style="margin:6px 0 12px">
+      <div id="provList" class="province-list card"></div>
+      <div id="provDetail" style="margin-top:14px"></div>
+    </section>
+
+    <!-- PIANO -->
+    <section id="piano" hidden>
+      <span class="eyebrow">Your plan</span>
+      <h1>A real plan, in order</h1>
+      <p class="lead">A numbered sequence with dependencies, so you always know what comes next. The Codice Fiscale is first because almost everything else needs it.</p>
+      <div class="stack" style="margin-top:6px">
+        <div class="card"><div class="plan-step"><div class="plan-num primary">1</div><div><div class="between"><h3>Get your Codice Fiscale</h3><span class="badge badge-accent">Start here</span></div><p class="muted" style="margin:6px 0 0;font-size:14px">Your Italian tax code — the prerequisite for residency, health card, contracts and a bank account.</p><a class="btn btn-secondary btn-sm" href="#" data-go="cf" style="margin-top:10px">Prepare my request →</a></div></div></div>
+        <div class="card"><div class="plan-step"><div class="plan-num">2</div><div><h3>Register your residency</h3><p class="muted" style="margin:6px 0 0;font-size:14px">Dichiarazione di residenza at your Comune. <b>Requires:</b> Codice Fiscale.</p></div></div></div>
+        <div class="card"><div class="plan-step"><div class="plan-num">3</div><div><h3>Get your Tessera Sanitaria</h3><p class="muted" style="margin:6px 0 0;font-size:14px">Enrol in the SSN at the ASL. <b>Requires:</b> Codice Fiscale + residency.</p></div></div></div>
+      </div>
+      <p class="disclaimer">In the full app, steps 2 and 3 reuse your Codice Fiscale details to generate the same kind of request. This preview focuses on step 1 and the offices directory.</p>
+    </section>
+
+    <p class="disclaimer">Buddy is an information tool, not legal or tax advice. Always verify with official sources. This preview stores nothing and makes no network calls of its own.</p>
+  </main>
+
+  <nav class="tabbar"><div class="tabbar-inner" id="tabs">
+    <button class="tab" data-tab="home" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>Home</button>
+    <button class="tab" data-tab="cf" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Codice F.</button>
+    <button class="tab" data-tab="questure" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-5.2 7-11a7 7 0 1 0-14 0c0 5.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>Questure</button>
+    <button class="tab" data-tab="piano" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 6h14M5 12h14M5 18h9"/></svg>Piano</button>
+  </div></nav>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- Theme ---------- */
+  var root = document.documentElement;
+  document.getElementById("themeBtn").addEventListener("click", function () {
+    var dark = root.getAttribute("data-theme") === "dark"
+      || (!root.getAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+
+  /* ---------- Tabs ---------- */
+  var sections = ["home", "cf", "questure", "piano"];
+  function show(tab) {
+    sections.forEach(function (s) { document.getElementById(s).hidden = (s !== tab); });
+    document.querySelectorAll(".tab").forEach(function (t) {
+      t.setAttribute("aria-selected", t.dataset.tab === tab ? "true" : "false");
+    });
+    window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+  }
+  document.getElementById("tabs").addEventListener("click", function (e) {
+    var b = e.target.closest(".tab"); if (b) show(b.dataset.tab);
+  });
+  document.querySelectorAll("[data-go]").forEach(function (el) {
+    el.addEventListener("click", function (e) { e.preventDefault(); show(el.dataset.go); });
+  });
+
+  /* ---------- Helpers ---------- */
+  function val(id) { return (document.getElementById(id).value || "").trim(); }
+  function esc(s) { return String(s).replace(/[&<>]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]; }); }
+  function itDate(iso) { if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return ""; var p = iso.split("-"); return p[2] + "/" + p[1] + "/" + p[0]; }
+  var DOC = { passport: "Passport", id_card: "National ID card", permesso: "Permesso di soggiorno" };
+
+  /* ---------- Codice Fiscale builder (faithful to the server's deterministic kit) ---------- */
+  function buildKit(p) {
+    var abroad = p.location === "abroad", nonEu = p.euStatus === "non_eu";
+    var fullName = [p.firstName, p.lastName].filter(Boolean).join(" ");
+    var birthPlace = [p.cityOfBirth, p.countryOfBirth].filter(Boolean).join(", ");
+    var address = [p.addressStreet, [p.addressCap, p.addressComune].filter(Boolean).join(" "), p.addressProvincia ? "(" + p.addressProvincia + ")" : ""].filter(Boolean).join(", ");
+    var docLabel = p.documentType ? (DOC[p.documentType] || p.documentType) : "";
+    var docFull = docLabel ? (docLabel + " n. " + (p.documentNumber || "")).trim() : "";
+
+    var rows = [
+      { l: "Tipo di richiesta", v: "Attribuzione codice fiscale (nuovo)" },
+      { l: "Cognome / Surname", v: p.lastName, req: 1 },
+      { l: "Nome / First name", v: p.firstName, req: 1 },
+      { l: "Sesso / Sex", v: p.sex === "M" ? "M" : p.sex === "F" ? "F" : "", req: 1 },
+      { l: "Data di nascita / Date of birth", v: itDate(p.dateOfBirth), req: 1 },
+      { l: "Comune (o Stato estero) di nascita / Place of birth", v: birthPlace, req: 1 },
+      { l: "Provincia di nascita / Province of birth", v: p.provinceOfBirth, n: "Solo se nato/a in Italia. — Only if born in Italy." },
+      { l: "Cittadinanza / Citizenship", v: p.nationality },
+      { l: "Comune di domicilio in Italia / Comune of residence", v: p.addressComune, req: !abroad, n: abroad ? "Indicalo appena disponibile. — Provide once you have an Italian address." : "" },
+      { l: "Provincia / Province", v: p.addressProvincia },
+      { l: "Indirizzo (via e numero civico) / Street and number", v: p.addressStreet, req: !abroad },
+      { l: "CAP / Postal code", v: p.addressCap },
+      { l: "Documento di riconoscimento / Identity document", v: docFull, req: 1, n: nonEu ? "Allega copia del passaporto e del permesso di soggiorno (o della ricevuta). — Attach passport + permesso." : "Allega copia di un documento valido. — Attach a valid ID." },
+      { l: "Email di contatto / Contact email", v: p.contactEmail, req: 1 }
+    ];
+    var missing = rows.filter(function (r) { return r.req && !(r.v && String(r.v).trim()); }).map(function (r) { return r.l; });
+    var fields = rows.map(function (r) {
+      return { label: r.l, value: (r.v || "").toString().trim(), note: r.n || (r.req && !(r.v && String(r.v).trim()) ? "Campo obbligatorio: da completare. — Required." : "") };
+    });
+
+    var name = fullName || "[Nome e cognome]";
+    var dob = itDate(p.dateOfBirth) || "[data di nascita]";
+    var doc = (docLabel && p.documentNumber) ? (docLabel + " n. " + p.documentNumber) : "[documento di identità]";
+    var email;
+    if (abroad) {
+      email = {
+        to: "[email del Consolato italiano competente per il tuo Paese di residenza]",
+        subject: "Richiesta di attribuzione del codice fiscale tramite Consolato",
+        italian: "Oggetto: Richiesta di attribuzione del codice fiscale tramite Consolato\n\nSpett.le Consolato,\n\nil/la sottoscritto/a " + name + ", nato/a a " + (birthPlace || "[luogo di nascita]") + " il " + dob + ", cittadinanza " + p.nationality + ", residente all'estero" + (address ? " (recapito: " + address + ")" : "") + ", chiede l'attribuzione del codice fiscale italiano tramite codesto Consolato.\n\nIn allegato trasmetto il Modello AA4/8 compilato e copia del mio " + doc + ".\n\nChiedo di ricevere il codice fiscale a questo indirizzo email: " + (p.contactEmail || "[la tua email]") + ".\n\nCordiali saluti,\n" + name,
+        english: "Subject: Request for the Italian Codice Fiscale through the Consulate\n\nTo the Consulate,\n\nI, " + name + ", born in " + (birthPlace || "[place of birth]") + " on " + dob + ", citizenship " + p.nationality + ", resident abroad, request the attribution of the Italian Codice Fiscale through your Consulate.\n\nAttached: the completed Modello AA4/8 and a copy of my " + doc + ".\n\nPlease send the Codice Fiscale to: " + (p.contactEmail || "[your email]") + ".\n\nKind regards,\n" + name
+      };
+    } else {
+      var att = nonEu ? "il Modello AA4/8 compilato, copia del passaporto e copia del permesso di soggiorno (o della ricevuta di richiesta)" : "il Modello AA4/8 compilato e copia di un documento d'identità valido";
+      email = {
+        to: "[PEC o email dell'ufficio Agenzia delle Entrate competente — trova l'ufficio su agenziaentrate.gov.it]",
+        subject: "Richiesta di attribuzione del codice fiscale",
+        italian: "Oggetto: Richiesta di attribuzione del codice fiscale\n\nSpett.le Ufficio,\n\nil/la sottoscritto/a " + name + ", nato/a a " + (birthPlace || "[luogo di nascita]") + " il " + dob + ", cittadinanza " + p.nationality + ", " + (address ? "domiciliato/a in " + address : "attualmente in fase di registrazione del domicilio in Italia") + ", identificato/a tramite " + doc + ", chiede l'attribuzione del codice fiscale ai sensi della normativa vigente.\n\nIn allegato trasmetto " + att + ".\n\nChiedo cortesemente di ricevere il certificato di attribuzione del codice fiscale a questo indirizzo email: " + (p.contactEmail || "[la tua email]") + ".\n\nCordiali saluti,\n" + name,
+        english: "Subject: Request for attribution of the Codice Fiscale (Italian tax code)\n\nTo the Office,\n\nI, " + name + ", born in " + (birthPlace || "[place of birth]") + " on " + dob + ", citizenship " + p.nationality + ", " + (address ? "residing at " + address : "currently registering my address in Italy") + ", identified by " + doc + ", request the attribution of the Codice Fiscale under the applicable rules.\n\nAttached: " + (nonEu ? "the completed Modello AA4/8, a copy of my passport, and a copy of my permesso di soggiorno (or its request receipt)" : "the completed Modello AA4/8 and a copy of a valid ID") + ".\n\nPlease send the certificate to: " + (p.contactEmail || "[your email]") + ".\n\nKind regards,\n" + name
+      };
+    }
+
+    var bring = ["A valid passport or national ID (original + a photocopy)"];
+    if (nonEu) bring.push("Your permesso di soggiorno — or the receipt of your application, if still pending");
+    bring.push("The completed Modello AA4/8 (printed and signed)", "This pre-filled data sheet, to copy from");
+    if (!abroad) bring.push("Proof of your Italian address, if you already have one");
+    var say = abroad
+      ? "Ask the consulate: «Vorrei richiedere il codice fiscale. Ho compilato il Modello AA4/8 e allego il mio documento.»"
+      : "At the counter: «Buongiorno, vorrei richiedere il codice fiscale. Ho già compilato il Modello AA4/8 e ho con me il documento di identità.» The certificate is normally issued immediately, free of charge.";
+
+    return {
+      form: "Modello AA4/8 — Domanda di attribuzione del codice fiscale",
+      channel: abroad
+        ? "You're abroad: submit through the Italian consulate for your country of residence; it forwards the request to the Agenzia delle Entrate. Free of charge."
+        : "You're in Italy: submit Modello AA4/8 to any Agenzia delle Entrate office — in person or by PEC/email — with a copy of your ID. Free, usually issued on the spot.",
+      fields: fields, missing: missing, email: email,
+      bring: bring, say: say
+    };
+  }
+
+  function copyBtn(text) {
+    var id = "c" + Math.random().toString(36).slice(2, 8);
+    setTimeout(function () {
+      var b = document.getElementById(id); if (!b) return;
+      b.addEventListener("click", function () {
+        (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
+          .then(function () { b.textContent = "Copied ✓"; setTimeout(function () { b.textContent = b.dataset.label; }, 1400); })
+          .catch(function () {});
+      });
+    }, 0);
+    return '<button class="btn btn-secondary btn-sm" id="' + id + '" data-label="Copy" type="button">Copy</button>';
+  }
+
+  function renderKit(k) {
+    var h = "";
+    h += '<div class="between"><h2>Your ready-to-send request</h2><span class="badge badge-neutral">Standard</span></div>';
+    h += '<p class="muted" style="margin:2px 0 0;font-size:13px">Target form: ' + esc(k.form) + '</p>';
+    if (k.missing.length) {
+      h += '<div class="warn" style="margin-top:12px"><b>Still needed before you submit</b><ul>' + k.missing.map(function (m) { return "<li>" + esc(m) + "</li>"; }).join("") + '</ul></div>';
+    }
+    h += '<div class="card" style="margin-top:14px"><h3>How to submit</h3><p class="muted" style="margin:6px 0 0;font-size:14px">' + esc(k.channel) + '</p></div>';
+
+    var fh = k.fields.map(function (f) {
+      return '<div><dt>' + esc(f.label) + '</dt><dd>' + (f.value ? esc(f.value) : '<span class="todo">— to complete —</span>') + '</dd>' + (f.note ? '<dd class="note">' + esc(f.note) + '</dd>' : '') + '</div>';
+    }).join("");
+    h += '<div class="card"><div class="between"><h3>Form field values (AA4/8)</h3>' + copyBtn(k.fields.map(function (f) { return f.label + ": " + (f.value || "—"); }).join("\n")) + '</div><dl class="fields" style="margin-top:8px">' + fh + '</dl></div>';
+
+    h += '<div class="card"><div class="between"><h3>Email to the office (Italian)</h3>' + copyBtn(k.email.italian) + '</div>';
+    h += '<p class="muted" style="margin:8px 0 6px;font-size:12px"><b>To:</b> ' + esc(k.email.to) + '</p>';
+    h += '<textarea readonly rows="13">' + esc(k.email.italian) + '</textarea>';
+    h += '<div class="between" style="margin-top:12px"><h3 style="font-size:14px">English translation</h3>' + copyBtn(k.email.english) + '</div>';
+    h += '<textarea readonly rows="11">' + esc(k.email.english) + '</textarea></div>';
+
+    h += '<div class="card"><h3>At the office — what to bring</h3><ul class="bring">' + k.bring.map(function (b) { return "<li><b>✓</b><span>" + esc(b) + "</span></li>"; }).join("") + '</ul>';
+    h += '<h3 style="margin-top:14px">What to say</h3><p class="say">' + esc(k.say) + '</p></div>';
+    return h;
+  }
+
+  document.getElementById("genBtn").addEventListener("click", function () {
+    var p = {
+      firstName: val("firstName"), lastName: val("lastName"), sex: val("sex"),
+      dateOfBirth: val("dateOfBirth"), nationality: val("nationality"),
+      euStatus: val("euStatus"), location: val("location"), reason: val("reason"),
+      countryOfBirth: val("countryOfBirth"), cityOfBirth: val("cityOfBirth"),
+      provinceOfBirth: val("provinceOfBirth"), addressComune: val("addressComune"),
+      addressProvincia: val("addressProvincia"), addressStreet: val("addressStreet"),
+      addressCap: val("addressCap"), contactEmail: val("contactEmail"),
+      documentType: val("documentType"), documentNumber: val("documentNumber")
+    };
+    var out = document.getElementById("cfOut");
+    out.innerHTML = renderKit(buildKit(p));
+    out.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  /* ---------- Questure directory (real data + official links) ---------- */
+  var REGIONS = [
+    ["Abruzzo", [["L'Aquila","AQ"],["Chieti","CH"],["Pescara","PE"],["Teramo","TE"]]],
+    ["Basilicata", [["Potenza","PZ"],["Matera","MT"]]],
+    ["Calabria", [["Catanzaro","CZ"],["Cosenza","CS"],["Crotone","KR"],["Reggio Calabria","RC"],["Vibo Valentia","VV"]]],
+    ["Campania", [["Napoli","NA"],["Avellino","AV"],["Benevento","BN"],["Caserta","CE"],["Salerno","SA"]]],
+    ["Emilia-Romagna", [["Bologna","BO"],["Ferrara","FE"],["Forlì-Cesena","FC"],["Modena","MO"],["Parma","PR"],["Piacenza","PC"],["Ravenna","RA"],["Reggio Emilia","RE"],["Rimini","RN"]]],
+    ["Friuli-Venezia Giulia", [["Trieste","TS"],["Gorizia","GO"],["Pordenone","PN"],["Udine","UD"]]],
+    ["Lazio", [["Roma","RM"],["Frosinone","FR"],["Latina","LT"],["Rieti","RI"],["Viterbo","VT"]]],
+    ["Liguria", [["Genova","GE"],["Imperia","IM"],["La Spezia","SP"],["Savona","SV"]]],
+    ["Lombardia", [["Milano","MI"],["Bergamo","BG"],["Brescia","BS"],["Como","CO"],["Cremona","CR"],["Lecco","LC"],["Lodi","LO"],["Mantova","MN"],["Monza e Brianza","MB"],["Pavia","PV"],["Sondrio","SO"],["Varese","VA"]]],
+    ["Marche", [["Ancona","AN"],["Ascoli Piceno","AP"],["Fermo","FM"],["Macerata","MC"],["Pesaro e Urbino","PU"]]],
+    ["Molise", [["Campobasso","CB"],["Isernia","IS"]]],
+    ["Piemonte", [["Torino","TO"],["Alessandria","AL"],["Asti","AT"],["Biella","BI"],["Cuneo","CN"],["Novara","NO"],["Verbano-Cusio-Ossola","VB"],["Vercelli","VC"]]],
+    ["Puglia", [["Bari","BA"],["Barletta-Andria-Trani","BT"],["Brindisi","BR"],["Foggia","FG"],["Lecce","LE"],["Taranto","TA"]]],
+    ["Sardegna", [["Cagliari","CA"],["Nuoro","NU"],["Oristano","OR"],["Sassari","SS"],["Sud Sardegna","SU"]]],
+    ["Sicilia", [["Palermo","PA"],["Agrigento","AG"],["Caltanissetta","CL"],["Catania","CT"],["Enna","EN"],["Messina","ME"],["Ragusa","RG"],["Siracusa","SR"],["Trapani","TP"]]],
+    ["Toscana", [["Firenze","FI"],["Arezzo","AR"],["Grosseto","GR"],["Livorno","LI"],["Lucca","LU"],["Massa-Carrara","MS"],["Pisa","PI"],["Pistoia","PT"],["Prato","PO"],["Siena","SI"]]],
+    ["Trentino-Alto Adige", [["Trento","TN"],["Bolzano","BZ"]]],
+    ["Umbria", [["Perugia","PG"],["Terni","TR"]]],
+    ["Valle d'Aosta", [["Aosta","AO"]]],
+    ["Veneto", [["Venezia","VE"],["Belluno","BL"],["Padova","PD"],["Rovigo","RO"],["Treviso","TV"],["Verona","VR"],["Vicenza","VI"]]]
+  ];
+  var PDF = { MI: "https://questure.poliziadistato.it/statics/03/competenze-commissariati-citta-di-milano.pdf?lang=it" };
+  var SERVICES = [
+    "Permesso di soggiorno — first issue, renewal, conversion, duplicate",
+    "Carta di soggiorno / permesso UE per soggiornanti di lungo periodo",
+    "Ricongiungimento familiare (nulla osta and follow-up)",
+    "Dichiarazione di presenza / hospitality declarations",
+    "Documents for citizenship and long-stay procedures"
+  ];
+  function slug(n) { return n.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/['’\-\s]/g, ""); }
+  function siteSearch(t) { return "https://www.google.com/search?q=" + encodeURIComponent("site:questure.poliziadistato.it " + t); }
+  function mapsSearch(t) { return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(t); }
+
+  var pcount = REGIONS.reduce(function (n, r) { return n + r[1].length; }, 0);
+  document.getElementById("pcount").textContent = pcount;
+
+  var selected = null, query = "";
+  function renderList() {
+    var q = query.trim().toLowerCase(), html = "";
+    REGIONS.forEach(function (reg) {
+      var provs = reg[1].filter(function (p) {
+        return !q || p[0].toLowerCase().indexOf(q) >= 0 || p[1].toLowerCase().indexOf(q) >= 0 || reg[0].toLowerCase().indexOf(q) >= 0;
+      });
+      if (!provs.length) return;
+      html += '<div class="region-label">' + esc(reg[0]) + '</div><div class="chips">';
+      provs.forEach(function (p) {
+        html += '<button class="chip" type="button" data-n="' + esc(p[0]) + '" data-s="' + esc(p[1]) + '" aria-pressed="' + (selected && selected[1] === p[1] ? "true" : "false") + '">' + esc(p[0]) + ' <small>(' + esc(p[1]) + ')</small></button>';
+      });
+      html += '</div>';
+    });
+    if (!html) html = '<p class="muted">No province matches “' + esc(query) + '”.</p>';
+    document.getElementById("provList").innerHTML = html;
+  }
+  function renderDetail() {
+    var d = document.getElementById("provDetail");
+    if (!selected) { d.innerHTML = ""; return; }
+    var name = selected[0], sig = selected[1];
+    var pdf = PDF[sig];
+    var h = '<div class="card"><div class="between"><div><h3>Questura di ' + esc(name) + '</h3><p class="muted" style="margin:2px 0 0;font-size:13px">Ufficio Immigrazione</p></div><span class="badge badge-neutral">' + esc(sig) + '</span></div>';
+    h += '<div class="callout" style="margin-top:12px"><b>Territorial competence:</b> the whole province of ' + esc(name) + ' (' + esc(sig) + '). If you live here, this is your Ufficio Immigrazione.</div>';
+    h += '<h3 style="margin-top:14px;font-size:14px">What it handles</h3><ul class="bring">' + SERVICES.map(function (s) { return '<li><b>•</b><span>' + esc(s) + '</span></li>'; }).join("") + '</ul>';
+    h += '<div class="row" style="margin-top:14px">';
+    h += '<a class="btn btn-primary btn-sm" target="_blank" rel="noreferrer" href="https://questure.poliziadistato.it/it/' + slug(name) + '">Official Questura page ↗</a>';
+    h += '<a class="btn btn-secondary btn-sm" target="_blank" rel="noreferrer" href="' + siteSearch(name + " ufficio immigrazione permesso di soggiorno") + '">Immigration info ↗</a>';
+    h += '<a class="btn btn-secondary btn-sm" target="_blank" rel="noreferrer" href="' + mapsSearch("Questura di " + name + " Ufficio Immigrazione") + '">Map ↗</a></div>';
+    h += '<div style="margin-top:16px;border-top:1px solid var(--line-soft);padding-top:14px"><h3 style="font-size:14px">Commissariati &amp; territorial competence</h3>';
+    h += '<p class="muted" style="margin:6px 0 0;font-size:13.5px">The Questura publishes the commissariati and the streets each covers (competenza territoriale) as an official PDF.</p>';
+    h += '<a class="link" style="display:inline-block;margin-top:8px" target="_blank" rel="noreferrer" href="' + (pdf || siteSearch(name + " competenze commissariati")) + '">' + (pdf ? "Commissariati competence — official PDF ↗" : "Official commissariati PDF (Polizia di Stato) ↗") + '</a></div>';
+    h += '</div>';
+    d.innerHTML = h;
+    d.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+  document.getElementById("provList").addEventListener("click", function (e) {
+    var c = e.target.closest(".chip"); if (!c) return;
+    selected = [c.dataset.n, c.dataset.s]; renderList(); renderDetail();
+  });
+  document.getElementById("provSearch").addEventListener("input", function (e) { query = e.target.value; renderList(); });
+  renderList();
+
+  /* Start on the Codice Fiscale so the value is obvious immediately */
+})();
+</script>
+</body>
+</html>
