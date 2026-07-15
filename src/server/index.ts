@@ -5,6 +5,8 @@ import { authRouter } from "@server/routes/auth";
 import { profileRouter } from "@server/routes/profile";
 import { planRouter } from "@server/routes/plan";
 import { dashboardRouter } from "@server/routes/dashboard";
+import { stepsRouter } from "@server/routes/steps";
+import { codiceFiscaleRouter } from "@server/routes/codiceFiscale";
 
 const app = express();
 
@@ -22,6 +24,8 @@ app.use("/api/auth", authRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api/plan", planRouter);
 app.use("/api/dashboard", dashboardRouter);
+app.use("/api/steps", stepsRouter);
+app.use("/api/codice-fiscale", codiceFiscaleRouter);
 
 // Unknown API routes → JSON 404 (never fall through to the SPA)
 app.use("/api", (_req, res) => {

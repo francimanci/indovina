@@ -72,6 +72,25 @@ export const profiles = pgTable("profiles", {
     .$type<FamilyMember[]>()
     .notNull()
     .default([]),
+
+  // --- Personal identity (Phase 3) ---
+  // Nullable: collected in the dedicated Codice Fiscale form, not the initial
+  // intake. These are the fields Modello AA4/8 actually requires.
+  firstName: text("first_name"),
+  lastName: text("last_name"),
+  sex: text("sex"), // 'M' | 'F'
+  dateOfBirth: text("date_of_birth"), // ISO 'YYYY-MM-DD'
+  countryOfBirth: text("country_of_birth"),
+  cityOfBirth: text("city_of_birth"),
+  provinceOfBirth: text("province_of_birth"), // sigla (IT-born) or empty
+  addressComune: text("address_comune"), // residence comune in Italy
+  addressProvincia: text("address_provincia"),
+  addressStreet: text("address_street"), // via/piazza + civico
+  addressCap: text("address_cap"),
+  contactEmail: text("contact_email"),
+  documentType: text("document_type"), // passport | id_card | permesso
+  documentNumber: text("document_number"),
+
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
@@ -124,9 +143,11 @@ export type GeneratedContent = {
 
 export const generatedDocuments = pgTable("generated_documents", {
   id: uuid("id").primaryKey().defaultRandom(),
-  planStepId: uuid("plan_step_id")
-    .notNull()
-    .references(() => planSteps.id, { onDelete: "cascade" }),
+  // Nullable: kits are keyed by (user, stepKey) and can be generated before the
+  // plan's steps are persisted to plan_steps (Phase 3).
+  planStepId: uuid("plan_step_id").references(() => planSteps.id, {
+    onDelete: "cascade",
+  }),
   userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
   stepKey: text("step_key").notNull(),
   content: jsonb("content").$type<GeneratedContent>().notNull(),

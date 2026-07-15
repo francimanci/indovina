@@ -3,6 +3,7 @@ import type {
   ButtonHTMLAttributes,
   InputHTMLAttributes,
   SelectHTMLAttributes,
+  TextareaHTMLAttributes,
   ReactNode,
 } from "react";
 
@@ -106,6 +107,24 @@ export const Input = forwardRef<
   />
 ));
 Input.displayName = "Input";
+
+// ---------------------------------------------------------------------------
+// Textarea
+// ---------------------------------------------------------------------------
+export const Textarea = forwardRef<
+  HTMLTextAreaElement,
+  TextareaHTMLAttributes<HTMLTextAreaElement>
+>(({ className, ...props }, ref) => (
+  <textarea
+    ref={ref}
+    className={cx(
+      "w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 font-mono text-xs leading-relaxed text-ink focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-100",
+      className,
+    )}
+    {...props}
+  />
+));
+Textarea.displayName = "Textarea";
 
 // ---------------------------------------------------------------------------
 // Select

@@ -1,0 +1,1 @@
+ALTER TABLE "generated_documents" ALTER COLUMN "plan_step_id" DROP NOT NULL;

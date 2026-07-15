@@ -4,6 +4,12 @@ import { Button, Card } from "@client/components/ui";
 import { api } from "@client/lib/api";
 import type { PlanView, PlanStepView } from "@shared/types";
 
+function stepCtaHref(step: PlanStepView, profileId: string): string | null {
+  // Phase 3: the Codice Fiscale step opens its dedicated request builder.
+  if (step.stepKey === "codice_fiscale") return `/codice-fiscale/${profileId}`;
+  return null;
+}
+
 export function Plan() {
   const [, params] = useRoute("/plan/:profileId");
   const profileId = params?.profileId;
@@ -49,7 +55,12 @@ export function Plan() {
 
       <ol className="space-y-4">
         {data.steps.map((step) => (
-          <StepCard key={step.stepKey} step={step} allSteps={data.steps} />
+          <StepCard
+            key={step.stepKey}
+            step={step}
+            allSteps={data.steps}
+            profileId={data.profileId}
+          />
         ))}
       </ol>
 
@@ -65,12 +76,15 @@ export function Plan() {
 function StepCard({
   step,
   allSteps,
+  profileId,
 }: {
   step: PlanStepView;
   allSteps: PlanStepView[];
+  profileId: string;
 }) {
   const titleFor = (key: string) =>
     allSteps.find((s) => s.stepKey === key)?.title ?? key;
+  const ctaHref = stepCtaHref(step, profileId);
 
   return (
     <li>
@@ -116,6 +130,18 @@ function StepCard({
                     {titleFor(k)} completed
                   </span>
                 ))}
+              </p>
+            )}
+
+            {ctaHref ? (
+              <Link href={ctaHref}>
+                <Button size="md" className="mt-4">
+                  Prepare my request →
+                </Button>
+              </Link>
+            ) : (
+              <p className="mt-4 text-xs text-ink-muted">
+                Document generation for this step is coming next.
               </p>
             )}
           </div>

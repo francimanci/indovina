@@ -4,6 +4,7 @@ import { ProtectedRoute } from "@client/components/ProtectedRoute";
 import { Landing } from "@client/pages/Landing";
 import { Intake } from "@client/pages/Intake";
 import { Plan } from "@client/pages/Plan";
+import { CodiceFiscale } from "@client/pages/CodiceFiscale";
 import { Login } from "@client/pages/Login";
 import { Signup } from "@client/pages/Signup";
 import { Dashboard } from "@client/pages/Dashboard";
@@ -24,6 +25,11 @@ export default function App() {
         <Route path="/plan/:profileId">
           <ProtectedRoute>
             <Plan />
+          </ProtectedRoute>
+        </Route>
+        <Route path="/codice-fiscale/:profileId">
+          <ProtectedRoute>
+            <CodiceFiscale />
           </ProtectedRoute>
         </Route>
         <Route path="/dashboard">
