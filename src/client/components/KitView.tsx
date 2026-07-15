@@ -58,21 +58,35 @@ export function KitView({ kit }: { kit: StepKit }) {
         <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
           {kit.channel.summary}
         </p>
-        <div className="mt-3 flex flex-wrap gap-4 text-sm">
+        <ol className="mt-3 space-y-1.5 text-sm text-ink-soft">
+          <li>
+            <span className="font-medium text-ink">1.</span> Download the
+            pre-filled module below and <b>sign</b> it (place + date + signature).
+          </li>
+          <li>
+            <span className="font-medium text-ink">2.</span> Attach the signed
+            module and a copy of your ID to the email/<b>PEC</b> below.
+          </li>
+          <li>
+            <span className="font-medium text-ink">3.</span> Send it to the
+            competent office (or bring it in person).
+          </li>
+        </ol>
+        <div className="mt-4 flex flex-wrap gap-3">
           <a
             href={pdfHref}
             target="_blank"
             rel="noreferrer"
-            className="font-medium text-accent-700 hover:underline"
+            className="inline-flex items-center rounded-lg bg-accent-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-accent-700"
           >
-            Download pre-filled PDF ↓
+            Download the module to sign (PDF) ↓
           </a>
           {kit.channel.officialFormUrl && (
             <a
               href={kit.channel.officialFormUrl}
               target="_blank"
               rel="noreferrer"
-              className="font-medium text-accent-700 hover:underline"
+              className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-ink-soft hover:bg-slate-50"
             >
               Official site ↗
             </a>
