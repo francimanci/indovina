@@ -148,41 +148,53 @@ function ProvinceDetail({ province }: { province: Province }) {
 
       <div className="mt-5 flex flex-wrap gap-3">
         <a
-          href={links.maps}
+          href={links.questuraPage}
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center rounded-lg bg-accent-600 px-3.5 py-2 text-sm font-medium text-white hover:bg-accent-700"
         >
-          Find the office on the map ↗
+          Official Questura page ↗
         </a>
         <a
-          href={links.poliziaPortal}
+          href={links.immigrazioneSearch}
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-ink-soft hover:bg-slate-50"
         >
-          Polizia di Stato portal ↗
+          Immigration info & booking ↗
+        </a>
+        <a
+          href={links.maps}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-ink-soft hover:bg-slate-50"
+        >
+          Map ↗
         </a>
       </div>
 
-      {/* Commissariati */}
+      {/* Commissariati — territorial competence */}
       <div className="mt-6 border-t border-slate-100 pt-5">
         <h4 className="text-sm font-semibold text-ink">
-          Local commissariati in {province.name}
+          Commissariati &amp; territorial competence in {province.name}
         </h4>
         <p className="mt-1 text-sm leading-relaxed text-ink-soft">
-          Immigration matters are handled by the Questura above. Local{" "}
-          <span className="font-medium">commissariati di P.S.</span> cover
-          neighbourhood policing and some services; their exact street-level
-          competence is set locally, so confirm with the office directly.
+          The Questura publishes the{" "}
+          <span className="font-medium">commissariati</span> and the streets each
+          one covers (competenza territoriale) as an official PDF.
+          {links.commissariatiPdfUrl
+            ? " The direct document for this province:"
+            : " Open the official document for this province:"}
         </p>
         <a
-          href={links.commissariatiMaps}
+          href={links.commissariatiPdfUrl ?? links.commissariatiSearch}
           target="_blank"
           rel="noreferrer"
           className="mt-2 inline-flex items-center text-sm font-medium text-accent-700 hover:underline"
         >
-          Find commissariati in {province.name} on the map ↗
+          {links.commissariatiPdfUrl
+            ? "Commissariati competence — official PDF ↗"
+            : "Official commissariati PDF (Polizia di Stato) ↗"}
         </a>
       </div>
     </Card>

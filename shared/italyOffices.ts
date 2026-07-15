@@ -238,20 +238,56 @@ export const ufficioImmigrazioneServices = [
   "Documents for citizenship and long-stay procedures",
 ];
 
+/**
+ * Direct links to the official commissariati "competenza territoriale" PDF, when
+ * the exact URL has been confirmed on questure.poliziadistato.it. Keyed by sigla.
+ * Everything not listed here falls back to an official-domain search that surfaces
+ * the same document — per the "put the reference link when data isn't found" rule.
+ */
+export const commissariatiPdf: Record<string, string> = {
+  MI: "https://questure.poliziadistato.it/statics/03/competenze-commissariati-citta-di-milano.pdf?lang=it",
+};
+
 export interface OfficeLinks {
+  /** Official Questura page on questure.poliziadistato.it. */
+  questuraPage: string;
+  /** Official-domain search for the Ufficio Immigrazione / permesso booking. */
+  immigrazioneSearch: string;
+  /** Official-domain search for the commissariati competence PDF. */
+  commissariatiSearch: string;
+  /** Direct official PDF, when confirmed (else undefined → use the search). */
+  commissariatiPdfUrl?: string;
+  /** Maps lookup for directions to the Questura. */
   maps: string;
-  commissariatiMaps: string;
-  poliziaPortal: string;
 }
 
-/** Reliable lookup links (resolve current address/contacts; not fabricated). */
+/** Slug used by the official site: diacritics + spaces/punctuation removed. */
+function questuraSlug(name: string): string {
+  return name
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/['’\-\s]/g, "");
+}
+
+/** Reliable reference links (official sources; nothing fabricated). */
 export function officeLinks(p: Province): OfficeLinks {
-  const q = (s: string) =>
+  const officialSearch = (terms: string) =>
+    `https://www.google.com/search?q=${encodeURIComponent(
+      `site:questure.poliziadistato.it ${terms}`,
+    )}`;
+  const maps = (s: string) =>
     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s)}`;
+
   return {
-    maps: q(`Questura di ${p.name} Ufficio Immigrazione`),
-    commissariatiMaps: q(`Commissariato di Pubblica Sicurezza ${p.name}`),
-    poliziaPortal: "https://www.poliziadistato.it/articolo/1087",
+    questuraPage: `https://questure.poliziadistato.it/it/${questuraSlug(p.name)}`,
+    immigrazioneSearch: officialSearch(
+      `${p.name} ufficio immigrazione permesso di soggiorno`,
+    ),
+    commissariatiSearch: officialSearch(
+      `${p.name} competenze commissariati`,
+    ),
+    commissariatiPdfUrl: commissariatiPdf[p.sigla],
+    maps: maps(`Questura di ${p.name} Ufficio Immigrazione`),
   };
 }
 
