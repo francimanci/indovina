@@ -1,0 +1,1 @@
+ALTER TABLE "profiles" ADD COLUMN "codice_fiscale_code" text;

@@ -111,6 +111,12 @@ export const codiceFiscaleInputSchema = z.object({
     .string()
     .min(1, "Document number is required")
     .max(60),
+  /** The 16-character Codice Fiscale, once obtained — used by later steps. */
+  codiceFiscaleCode: z
+    .string()
+    .max(16)
+    .optional()
+    .or(z.literal("")),
 });
 
 export type CodiceFiscaleInput = z.infer<typeof codiceFiscaleInputSchema>;

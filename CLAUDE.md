@@ -76,7 +76,8 @@ API:
   1:1 per user, POST upserts)
 - `GET /api/plan/:profileId` · `POST /api/plan/generate` (auth + ownership)
 - `GET/POST /api/codice-fiscale/:profileId` (identity for Modello AA4/8)
-- `POST /api/steps/:stepKey/generate` · `GET /api/steps/:stepKey` (the kit)
+- `POST /api/steps/:stepKey/generate` · `GET /api/steps/:stepKey` (the kit) ·
+  `GET /api/steps/:stepKey/pdf` (printable pre-filled data sheet)
 - `GET /api/dashboard` (auth) · `GET /api/health`
 
 ## Codice Fiscale request (Phase 3 — the product's core)
@@ -93,11 +94,22 @@ request**:
 - a **what-to-bring / what-to-say** appointment script.
 
 Generated kits are persisted to `generated_documents` (keyed by user + stepKey)
-and re-openable. The builder is **deterministic** (`src/server/lib/codiceFiscale.ts`)
-— correct for a fixed official form and testable without a key; when
-`ANTHROPIC_API_KEY` is set, the model refines the artifact content, but the
-channel, form identity, and `missing` list are always computed deterministically.
-System prompts live in `src/server/ai/prompts/` (editable IP).
+and re-openable. Each kit offers a **printable pre-filled PDF** (`pdf-lib`,
+`src/server/lib/pdf.ts`) to take to the office or attach.
+
+The **secondary steps** (`iscrizione_anagrafica` at the Comune,
+`tessera_sanitaria` at the ASL) reuse the identity from the AA4/8 form via the
+same registry (`src/server/lib/stepKits.ts`), each with its own channel and
+`missing` logic. The optional 16-char `codiceFiscaleCode` (captured once obtained)
+feeds those later steps.
+
+The builders are **deterministic** — correct for fixed official forms and
+testable without a key. When `ANTHROPIC_API_KEY` is set, the model refines the
+artifact content (strict JSON, zod-validated, retry once, then **fall back** to
+the deterministic kit); the channel, form identity, and `missing` list are always
+computed deterministically. System prompts live in `src/server/ai/prompts/`
+(editable IP). Set `ANTHROPIC_API_KEY` in `.env` to enable AI refinement — the
+kit shows an "AI-refined" vs "Standard" badge.
 
 ## Auth (Phase 2)
 
@@ -120,9 +132,11 @@ System prompts live in `src/server/ai/prompts/` (editable IP).
   protected wizard/plan/dashboard, profiles linked 1:1 to the user, `/dashboard`
   with empty states.
 - **Phase 3 — AI generation ✅** (focused on the Codice Fiscale): dedicated
-  AA4/8 form, `POST /api/steps/:stepKey/generate` + `GET`, `POST
-  /api/plan/generate`, persisted kits, deterministic-first builder with an
-  optional Anthropic path, prompts as files. Secondary steps show "coming next".
+  AA4/8 form, `POST /api/steps/:stepKey/generate` + `GET` + `/pdf`, `POST
+  /api/plan/generate`, persisted kits, deterministic-first builders with an
+  optional Anthropic path, prompts as files. **Follow-ups:** printable pre-filled
+  PDF per step, generation for the two secondary steps (residency, health card),
+  and the AI-refinement path wired end-to-end (enable with `ANTHROPIC_API_KEY`).
 - Phase 4 — Stripe (next: gate "Generate my documents" per step)
 - Phase 5 — Polish
 

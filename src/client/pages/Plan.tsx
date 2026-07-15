@@ -4,9 +4,18 @@ import { Button, Card } from "@client/components/ui";
 import { api } from "@client/lib/api";
 import type { PlanView, PlanStepView } from "@shared/types";
 
+const GENERATABLE_STEPS = new Set([
+  "codice_fiscale",
+  "iscrizione_anagrafica",
+  "tessera_sanitaria",
+]);
+
 function stepCtaHref(step: PlanStepView, profileId: string): string | null {
-  // Phase 3: the Codice Fiscale step opens its dedicated request builder.
+  // The Codice Fiscale step has its own dedicated form; the secondary steps
+  // reuse those details via the generic step builder.
   if (step.stepKey === "codice_fiscale") return `/codice-fiscale/${profileId}`;
+  if (GENERATABLE_STEPS.has(step.stepKey))
+    return `/step/${step.stepKey}/${profileId}`;
   return null;
 }
 

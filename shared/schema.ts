@@ -90,6 +90,7 @@ export const profiles = pgTable("profiles", {
   contactEmail: text("contact_email"),
   documentType: text("document_type"), // passport | id_card | permesso
   documentNumber: text("document_number"),
+  codiceFiscaleCode: text("codice_fiscale_code"), // the 16-char code, once obtained
 
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()

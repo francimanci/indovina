@@ -5,6 +5,7 @@ import { Landing } from "@client/pages/Landing";
 import { Intake } from "@client/pages/Intake";
 import { Plan } from "@client/pages/Plan";
 import { CodiceFiscale } from "@client/pages/CodiceFiscale";
+import { StepKitPage } from "@client/pages/StepKitPage";
 import { Login } from "@client/pages/Login";
 import { Signup } from "@client/pages/Signup";
 import { Dashboard } from "@client/pages/Dashboard";
@@ -30,6 +31,11 @@ export default function App() {
         <Route path="/codice-fiscale/:profileId">
           <ProtectedRoute>
             <CodiceFiscale />
+          </ProtectedRoute>
+        </Route>
+        <Route path="/step/:stepKey/:profileId">
+          <ProtectedRoute>
+            <StepKitPage />
           </ProtectedRoute>
         </Route>
         <Route path="/dashboard">

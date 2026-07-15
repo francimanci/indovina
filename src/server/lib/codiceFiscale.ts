@@ -301,11 +301,11 @@ function buildScript(
 }
 
 // ---------------------------------------------------------------------------
-function isFilled(v: string | null | undefined): boolean {
+export function isFilled(v: string | null | undefined): boolean {
   return typeof v === "string" && v.trim().length > 0;
 }
 
-function formatItalianDate(iso: string | null | undefined): string {
+export function formatItalianDate(iso: string | null | undefined): string {
   if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return "";
   const [y, m, d] = iso.split("-");
   return `${d}/${m}/${y}`;

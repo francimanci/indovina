@@ -6,7 +6,8 @@ import { profiles, generatedDocuments } from "@shared/schema";
 import type { Profile } from "@shared/schema";
 import type { GeneratedKitContent, StepKit } from "@shared/types";
 import { requireAuth } from "@server/lib/auth";
-import { buildCodiceFiscaleKit } from "@server/lib/codiceFiscale";
+import { buildStepKit, stepPromptFile } from "@server/lib/stepKits";
+import { buildStepPdf } from "@server/lib/pdf";
 import {
   isAiEnabled,
   loadPrompt,
@@ -49,26 +50,24 @@ async function loadProfile(userId: string): Promise<Profile | null> {
 }
 
 /**
- * Build the kit for a step. The Codice Fiscale kit is deterministic-first
- * (correct Modello AA4/8 mapping, no hallucinated fields). If an Anthropic key
- * is configured, we let the model refine the artifact content, but the channel,
- * form identity and `missing` list are always computed deterministically.
+ * Build the kit for a step. Deterministic-first (correct official mapping, no
+ * hallucinated fields). If an Anthropic key is configured, the model refines the
+ * artifact content; the form identity, channel and `missing` list are always
+ * computed deterministically.
  */
 async function buildKit(stepKey: string, profile: Profile): Promise<StepKit | null> {
-  if (stepKey !== "codice_fiscale") return null;
-
-  const base = buildCodiceFiscaleKit(profile);
+  const base = buildStepKit(stepKey, profile);
+  if (!base) return null;
 
   if (isAiEnabled) {
     try {
       const aiContent = await generateStructured(
-        loadPrompt("codice-fiscale.md"),
-        `Applicant profile (JSON):\n${JSON.stringify(profileForPrompt(profile), null, 2)}`,
+        loadPrompt(stepPromptFile[stepKey] ?? "step.md"),
+        `Step: ${stepKey} (${base.title})\nTarget form: ${base.form}\nApplicant profile (JSON):\n${JSON.stringify(profileForPrompt(profile), null, 2)}`,
         kitContentSchema,
       );
       return { ...base, content: aiContent, source: "ai" };
     } catch (err) {
-      // Deterministic builder is correct on its own — fall back rather than fail.
       console.error("AI kit generation failed, using deterministic kit:", err);
     }
   }
@@ -87,8 +86,10 @@ function profileForPrompt(p: Profile) {
     nationality: p.nationality,
     euStatus: p.euStatus,
     location: p.location,
+    reason: p.reason,
     hasPermesso: p.hasPermesso,
-    addressComune: p.addressComune,
+    codiceFiscaleCode: p.codiceFiscaleCode,
+    addressComune: p.addressComune ?? p.city,
     addressProvincia: p.addressProvincia,
     addressStreet: p.addressStreet,
     addressCap: p.addressCap,
@@ -99,8 +100,7 @@ function profileForPrompt(p: Profile) {
 }
 
 /**
- * POST /api/steps/:stepKey/generate
- * Generate (and persist) the kit for the authenticated user's profile.
+ * POST /api/steps/:stepKey/generate — generate (and persist) the kit.
  */
 stepsRouter.post("/:stepKey/generate", async (req, res) => {
   const profile = await loadProfile(req.session.userId!);
@@ -108,12 +108,11 @@ stepsRouter.post("/:stepKey/generate", async (req, res) => {
 
   const kit = await buildKit(req.params.stepKey, profile);
   if (!kit) {
-    return res.status(400).json({
-      error: `Generation is not available yet for step "${req.params.stepKey}".`,
-    });
+    return res
+      .status(400)
+      .json({ error: `Generation is not available for step "${req.params.stepKey}".` });
   }
 
-  // Persist as the current document for (user, stepKey).
   await db
     .delete(generatedDocuments)
     .where(
@@ -132,16 +131,14 @@ stepsRouter.post("/:stepKey/generate", async (req, res) => {
 });
 
 /**
- * GET /api/steps/:stepKey
- * Return the previously generated kit (404 if none). Channel / form / missing
- * are recomputed from the current profile so they stay accurate.
+ * GET /api/steps/:stepKey — the previously generated kit (404 if none).
  */
 stepsRouter.get("/:stepKey", async (req, res) => {
   const profile = await loadProfile(req.session.userId!);
   if (!profile) return res.status(404).json({ error: "Profile not found" });
-  if (req.params.stepKey !== "codice_fiscale") {
-    return res.status(404).json({ error: "No document" });
-  }
+
+  const base = buildStepKit(req.params.stepKey, profile);
+  if (!base) return res.status(404).json({ error: "Unknown step" });
 
   const [doc] = await db
     .select()
@@ -149,7 +146,7 @@ stepsRouter.get("/:stepKey", async (req, res) => {
     .where(
       and(
         eq(generatedDocuments.userId, profile.userId!),
-        eq(generatedDocuments.stepKey, "codice_fiscale"),
+        eq(generatedDocuments.stepKey, req.params.stepKey),
       ),
     )
     .orderBy(desc(generatedDocuments.createdAt))
@@ -157,11 +154,29 @@ stepsRouter.get("/:stepKey", async (req, res) => {
 
   if (!doc) return res.status(404).json({ error: "Not generated yet" });
 
-  const base = buildCodiceFiscaleKit(profile);
   const kit: StepKit = {
     ...base,
     content: doc.content as GeneratedKitContent,
     generatedAt: doc.createdAt.toISOString(),
   };
   return res.json(kit);
+});
+
+/**
+ * GET /api/steps/:stepKey/pdf — printable pre-filled data sheet for the step.
+ */
+stepsRouter.get("/:stepKey/pdf", async (req, res) => {
+  const profile = await loadProfile(req.session.userId!);
+  if (!profile) return res.status(404).json({ error: "Profile not found" });
+
+  const kit = buildStepKit(req.params.stepKey, profile);
+  if (!kit) return res.status(404).json({ error: "Unknown step" });
+
+  const pdf = await buildStepPdf(kit);
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader(
+    "Content-Disposition",
+    `inline; filename="buddy-${kit.stepKey}.pdf"`,
+  );
+  return res.end(Buffer.from(pdf));
 });

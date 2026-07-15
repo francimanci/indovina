@@ -40,6 +40,7 @@ codiceFiscaleRouter.get("/:profileId", async (req, res) => {
     contactEmail: profile.contactEmail ?? "",
     documentType: profile.documentType ?? "",
     documentNumber: profile.documentNumber ?? "",
+    codiceFiscaleCode: profile.codiceFiscaleCode ?? "",
   });
 });
 
@@ -77,6 +78,7 @@ codiceFiscaleRouter.post("/:profileId", async (req, res) => {
       contactEmail: d.contactEmail,
       documentType: d.documentType,
       documentNumber: d.documentNumber,
+      codiceFiscaleCode: d.codiceFiscaleCode || null,
       updatedAt: new Date(),
     })
     .where(eq(profiles.id, profile.id));
