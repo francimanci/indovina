@@ -15,6 +15,19 @@ export const reasonValues = [
   "elective_residence",
 ] as const;
 
+// --- Auth (Phase 2) ---
+export const credentialsSchema = z.object({
+  email: z.string().email("Enter a valid email").max(255),
+  password: z.string().min(8, "Password must be at least 8 characters").max(200),
+});
+export type Credentials = z.infer<typeof credentialsSchema>;
+
+/** Current authenticated user as exposed to the client (never the hash). */
+export interface AuthUser {
+  id: string;
+  email: string;
+}
+
 export const familyMemberSchema = z.object({
   relationship: z.string().min(1).max(60),
   nationality: z.string().min(1).max(60),
@@ -51,6 +64,26 @@ export interface PlanView {
   profileId: string;
   title: string;
   steps: PlanStepView[];
+}
+
+/** Dashboard payload (Phase 2). */
+export interface DashboardPlanSummary {
+  profileId: string;
+  title: string;
+  city: string;
+  reason: (typeof reasonValues)[number];
+  createdAt: string;
+}
+
+export interface DashboardDocumentSummary {
+  id: string;
+  stepKey: string;
+  createdAt: string;
+}
+
+export interface DashboardView {
+  plans: DashboardPlanSummary[];
+  documents: DashboardDocumentSummary[];
 }
 
 /** Human-readable labels for enum values (English). */

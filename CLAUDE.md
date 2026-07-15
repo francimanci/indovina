@@ -14,7 +14,7 @@ UI is in English, with Italian as a secondary language toggle (Phase 5).
 | Frontend  | React + Vite + TypeScript, Tailwind, wouter, TanStack Query   |
 | Backend   | Express (Node, TypeScript), zod validation                    |
 | DB        | PostgreSQL + Drizzle ORM                                       |
-| Auth      | email + password, argon2, server-side sessions (Phase 2)      |
+| Auth      | email + password, argon2, server-side Postgres sessions ✅    |
 | AI        | Anthropic API, `claude-sonnet-4-6`, **server-side only** (P3) |
 | Payments  | Stripe Checkout + webhook (Phase 4)                           |
 
@@ -67,17 +67,37 @@ npm start                     # run production server (serves built client)
 
 ## Routes
 
-Client: `/` landing · `/intake` wizard · `/plan/:profileId` plan.
-API: `POST /api/profile` · `GET /api/profile/:id` · `GET /api/plan/:profileId`
-(mock data in Phase 1) · `GET /api/health`.
+Client: `/` landing · `/login` · `/signup` · `/intake` wizard* ·
+`/plan/:profileId`* · `/dashboard`* (*protected — redirect to `/login?next=…`).
+API:
+- `POST /api/auth/signup` · `POST /api/auth/login` · `POST /api/auth/logout` ·
+  `GET /api/auth/me`
+- `POST /api/profile` · `GET /api/profile/:id` (auth + ownership; profile is
+  1:1 per user, POST upserts)
+- `GET /api/plan/:profileId` (auth + ownership; mock data until Phase 3)
+- `GET /api/dashboard` (auth) · `GET /api/health`
+
+## Auth (Phase 2)
+
+- **argon2** password hashing; **server-side sessions** in Postgres via
+  `express-session` + `connect-pg-simple` (`session` table auto-created).
+- Session id in an **httpOnly, sameSite=lax** cookie (`buddy.sid`); `secure` in
+  production only (requires HTTPS + `trust proxy`). No JWT in localStorage.
+- `requireAuth` middleware guards `/api/profile`, `/api/plan`, `/api/dashboard`.
+  Ownership is enforced in the query (`where userId = session.userId`), not just
+  the UI — cross-user reads return 404.
+- Client: `useAuthUser`/`useLogin`/`useSignup`/`useLogout` hooks over
+  `/api/auth/*`; `<ProtectedRoute>` gates pages and redirects when logged out.
 
 ## Phase status
 
 - **Phase 1 — Skeleton ✅**: scaffold, docker Postgres, Drizzle schema +
   migration, `.env.example`, landing page, intake wizard (persists profile),
   plan page with 3 mock steps (Codice Fiscale primary), footer disclaimer.
-- Phase 2 — Auth (next)
-- Phase 3 — AI generation
+- **Phase 2 — Auth ✅**: signup/login/logout, argon2, Postgres sessions,
+  protected wizard/plan/dashboard, profiles linked 1:1 to the user, `/dashboard`
+  with empty states.
+- Phase 3 — AI generation (next)
 - Phase 4 — Stripe
 - Phase 5 — Polish
 

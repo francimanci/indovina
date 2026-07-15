@@ -1,18 +1,27 @@
 import express from "express";
 import { env, isDev } from "@server/env";
+import { sessionMiddleware } from "@server/lib/session";
+import { authRouter } from "@server/routes/auth";
 import { profileRouter } from "@server/routes/profile";
 import { planRouter } from "@server/routes/plan";
+import { dashboardRouter } from "@server/routes/dashboard";
 
 const app = express();
 
+// Trust the reverse proxy in production so secure cookies work behind TLS.
+if (!isDev) app.set("trust proxy", 1);
+
 app.use(express.json());
+app.use(sessionMiddleware);
 
 // Health check
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
 
 // API routes
+app.use("/api/auth", authRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api/plan", planRouter);
+app.use("/api/dashboard", dashboardRouter);
 
 // Unknown API routes → JSON 404 (never fall through to the SPA)
 app.use("/api", (_req, res) => {
