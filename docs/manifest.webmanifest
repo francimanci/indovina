@@ -1,0 +1,20 @@
+{
+  "name": "Insieme · Organizer famiglia",
+  "short_name": "Insieme",
+  "description": "Organizer familiare: calendario condiviso, attività, lista della spesa, spese e bacheca. Gratuito, senza pubblicità.",
+  "lang": "it",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0e1020",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
