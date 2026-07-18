@@ -24,8 +24,8 @@ I dati si **sincronizzano in tempo reale** tra i due telefoni tramite Firebase (
    - **Build → Firestore Database → Crea database → modalità test**.
    - **⚙️ Impostazioni progetto → Le tue app → Web `</>`** e copia l'oggetto `firebaseConfig`.
    - Incolla la configurazione, scegli un **codice famiglia** (parola segreta) e i vostri nomi.
-3. Sull'**altro telefono**: apri lo stesso link e inserisci la **stessa** configurazione e lo **stesso** codice famiglia (dalla sezione *Altro → Invita il partner* puoi copiarli e inviarli via WhatsApp).
-4. Su iPhone/Android: *Condividi → Aggiungi alla schermata Home* per usarla come una vera app.
+3. Sull'**altro telefono** (modo più semplice): dalla sezione *Altro → Invita il partner* premi **Invia link d'invito** e mandalo via WhatsApp. Aprendo quel link, l'app si collega da sola alla vostra famiglia: basta scegliere il proprio nome. (In alternativa si possono incollare a mano la stessa configurazione e lo stesso codice famiglia.)
+4. Su iPhone/Android: *Condividi → Aggiungi alla schermata Home* per usarla come una vera app (icona in home, a schermo intero — una **PWA**).
 
 ## Regole di sicurezza consigliate (Firestore)
 

@@ -9,7 +9,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Insieme">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="icon" type="image/png" href="icon-192.png">
   <style>
     :root{
       --bg:#0e1020; --card:#191d33; --card2:#232847; --line:#2c3258;
@@ -378,8 +379,24 @@ function fmtDateFull(s){if(!s)return "";const d=new Date(s+"T00:00:00");return D
 function inMonthIdx(s,m){if(!s)return false;const d=new Date(s+"T00:00:00");return d.getFullYear()*12+d.getMonth()===m;}
 
 /* ---------- Boot ---------- */
+function b64encode(obj){return btoa(unescape(encodeURIComponent(JSON.stringify(obj))));}
+function b64decode(s){return JSON.parse(decodeURIComponent(escape(atob(s))));}
+function handleJoinLink(){
+  const h=location.hash||"";const m=h.match(/join=([^&]+)/);
+  if(!m)return;
+  try{
+    const data=b64decode(decodeURIComponent(m[1]));
+    if(data&&data.cfg&&data.family){
+      localStorage.setItem(LS.cfg,JSON.stringify(data.cfg));
+      localStorage.setItem(LS.family,data.family);
+      localStorage.removeItem(LS.me);
+    }
+  }catch(e){console.error("join link non valido",e);}
+  history.replaceState(null,"",location.pathname+location.search);
+}
 function boot(){
   window.__insiemeBooted=true;
+  handleJoinLink();
   const rawCfg=localStorage.getItem(LS.cfg);family=localStorage.getItem(LS.family);
   const rawMe=localStorage.getItem(LS.me);
   if(!rawCfg||!family){show("setup");return;}
@@ -710,15 +727,27 @@ function openNamesSheet(){
   $("#n-cancel").onclick=closeSheet;
   $("#n-save").onclick=async()=>{const n0=$("#n0").value.trim()||"Io",n1=$("#n1").value.trim()||"Partner";try{await setDoc(doc(db,"families",family,"meta","config"),{members:[n0,n1]},{merge:true});toast("Nomi aggiornati");closeSheet();}catch(e){toast("Errore");}};
 }
+function inviteLink(){return location.origin+location.pathname+"#join="+encodeURIComponent(b64encode({cfg,family}));}
 function openShareSheet(){
+  const link=inviteLink();
   openSheet(`<div class="grab"></div><h2>Invita il partner</h2>
-    <p class="muted" style="margin:6px 0 14px;font-size:14px">Sull'altro telefono, apri lo stesso link dell'app e nella schermata iniziale inserisci:</p>
-    <div class="card" style="margin-bottom:12px"><div class="label">Codice famiglia</div><div style="font-size:18px;font-weight:700;margin-top:4px">${escapeHtml(family)}</div></div>
-    <div class="card" style="margin-bottom:14px"><div class="label">Configurazione Firebase</div><div class="muted" style="font-size:13px;margin-top:6px">La stessa che hai incollato tu. Copiala qui sotto e inviala al partner (WhatsApp, ecc.).</div>
-      <textarea readonly style="width:100%;margin-top:8px;background:var(--card2);border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:10px;font-size:12px" rows="5">${escapeHtml(JSON.stringify(cfg,null,2))}</textarea></div>
-    <button class="btn-primary" id="sh-copy">Copia configurazione</button><button class="btn-ghost" id="sh-close">Chiudi</button>`);
+    <p class="muted" style="margin:6px 0 14px;font-size:14px">Il modo più semplice: invia questo <b>link d'invito</b> al partner (WhatsApp, ecc.). Aprendolo sul suo telefono, l'app si collega da sola alla vostra famiglia — dovrà solo scegliere il proprio nome.</p>
+    <div class="card" style="margin-bottom:12px"><div class="label">Link d'invito</div>
+      <div class="muted" style="font-size:12.5px;margin-top:6px;word-break:break-all">${escapeHtml(link)}</div></div>
+    <button class="btn-primary" id="sh-share">📤 Invia link d'invito</button>
+    <button class="btn-ghost" id="sh-copylink">Copia link</button>
+    <div class="label" style="margin:18px 0 8px">In alternativa, a mano</div>
+    <div class="card" style="margin-bottom:10px"><div class="label">Codice famiglia</div><div style="font-size:18px;font-weight:700;margin-top:4px">${escapeHtml(family)}</div></div>
+    <button class="btn-ghost" id="sh-copycfg">Copia configurazione Firebase</button>
+    <button class="btn-ghost" id="sh-close">Chiudi</button>`);
   $("#sh-close").onclick=closeSheet;
-  $("#sh-copy").onclick=async()=>{try{await navigator.clipboard.writeText("Codice famiglia: "+family+"\n\nConfigurazione Firebase:\n"+JSON.stringify(cfg,null,2));toast("Copiato negli appunti");}catch(e){toast("Copia non riuscita");}};
+  $("#sh-share").onclick=async()=>{
+    const payload={title:"Insieme — invito famiglia",text:"Ti invito su Insieme, il nostro organizer di famiglia. Apri questo link sul telefono:",url:link};
+    try{ if(navigator.share){await navigator.share(payload);} else {await navigator.clipboard.writeText(link);toast("Link copiato");} }
+    catch(e){ if(e&&e.name!=="AbortError")toast("Condivisione non riuscita"); }
+  };
+  $("#sh-copylink").onclick=async()=>{try{await navigator.clipboard.writeText(link);toast("Link copiato");}catch(e){toast("Copia non riuscita");}};
+  $("#sh-copycfg").onclick=async()=>{try{await navigator.clipboard.writeText("Codice famiglia: "+family+"\n\nConfigurazione Firebase:\n"+JSON.stringify(cfg,null,2));toast("Configurazione copiata");}catch(e){toast("Copia non riuscita");}};
 }
 
 /* ---------- UI binding ---------- */
