@@ -1,579 +1,804 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0d9488">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+  <title>Insieme · Organizer famiglia</title>
+  <meta name="theme-color" content="#4f46e5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Insieme">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <style>
+    :root{
+      --bg:#0e1020; --card:#191d33; --card2:#232847; --line:#2c3258;
+      --txt:#eef0ff; --muted:#9aa0c7; --accent:#6366f1; --accent2:#818cf8;
+      --green:#22c55e; --red:#f43f5e; --amber:#f59e0b; --cyan:#06b6d4;
+      --u0:#6366f1; --u1:#ec4899; --both:#14b8a6;
+      --shadow:0 8px 30px rgba(0,0,0,.4);
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      background:var(--bg); color:var(--txt); line-height:1.42;
+      padding-bottom:calc(80px + env(safe-area-inset-bottom));
+      -webkit-font-smoothing:antialiased;
+    }
+    button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+    input,select,textarea{font-family:inherit;font-size:16px}
+    .hidden{display:none !important}
+
+    header{
+      position:sticky;top:0;z-index:20;
+      background:linear-gradient(135deg,#4f46e5,#7c3aed);
+      padding:calc(env(safe-area-inset-top) + 14px) 18px 15px;
+      box-shadow:0 4px 22px rgba(79,70,229,.32);
+    }
+    .h-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    header h1{font-size:19px;margin:0;font-weight:700;letter-spacing:.2px}
+    header .sub{font-size:12.5px;color:rgba(255,255,255,.82);margin-top:2px}
+    .who-chip{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.16);padding:6px 11px;border-radius:99px;font-size:13px;font-weight:600}
+    .who-dot{width:10px;height:10px;border-radius:50%;background:#fff}
+
+    main{max-width:600px;margin:0 auto;padding:16px 14px 24px}
+    .page{animation:fade .25s ease}
+    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}
+    .grad-card{background:linear-gradient(135deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
+    .label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+    .big-amount{font-size:32px;font-weight:800;margin:6px 0 2px;letter-spacing:-.5px}
+    .muted{color:var(--muted)}
+    .section-title{font-size:13px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin:22px 4px 10px;display:flex;justify-content:space-between;align-items:center}
+    .section-title .link-btn{text-transform:none;letter-spacing:0;font-size:13px;color:var(--accent2);font-weight:600}
+
+    .stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
+    .stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+    .stat .s-label{font-size:12px;color:var(--muted);font-weight:600}
+    .stat .s-val{font-size:22px;font-weight:800;margin-top:4px}
+
+    .item{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px 14px;margin-bottom:9px;position:relative}
+    .item .emoji{font-size:21px;width:42px;height:42px;flex:0 0 42px;display:flex;align-items:center;justify-content:center;background:var(--card2);border-radius:12px}
+    .item .body{flex:1;min-width:0}
+    .item .t1{font-weight:600;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .item .t2{font-size:12.5px;color:var(--muted);margin-top:2px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .item .amt{font-weight:800;font-size:16px;white-space:nowrap}
+    .del-btn{background:transparent;color:var(--muted);font-size:22px;padding:2px 6px;line-height:1;border-radius:8px}
+    .del-btn:active{background:var(--card2)}
+    .pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:99px}
+    .pill .pd{width:8px;height:8px;border-radius:50%}
+    .tag{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--card2)}
+
+    .empty{text-align:center;color:var(--muted);padding:30px 20px;font-size:14.5px}
+    .empty .big{font-size:38px;margin-bottom:8px}
+
+    /* check items */
+    .check{width:26px;height:26px;flex:0 0 26px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;background:transparent;transition:.15s}
+    .done .check{background:var(--green);border-color:var(--green)}
+    .done .t1{text-decoration:line-through;color:var(--muted)}
+
+    .chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
+    .chips::-webkit-scrollbar{display:none}
+    .chip{flex:0 0 auto;padding:8px 15px;border-radius:99px;background:var(--card);border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--muted)}
+    .chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+    .seg2{display:flex;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:4px;margin-bottom:14px}
+    .seg2 button{flex:1;padding:10px;border-radius:10px;font-weight:600;font-size:14px;color:var(--muted)}
+    .seg2 button.on{background:var(--accent);color:#fff}
+
+    /* calendar */
+    .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .cal-head .m-label{font-weight:800;font-size:18px;text-transform:capitalize}
+    .cal-head button{font-size:20px;width:38px;height:38px;border-radius:12px;background:var(--card);border:1px solid var(--line)}
+    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+    .cal-dow{text-align:center;font-size:11px;color:var(--muted);font-weight:700;padding-bottom:4px}
+    .cal-cell{aspect-ratio:1;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:600;background:var(--card);border:1px solid transparent;position:relative;color:var(--txt)}
+    .cal-cell.out{color:var(--muted);opacity:.35}
+    .cal-cell.today{border-color:var(--accent2)}
+    .cal-cell.sel{background:var(--accent);color:#fff}
+    .cal-cell .dots{display:flex;gap:2px;margin-top:3px;height:5px}
+    .cal-cell .dots i{width:5px;height:5px;border-radius:50%;display:block}
+
+    .fab{position:fixed;right:18px;bottom:calc(90px + env(safe-area-inset-bottom));z-index:30;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-size:30px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(99,102,241,.5);font-weight:300}
+    .fab:active{transform:scale(.94)}
+
+    nav.tabbar{position:fixed;bottom:0;left:0;right:0;z-index:25;background:rgba(16,19,36,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;padding:8px 0 calc(8px + env(safe-area-inset-bottom))}
+    .tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:10.5px;font-weight:600;padding:4px 0}
+    .tabbar button .ic{font-size:21px;line-height:1}
+    .tabbar button.active{color:var(--accent2)}
+
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;display:flex;align-items:flex-end;justify-content:center;animation:fade .2s}
+    .sheet{background:var(--card);width:100%;max-width:600px;border-radius:24px 24px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom));max-height:92vh;overflow-y:auto;animation:slideUp .28s cubic-bezier(.2,.8,.2,1);box-shadow:var(--shadow)}
+    @keyframes slideUp{from{transform:translateY(100%)}to{transform:none}}
+    .sheet h2{margin:0 0 4px;font-size:19px}
+    .grab{width:44px;height:5px;background:var(--line);border-radius:99px;margin:-2px auto 14px}
+    .field{margin-bottom:14px}
+    .field label{display:block;font-size:13px;color:var(--muted);font-weight:600;margin-bottom:6px}
+    .field input,.field select,.field textarea{width:100%;padding:13px 14px;border-radius:13px;background:var(--card2);border:1px solid var(--line);color:var(--txt);outline:none}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+    .field textarea{resize:vertical;min-height:60px}
+    .seg{display:flex;gap:8px}
+    .seg button{flex:1;padding:12px;border-radius:13px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:14px;color:var(--muted)}
+    .seg button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+    .seg button.on0{background:var(--u0);border-color:var(--u0);color:#fff}
+    .seg button.on1{background:var(--u1);border-color:var(--u1);color:#fff}
+    .seg button.on2{background:var(--both);border-color:var(--both);color:#fff}
+    .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .cat-grid button{padding:10px 4px;border-radius:13px;background:var(--card2);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--muted)}
+    .cat-grid button.on{border-color:var(--accent);background:rgba(99,102,241,.18);color:var(--txt)}
+    .cat-grid button .ce{font-size:20px}
+    .btn-primary{width:100%;padding:15px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-weight:700;font-size:16px;margin-top:6px}
+    .btn-primary.danger{background:linear-gradient(135deg,#f43f5e,#e11d48)}
+    .btn-ghost{width:100%;padding:13px;border-radius:14px;background:transparent;color:var(--muted);font-weight:600;font-size:14px;margin-top:4px}
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--card2);border:1px solid var(--line);border-radius:13px}
+    .switch{width:48px;height:28px;border-radius:99px;background:var(--line);position:relative;transition:.2s;flex:0 0 48px}
+    .switch.on{background:var(--green)}
+    .switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s}
+    .switch.on::after{left:23px}
+    .add-menu button{width:100%;display:flex;align-items:center;gap:14px;padding:15px;border-radius:14px;background:var(--card2);border:1px solid var(--line);margin-bottom:10px;font-size:16px;font-weight:600}
+    .add-menu button .me{font-size:24px}
+
+    .center-screen{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:26px 22px;max-width:520px;margin:0 auto}
+    .logo{font-size:52px;text-align:center;margin-bottom:6px}
+    .center-screen h1{text-align:center;font-size:26px;margin:0 0 6px}
+    .center-screen p.lead{text-align:center;color:var(--muted);font-size:15px;margin:0 0 24px}
+    .steps{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:18px;font-size:14px}
+    .steps ol{margin:8px 0 0;padding-left:20px}
+    .steps li{margin-bottom:9px;color:var(--muted)}
+    .steps li b{color:var(--txt)} .steps a{color:var(--accent2)}
+    .who-pick{display:flex;gap:14px;margin-top:10px}
+    .who-pick button{flex:1;padding:24px 14px;border-radius:20px;background:var(--card);border:2px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:10px;font-size:17px;font-weight:700}
+    .who-pick button .av{width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;color:#fff}
+    .who-pick button:active{transform:scale(.97)}
+    .note{font-size:12.5px;color:var(--muted);margin-top:10px;text-align:center;line-height:1.5}
+    .err{background:rgba(244,63,94,.15);border:1px solid var(--red);color:#fecdd3;padding:11px 13px;border-radius:12px;font-size:13.5px;margin-bottom:14px}
+    .toast{position:fixed;bottom:calc(100px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#000;color:#fff;padding:11px 18px;border-radius:99px;font-size:13.5px;z-index:60;box-shadow:var(--shadow);opacity:0;transition:.25s;pointer-events:none}
+    .toast.show{opacity:1}
+    code{background:var(--card2);padding:1px 5px;border-radius:5px;font-size:12.5px}
+    .loading-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--muted)}
+    .spinner{width:34px;height:34px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .note-item{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:14px;padding:12px 14px;margin-bottom:9px}
+    .note-item .nt{font-size:14.5px;white-space:pre-wrap;word-break:break-word}
+    .note-item .nm{font-size:11.5px;color:var(--muted);margin-top:6px;display:flex;align-items:center;gap:6px}
+    .qa-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 4px}
+    .qa{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--muted)}
+    .qa .qe{font-size:22px}
+  </style>
 </head>
 <body>
-<title>Buddy — Preview</title>
-<style>
-  :root {
-    --bg: #f4f7f7;
-    --card: #ffffff;
-    --ink: #0f172a;
-    --soft: #334155;
-    --muted: #64748b;
-    --line: #e6ecec;
-    --line-soft: #f1f5f5;
-    --accent: #0d9488;
-    --accent-600: #0d9488;
-    --accent-700: #0f766e;
-    --accent-50: #ecfdf9;
-    --accent-100: #d1f5ee;
-    --amber-bg: #fdf6e7;
-    --amber-line: #f3e2b8;
-    --amber-ink: #8a6d1f;
-    --shadow: 0 1px 2px rgba(15,23,42,.05), 0 8px 24px rgba(15,23,42,.06);
-    --radius: 16px;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0b1220;
-      --card: #111a2b;
-      --ink: #eef2f7;
-      --soft: #c3ccd8;
-      --muted: #8b97a7;
-      --line: #223047;
-      --line-soft: #1a2438;
-      --accent: #2dd4bf;
-      --accent-600: #14b8a6;
-      --accent-700: #5eead4;
-      --accent-50: #10241f;
-      --accent-100: #14312a;
-      --amber-bg: #2a2210;
-      --amber-line: #4a3c17;
-      --amber-ink: #e4c96a;
-      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #0b1220; --card: #111a2b; --ink: #eef2f7; --soft: #c3ccd8;
-    --muted: #8b97a7; --line: #223047; --line-soft: #1a2438;
-    --accent: #2dd4bf; --accent-600: #14b8a6; --accent-700: #5eead4;
-    --accent-50: #10241f; --accent-100: #14312a;
-    --amber-bg: #2a2210; --amber-line: #4a3c17; --amber-ink: #e4c96a;
-    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
-  }
-  :root[data-theme="light"] {
-    --bg: #f4f7f7; --card: #ffffff; --ink: #0f172a; --soft: #334155;
-    --muted: #64748b; --line: #e6ecec; --line-soft: #f1f5f5;
-    --accent: #0d9488; --accent-600: #0d9488; --accent-700: #0f766e;
-    --accent-50: #ecfdf9; --accent-100: #d1f5ee;
-    --amber-bg: #fdf6e7; --amber-line: #f3e2b8; --amber-ink: #8a6d1f;
-    --shadow: 0 1px 2px rgba(15,23,42,.05), 0 8px 24px rgba(15,23,42,.06);
-  }
 
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    line-height: 1.5;
-  }
-  .app { max-width: 640px; margin: 0 auto; padding-bottom: 92px; }
-
-  /* App bar */
-  .appbar {
-    position: sticky; top: 0; z-index: 20;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 12px; padding: 14px 18px;
-    background: color-mix(in srgb, var(--bg) 86%, transparent);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--line);
-  }
-  .brand { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 17px; letter-spacing: -.01em; }
-  .logo { width: 30px; height: 30px; border-radius: 9px; background: var(--accent-600); color: #fff; display: grid; place-items: center; font-weight: 800; }
-  .preview-tag { font-size: 11px; font-weight: 600; color: var(--accent-700); background: var(--accent-50); border: 1px solid var(--accent-100); padding: 3px 8px; border-radius: 999px; }
-  .theme-btn { border: 1px solid var(--line); background: var(--card); color: var(--soft); border-radius: 10px; padding: 6px 10px; font-size: 13px; cursor: pointer; }
-
-  main { padding: 18px; }
-  section[hidden] { display: none; }
-
-  .eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--accent-700); background: var(--accent-50); border: 1px solid var(--accent-100); padding: 4px 10px; border-radius: 999px; }
-  h1 { font-size: 26px; line-height: 1.15; letter-spacing: -.02em; margin: 14px 0 8px; text-wrap: balance; }
-  h2 { font-size: 18px; letter-spacing: -.01em; margin: 0 0 4px; }
-  h3 { font-size: 15px; margin: 0; }
-  .lead { color: var(--soft); font-size: 15px; margin: 0 0 6px; }
-  .muted { color: var(--muted); }
-
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; }
-  .card + .card, .stack > * + * { margin-top: 14px; }
-  .stack > * + * { margin-top: 14px; }
-
-  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; font-weight: 600; font-size: 15px; padding: 11px 16px; border: 1px solid transparent; cursor: pointer; text-decoration: none; transition: background .15s, border-color .15s; }
-  .btn-primary { background: var(--accent-600); color: #fff; }
-  .btn-primary:hover { background: var(--accent-700); }
-  .btn-secondary { background: var(--card); color: var(--ink); border-color: var(--line); }
-  .btn-secondary:hover { border-color: var(--muted); }
-  .btn-sm { font-size: 13px; padding: 7px 12px; border-radius: 10px; }
-  .btn-block { width: 100%; }
-
-  label.field { display: block; }
-  .field-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-  .field-hint { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
-  input, select, textarea {
-    width: 100%; font: inherit; color: var(--ink);
-    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
-    padding: 11px 12px; font-size: 15px;
-  }
-  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-50); }
-  textarea { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; line-height: 1.55; resize: vertical; }
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  @media (max-width: 460px) { .grid2 { grid-template-columns: 1fr; } }
-
-  .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-  .between { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
-
-  .badge { font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 999px; }
-  .badge-accent { background: var(--accent-50); color: var(--accent-700); }
-  .badge-neutral { background: var(--line-soft); color: var(--muted); }
-
-  .callout { background: var(--accent-50); color: var(--accent-700); border: 1px solid var(--accent-100); border-radius: 12px; padding: 12px 14px; font-size: 14px; }
-  .warn { background: var(--amber-bg); border: 1px solid var(--amber-line); color: var(--amber-ink); border-radius: 12px; padding: 12px 14px; font-size: 14px; }
-  .warn ul { margin: 6px 0 0; padding-left: 18px; }
-
-  dl.fields { margin: 0; }
-  dl.fields > div { padding: 10px 0; border-top: 1px solid var(--line-soft); }
-  dl.fields > div:first-child { border-top: 0; }
-  dl.fields dt { font-size: 11px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: var(--muted); }
-  dl.fields dd { margin: 3px 0 0; font-size: 14.5px; }
-  dl.fields dd.note { font-size: 12px; color: var(--muted); }
-  .todo { color: var(--amber-ink); font-style: italic; }
-
-  ul.bring { list-style: none; margin: 8px 0 0; padding: 0; }
-  ul.bring li { display: flex; gap: 8px; font-size: 14px; color: var(--soft); padding: 3px 0; }
-  ul.bring li b { color: var(--accent); }
-  .say { background: var(--line-soft); border-radius: 12px; padding: 12px 14px; font-size: 14px; color: var(--soft); }
-
-  /* Chips (provinces) */
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip { border: 1px solid var(--line); background: var(--card); color: var(--soft); border-radius: 10px; padding: 7px 11px; font-size: 14px; cursor: pointer; }
-  .chip small { color: var(--muted); }
-  .chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-50); color: var(--accent-700); }
-  .region-label { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin: 16px 0 8px; }
-  .region-label:first-child { margin-top: 4px; }
-  .province-list { max-height: 46vh; overflow-y: auto; padding-right: 4px; }
-
-  .link { color: var(--accent-700); font-weight: 600; text-decoration: none; }
-  .link:hover { text-decoration: underline; }
-
-  .disclaimer { margin-top: 18px; background: var(--line-soft); border-radius: 12px; padding: 14px; font-size: 12px; color: var(--muted); }
-
-  /* Bottom tab bar */
-  .tabbar {
-    position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
-    display: flex; justify-content: center; gap: 4px;
-    padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
-    background: color-mix(in srgb, var(--card) 92%, transparent);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid var(--line);
-  }
-  .tabbar-inner { display: flex; gap: 2px; width: 100%; max-width: 640px; }
-  .tab { flex: 1; border: 0; background: transparent; color: var(--muted); cursor: pointer; border-radius: 12px; padding: 7px 4px; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; font-weight: 600; }
-  .tab svg { width: 22px; height: 22px; }
-  .tab[aria-selected="true"] { color: var(--accent-700); background: var(--accent-50); }
-
-  .hero-cta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
-  .feature { display: flex; gap: 12px; align-items: flex-start; }
-  .feature .dot { margin-top: 4px; width: 8px; height: 8px; border-radius: 999px; background: var(--accent); flex: none; }
-  .plan-step { display: flex; gap: 14px; }
-  .plan-num { flex: none; width: 34px; height: 34px; border-radius: 999px; background: var(--accent-50); color: var(--accent-700); display: grid; place-items: center; font-weight: 700; font-size: 14px; }
-  .plan-num.primary { background: var(--accent-600); color: #fff; }
-  a { color: var(--accent-700); }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-  /* Signable module (print / save as PDF) */
-  #moduleSheet { display: none; }
-  #moduleSheet .m-h1 { font-size: 18px; font-weight: 800; color: #0f766e; margin: 0 0 2px; }
-  #moduleSheet .m-sub { font-size: 10px; color: #555; margin: 0 0 12px; }
-  #moduleSheet .m-sec { font-size: 12px; font-weight: 800; color: #0f766e; letter-spacing: .04em; margin: 14px 0 8px; border-top: 1px solid #cfd8d8; padding-top: 10px; }
-  #moduleSheet .mf { margin: 0 0 9px; }
-  #moduleSheet .ml { font-size: 8px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; color: #6b7280; }
-  #moduleSheet .mv { font-size: 12px; color: #111; }
-  #moduleSheet .mn { font-size: 8px; color: #6b7280; }
-  #moduleSheet .m-decl { font-size: 11px; color: #111; margin: 2px 0 22px; }
-  #moduleSheet .m-sign { display: flex; gap: 30px; }
-  #moduleSheet .m-sign > div { flex: 1; }
-  #moduleSheet .m-cap { font-size: 8px; color: #6b7280; }
-  #moduleSheet .m-line { border-bottom: 1px solid #111; height: 34px; }
-  #moduleSheet .m-foot { font-size: 8px; color: #6b7280; margin-top: 18px; }
-  @media print {
-    body > *:not(#moduleSheet) { display: none !important; }
-    #moduleSheet { display: block !important; padding: 8mm; color: #111; }
-  }
-</style>
-
-<div class="app">
-  <div class="appbar">
-    <div class="brand"><span class="logo">B</span> Buddy <span class="preview-tag">Preview</span></div>
-    <button class="theme-btn" id="themeBtn" type="button">Theme</button>
-  </div>
-
-  <main>
-    <!-- HOME -->
-    <section id="home">
-      <span class="eyebrow">Interactive preview · runs in your browser</span>
-      <h1>Stop reading endless guides.</h1>
-      <p class="lead">Tell Buddy your situation once and get the exact forms, emails, and steps for Italian bureaucracy — starting with the one document everything depends on: your <b>Codice Fiscale</b>.</p>
-      <div class="callout" style="margin-top:14px">This is a live preview. The <b>Codice Fiscale generator</b> and the <b>Questure directory</b> below work fully offline, on your phone. Nothing you type is sent or saved.</div>
-      <div class="hero-cta">
-        <a class="btn btn-primary" href="#" data-go="cf">Try the Codice Fiscale →</a>
-        <a class="btn btn-secondary" href="#" data-go="questure">Find your Questura</a>
-      </div>
-
-      <div class="card" style="margin-top:22px">
-        <div class="stack">
-          <div class="feature"><span class="dot"></span><div><h3>One short intake</h3><p class="muted" style="margin:2px 0 0;font-size:14px">A few questions about your nationality, status and city — once.</p></div></div>
-          <div class="feature"><span class="dot"></span><div><h3>Artifacts, not essays</h3><p class="muted" style="margin:2px 0 0;font-size:14px">Pre-filled form fields, ready-to-send emails, appointment scripts.</p></div></div>
-          <div class="feature"><span class="dot"></span><div><h3>The right office, first time</h3><p class="muted" style="margin:2px 0 0;font-size:14px">The competent Questura / Ufficio Immigrazione for any province.</p></div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CODICE FISCALE -->
-    <section id="cf" hidden>
-      <span class="eyebrow">Modello AA4/8 · Agenzia delle Entrate</span>
-      <h1>Request your Codice Fiscale</h1>
-      <p class="lead">Fill this once. Buddy maps it onto the official Modello AA4/8 and builds a ready-to-send request — field values, the email (Italian + English), and what to say at the office.</p>
-
-      <div class="card">
-        <h2>Your details</h2>
-        <div class="grid2" style="margin-top:12px">
-          <label class="field"><span class="field-label">First name</span><input id="firstName" value="João"></label>
-          <label class="field"><span class="field-label">Last name</span><input id="lastName" value="Silva"></label>
-          <label class="field"><span class="field-label">Sex</span><select id="sex"><option value="M">M — Male</option><option value="F">F — Female</option></select></label>
-          <label class="field"><span class="field-label">Date of birth</span><input id="dateOfBirth" type="date" value="1992-05-14"></label>
-          <label class="field"><span class="field-label">Nationality</span><input id="nationality" value="Brazilian"></label>
-          <label class="field"><span class="field-label">EU status</span><select id="euStatus"><option value="non_eu">Non-EU</option><option value="eu">EU / EEA / Swiss</option></select></label>
-          <label class="field"><span class="field-label">Where are you now?</span><select id="location"><option value="in_italy">Already in Italy</option><option value="abroad">Still abroad</option></select></label>
-          <label class="field"><span class="field-label">Reason</span><select id="reason"><option value="work">Work</option><option value="study">Study</option><option value="family">Family</option><option value="elective_residence">Elective residence</option></select></label>
-          <label class="field"><span class="field-label">Country of birth</span><input id="countryOfBirth" value="Brazil"></label>
-          <label class="field"><span class="field-label">City / town of birth</span><input id="cityOfBirth" value="São Paulo"></label>
-          <label class="field"><span class="field-label">Province of birth</span><span class="field-hint">Only if born in Italy (sigla)</span><input id="provinceOfBirth" placeholder="e.g. MI"></label>
-          <label class="field"><span class="field-label">Comune of residence</span><input id="addressComune" value="Milano"></label>
-          <label class="field"><span class="field-label">Province</span><input id="addressProvincia" value="MI" placeholder="e.g. MI"></label>
-          <label class="field"><span class="field-label">Street + number</span><input id="addressStreet" value="Via Roma 12"></label>
-          <label class="field"><span class="field-label">CAP</span><input id="addressCap" value="20121" placeholder="5 digits"></label>
-          <label class="field"><span class="field-label">Contact email</span><input id="contactEmail" type="email" value="joao@example.com"></label>
-          <label class="field"><span class="field-label">Identity document</span><select id="documentType"><option value="passport">Passport</option><option value="id_card">National ID card</option><option value="permesso">Permesso di soggiorno</option></select></label>
-          <label class="field"><span class="field-label">Document number</span><input id="documentNumber" value="BR1234567"></label>
-        </div>
-        <button class="btn btn-primary btn-block" id="genBtn" type="button" style="margin-top:16px">Generate my request</button>
-      </div>
-
-      <div id="cfOut" class="stack" style="margin-top:20px"></div>
-    </section>
-
-    <!-- QUESTURE -->
-    <section id="questure" hidden>
-      <span class="eyebrow">Polizia di Stato · Ufficio Immigrazione</span>
-      <h1>Immigration offices (Questure)</h1>
-      <p class="lead">The Ufficio Immigrazione sits inside the Questura and handles your permesso di soggiorno. The competent office is the one for the <b>province where you live</b>. Pick your province (<span id="pcount"></span> covered).</p>
-      <input id="provSearch" placeholder="Search province, sigla or region (e.g. Milano, MI, Lombardia)" style="margin:6px 0 12px">
-      <div id="provList" class="province-list card"></div>
-      <div id="provDetail" style="margin-top:14px"></div>
-    </section>
-
-    <!-- PIANO -->
-    <section id="piano" hidden>
-      <span class="eyebrow">Your plan</span>
-      <h1>A real plan, in order</h1>
-      <p class="lead">A numbered sequence with dependencies, so you always know what comes next. The Codice Fiscale is first because almost everything else needs it.</p>
-      <div class="stack" style="margin-top:6px">
-        <div class="card"><div class="plan-step"><div class="plan-num primary">1</div><div><div class="between"><h3>Get your Codice Fiscale</h3><span class="badge badge-accent">Start here</span></div><p class="muted" style="margin:6px 0 0;font-size:14px">Your Italian tax code — the prerequisite for residency, health card, contracts and a bank account.</p><a class="btn btn-secondary btn-sm" href="#" data-go="cf" style="margin-top:10px">Prepare my request →</a></div></div></div>
-        <div class="card"><div class="plan-step"><div class="plan-num">2</div><div><h3>Register your residency</h3><p class="muted" style="margin:6px 0 0;font-size:14px">Dichiarazione di residenza at your Comune. <b>Requires:</b> Codice Fiscale.</p></div></div></div>
-        <div class="card"><div class="plan-step"><div class="plan-num">3</div><div><h3>Get your Tessera Sanitaria</h3><p class="muted" style="margin:6px 0 0;font-size:14px">Enrol in the SSN at the ASL. <b>Requires:</b> Codice Fiscale + residency.</p></div></div></div>
-      </div>
-      <p class="disclaimer">In the full app, steps 2 and 3 reuse your Codice Fiscale details to generate the same kind of request. This preview focuses on step 1 and the offices directory.</p>
-    </section>
-
-    <p class="disclaimer">Buddy is an information tool, not legal or tax advice. Always verify with official sources. This preview stores nothing and makes no network calls of its own.</p>
-  </main>
-
-  <nav class="tabbar"><div class="tabbar-inner" id="tabs">
-    <button class="tab" data-tab="home" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>Home</button>
-    <button class="tab" data-tab="cf" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Codice F.</button>
-    <button class="tab" data-tab="questure" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-5.2 7-11a7 7 0 1 0-14 0c0 5.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>Questure</button>
-    <button class="tab" data-tab="piano" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 6h14M5 12h14M5 18h9"/></svg>Piano</button>
-  </div></nav>
-
-  <div id="moduleSheet"></div>
-</div>
+<div id="screen-loading" class="loading-screen"><div class="spinner"></div><div>Caricamento…</div></div>
 
 <script>
-(function () {
-  "use strict";
-
-  /* ---------- Theme ---------- */
-  var root = document.documentElement;
-  document.getElementById("themeBtn").addEventListener("click", function () {
-    var dark = root.getAttribute("data-theme") === "dark"
-      || (!root.getAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
-    root.setAttribute("data-theme", dark ? "light" : "dark");
-  });
-
-  /* ---------- Tabs ---------- */
-  var sections = ["home", "cf", "questure", "piano"];
-  function show(tab) {
-    sections.forEach(function (s) { document.getElementById(s).hidden = (s !== tab); });
-    document.querySelectorAll(".tab").forEach(function (t) {
-      t.setAttribute("aria-selected", t.dataset.tab === tab ? "true" : "false");
-    });
-    window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
-  }
-  document.getElementById("tabs").addEventListener("click", function (e) {
-    var b = e.target.closest(".tab"); if (b) show(b.dataset.tab);
-  });
-  document.querySelectorAll("[data-go]").forEach(function (el) {
-    el.addEventListener("click", function (e) { e.preventDefault(); show(el.dataset.go); });
-  });
-
-  /* ---------- Helpers ---------- */
-  function val(id) { return (document.getElementById(id).value || "").trim(); }
-  function esc(s) { return String(s).replace(/[&<>]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]; }); }
-  function itDate(iso) { if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return ""; var p = iso.split("-"); return p[2] + "/" + p[1] + "/" + p[0]; }
-  var DOC = { passport: "Passport", id_card: "National ID card", permesso: "Permesso di soggiorno" };
-
-  /* ---------- Codice Fiscale builder (faithful to the server's deterministic kit) ---------- */
-  function buildKit(p) {
-    var abroad = p.location === "abroad", nonEu = p.euStatus === "non_eu";
-    var fullName = [p.firstName, p.lastName].filter(Boolean).join(" ");
-    var birthPlace = [p.cityOfBirth, p.countryOfBirth].filter(Boolean).join(", ");
-    var address = [p.addressStreet, [p.addressCap, p.addressComune].filter(Boolean).join(" "), p.addressProvincia ? "(" + p.addressProvincia + ")" : ""].filter(Boolean).join(", ");
-    var docLabel = p.documentType ? (DOC[p.documentType] || p.documentType) : "";
-    var docFull = docLabel ? (docLabel + " n. " + (p.documentNumber || "")).trim() : "";
-
-    var rows = [
-      { l: "Tipo di richiesta", v: "Attribuzione codice fiscale (nuovo)" },
-      { l: "Cognome / Surname", v: p.lastName, req: 1 },
-      { l: "Nome / First name", v: p.firstName, req: 1 },
-      { l: "Sesso / Sex", v: p.sex === "M" ? "M" : p.sex === "F" ? "F" : "", req: 1 },
-      { l: "Data di nascita / Date of birth", v: itDate(p.dateOfBirth), req: 1 },
-      { l: "Comune (o Stato estero) di nascita / Place of birth", v: birthPlace, req: 1 },
-      { l: "Provincia di nascita / Province of birth", v: p.provinceOfBirth, n: "Solo se nato/a in Italia. — Only if born in Italy." },
-      { l: "Cittadinanza / Citizenship", v: p.nationality },
-      { l: "Comune di domicilio in Italia / Comune of residence", v: p.addressComune, req: !abroad, n: abroad ? "Indicalo appena disponibile. — Provide once you have an Italian address." : "" },
-      { l: "Provincia / Province", v: p.addressProvincia },
-      { l: "Indirizzo (via e numero civico) / Street and number", v: p.addressStreet, req: !abroad },
-      { l: "CAP / Postal code", v: p.addressCap },
-      { l: "Documento di riconoscimento / Identity document", v: docFull, req: 1, n: nonEu ? "Allega copia del passaporto e del permesso di soggiorno (o della ricevuta). — Attach passport + permesso." : "Allega copia di un documento valido. — Attach a valid ID." },
-      { l: "Email di contatto / Contact email", v: p.contactEmail, req: 1 }
-    ];
-    var missing = rows.filter(function (r) { return r.req && !(r.v && String(r.v).trim()); }).map(function (r) { return r.l; });
-    var fields = rows.map(function (r) {
-      return { label: r.l, value: (r.v || "").toString().trim(), note: r.n || (r.req && !(r.v && String(r.v).trim()) ? "Campo obbligatorio: da completare. — Required." : "") };
-    });
-
-    var name = fullName || "[Nome e cognome]";
-    var dob = itDate(p.dateOfBirth) || "[data di nascita]";
-    var doc = (docLabel && p.documentNumber) ? (docLabel + " n. " + p.documentNumber) : "[documento di identità]";
-    var email;
-    if (abroad) {
-      email = {
-        to: "[email del Consolato italiano competente per il tuo Paese di residenza]",
-        subject: "Richiesta di attribuzione del codice fiscale tramite Consolato",
-        italian: "Oggetto: Richiesta di attribuzione del codice fiscale tramite Consolato\n\nSpett.le Consolato,\n\nil/la sottoscritto/a " + name + ", nato/a a " + (birthPlace || "[luogo di nascita]") + " il " + dob + ", cittadinanza " + p.nationality + ", residente all'estero" + (address ? " (recapito: " + address + ")" : "") + ", chiede l'attribuzione del codice fiscale italiano tramite codesto Consolato.\n\nIn allegato trasmetto il Modello AA4/8 compilato e copia del mio " + doc + ".\n\nChiedo di ricevere il codice fiscale a questo indirizzo email: " + (p.contactEmail || "[la tua email]") + ".\n\nCordiali saluti,\n" + name,
-        english: "Subject: Request for the Italian Codice Fiscale through the Consulate\n\nTo the Consulate,\n\nI, " + name + ", born in " + (birthPlace || "[place of birth]") + " on " + dob + ", citizenship " + p.nationality + ", resident abroad, request the attribution of the Italian Codice Fiscale through your Consulate.\n\nAttached: the completed Modello AA4/8 and a copy of my " + doc + ".\n\nPlease send the Codice Fiscale to: " + (p.contactEmail || "[your email]") + ".\n\nKind regards,\n" + name
-      };
-    } else {
-      var att = nonEu ? "il Modello AA4/8 compilato, copia del passaporto e copia del permesso di soggiorno (o della ricevuta di richiesta)" : "il Modello AA4/8 compilato e copia di un documento d'identità valido";
-      email = {
-        to: "[PEC o email dell'ufficio Agenzia delle Entrate competente — trova l'ufficio su agenziaentrate.gov.it]",
-        subject: "Richiesta di attribuzione del codice fiscale",
-        italian: "Oggetto: Richiesta di attribuzione del codice fiscale\n\nSpett.le Ufficio,\n\nil/la sottoscritto/a " + name + ", nato/a a " + (birthPlace || "[luogo di nascita]") + " il " + dob + ", cittadinanza " + p.nationality + ", " + (address ? "domiciliato/a in " + address : "attualmente in fase di registrazione del domicilio in Italia") + ", identificato/a tramite " + doc + ", chiede l'attribuzione del codice fiscale ai sensi della normativa vigente.\n\nIn allegato trasmetto " + att + ".\n\nChiedo cortesemente di ricevere il certificato di attribuzione del codice fiscale a questo indirizzo email: " + (p.contactEmail || "[la tua email]") + ".\n\nCordiali saluti,\n" + name,
-        english: "Subject: Request for attribution of the Codice Fiscale (Italian tax code)\n\nTo the Office,\n\nI, " + name + ", born in " + (birthPlace || "[place of birth]") + " on " + dob + ", citizenship " + p.nationality + ", " + (address ? "residing at " + address : "currently registering my address in Italy") + ", identified by " + doc + ", request the attribution of the Codice Fiscale under the applicable rules.\n\nAttached: " + (nonEu ? "the completed Modello AA4/8, a copy of my passport, and a copy of my permesso di soggiorno (or its request receipt)" : "the completed Modello AA4/8 and a copy of a valid ID") + ".\n\nPlease send the certificate to: " + (p.contactEmail || "[your email]") + ".\n\nKind regards,\n" + name
-      };
-    }
-
-    var bring = ["A valid passport or national ID (original + a photocopy)"];
-    if (nonEu) bring.push("Your permesso di soggiorno — or the receipt of your application, if still pending");
-    bring.push("The completed Modello AA4/8 (printed and signed)", "This pre-filled data sheet, to copy from");
-    if (!abroad) bring.push("Proof of your Italian address, if you already have one");
-    var say = abroad
-      ? "Ask the consulate: «Vorrei richiedere il codice fiscale. Ho compilato il Modello AA4/8 e allego il mio documento.»"
-      : "At the counter: «Buongiorno, vorrei richiedere il codice fiscale. Ho già compilato il Modello AA4/8 e ho con me il documento di identità.» The certificate is normally issued immediately, free of charge.";
-
-    return {
-      form: "Modello AA4/8 — Domanda di attribuzione del codice fiscale",
-      channel: abroad
-        ? "You're abroad: submit through the Italian consulate for your country of residence; it forwards the request to the Agenzia delle Entrate. Free of charge."
-        : "You're in Italy: submit Modello AA4/8 to any Agenzia delle Entrate office — in person or by PEC/email — with a copy of your ID. Free, usually issued on the spot.",
-      fields: fields, missing: missing, email: email,
-      bring: bring, say: say
-    };
-  }
-
-  function copyBtn(text) {
-    var id = "c" + Math.random().toString(36).slice(2, 8);
+  // Watchdog: se i componenti (Firebase) non si caricano, evita lo spinner infinito
+  window.addEventListener('load', function () {
     setTimeout(function () {
-      var b = document.getElementById(id); if (!b) return;
-      b.addEventListener("click", function () {
-        (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
-          .then(function () { b.textContent = "Copied ✓"; setTimeout(function () { b.textContent = b.dataset.label; }, 1400); })
-          .catch(function () {});
-      });
-    }, 0);
-    return '<button class="btn btn-secondary btn-sm" id="' + id + '" data-label="Copy" type="button">Copy</button>';
-  }
+      var ld = document.getElementById('screen-loading');
+      if (!window.__insiemeBooted && ld && !ld.classList.contains('hidden')) {
+        ld.innerHTML = '<div style="text-align:center;padding:34px 26px;color:#9aa0c7;max-width:420px">'
+          + '<div style="font-size:44px">📡</div>'
+          + '<h2 style="color:#eef0ff;margin:10px 0 6px">Connessione assente</h2>'
+          + '<p style="font-size:14.5px">Non riesco a caricare i componenti dell\'app. Serve una connessione a Internet al primo avvio. Controlla la rete e riprova.</p>'
+          + '<button onclick="location.reload()" style="margin-top:16px;padding:13px 22px;border-radius:13px;background:#6366f1;color:#fff;border:none;font-weight:700;font-size:15px">Riprova</button>'
+          + '</div>';
+      }
+    }, 8000);
+  });
+</script>
 
-  function renderKit(k) {
-    var h = "";
-    h += '<div class="between"><h2>Your ready-to-send request</h2><span class="badge badge-neutral">Standard</span></div>';
-    h += '<p class="muted" style="margin:2px 0 0;font-size:13px">Target form: ' + esc(k.form) + '</p>';
-    if (k.missing.length) {
-      h += '<div class="warn" style="margin-top:12px"><b>Still needed before you submit</b><ul>' + k.missing.map(function (m) { return "<li>" + esc(m) + "</li>"; }).join("") + '</ul></div>';
+<!-- SETUP -->
+<div id="screen-setup" class="center-screen hidden">
+  <div class="logo">🏡</div>
+  <h1>Insieme</h1>
+  <p class="lead">L'organizer della vostra famiglia</p>
+  <div id="setup-err" class="err hidden"></div>
+  <div class="steps">
+    <b>Configurazione iniziale (una sola volta, ~2 min):</b>
+    <ol>
+      <li>Vai su <a href="https://console.firebase.google.com" target="_blank" rel="noopener">console.firebase.google.com</a> e crea un progetto (gratis).</li>
+      <li>Menu <b>Build → Firestore Database</b> → <b>Crea database</b> → modalità <b>test</b>.</li>
+      <li>In <b>⚙️ Impostazioni progetto → Le tue app</b>, aggiungi un'app <b>Web &lt;/&gt;</b> e copia l'oggetto <code>firebaseConfig</code>.</li>
+      <li>Incollalo qui sotto 👇</li>
+    </ol>
+  </div>
+  <div class="field">
+    <label>Configurazione Firebase</label>
+    <textarea id="cfg-input" rows="7" placeholder='{
+  apiKey: "AIza...",
+  authDomain: "tuo-progetto.firebaseapp.com",
+  projectId: "tuo-progetto",
+  ...
+}'></textarea>
+  </div>
+  <div class="field"><label>Codice famiglia (parola segreta uguale per entrambi)</label><input id="cfg-family" type="text" placeholder="es. casa-rossi-2026" autocapitalize="none" autocorrect="off"></div>
+  <div class="field"><label>Il tuo nome</label><input id="cfg-name0" type="text" placeholder="es. Francesco" autocapitalize="words"></div>
+  <div class="field"><label>Nome del/della partner</label><input id="cfg-name1" type="text" placeholder="es. Maria" autocapitalize="words"></div>
+  <button class="btn-primary" id="cfg-save">Salva e continua</button>
+  <p class="note">La configurazione resta sul tuo telefono. Sull'altro telefono usate lo <b>stesso</b> codice famiglia e la <b>stessa</b> configurazione per condividere gli stessi dati.</p>
+</div>
+
+<!-- WHO -->
+<div id="screen-who" class="center-screen hidden">
+  <div class="logo">👋</div>
+  <h1>Chi sei?</h1>
+  <p class="lead">Scegli il tuo profilo su questo telefono</p>
+  <div class="who-pick" id="who-pick"></div>
+  <p class="note">Potrai cambiarlo dalle impostazioni.</p>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <header>
+    <div class="h-top">
+      <div><h1 id="app-title">Insieme</h1><div class="sub" id="app-sub">La nostra famiglia</div></div>
+      <button class="who-chip" id="who-chip"><span class="who-dot" id="who-chip-dot"></span><span id="who-chip-name">—</span></button>
+    </div>
+  </header>
+  <main>
+    <!-- BACHECA -->
+    <section id="page-home" class="page">
+      <div class="grad-card" style="margin-bottom:6px">
+        <div class="label">Bilancio spese condivise · <span id="home-month">—</span></div>
+        <div class="big-amount" id="home-bal">€0,00</div>
+        <div class="muted" id="home-bal-note" style="font-size:14px">—</div>
+      </div>
+      <div class="qa-row">
+        <button class="qa" data-add="event"><span class="qe">📅</span>Evento</button>
+        <button class="qa" data-add="task"><span class="qe">✅</span>Attività</button>
+        <button class="qa" data-add="shop"><span class="qe">🛒</span>Spesa lista</button>
+        <button class="qa" data-add="expense"><span class="qe">💶</span>Spesa €</button>
+      </div>
+      <div class="section-title"><span>Prossimi impegni</span><button class="link-btn" data-goto="calendar">Calendario ›</button></div>
+      <div id="home-events"></div>
+      <div class="section-title"><span>Attività da fare</span><button class="link-btn" data-goto="lists">Tutte ›</button></div>
+      <div id="home-tasks"></div>
+      <div class="section-title"><span>Bacheca</span></div>
+      <div class="field" style="margin-bottom:10px"><textarea id="note-input" rows="2" placeholder="Scrivi una nota per la famiglia…"></textarea></div>
+      <button class="btn-primary" id="note-add" style="margin-bottom:14px">Aggiungi alla bacheca</button>
+      <div id="home-notes"></div>
+    </section>
+
+    <!-- CALENDARIO -->
+    <section id="page-calendar" class="page hidden">
+      <div class="cal-head">
+        <button id="cal-prev">‹</button>
+        <div class="m-label" id="cal-label">—</div>
+        <button id="cal-next">›</button>
+      </div>
+      <div class="cal-grid" id="cal-dows"></div>
+      <div class="cal-grid" id="cal-grid" style="margin-top:5px"></div>
+      <div class="section-title"><span id="cal-day-label">Eventi</span></div>
+      <div id="cal-day-events"></div>
+    </section>
+
+    <!-- LISTE -->
+    <section id="page-lists" class="page hidden">
+      <div class="seg2"><button id="seg-tasks" class="on">✅ Attività</button><button id="seg-shop">🛒 Lista spesa</button></div>
+      <div id="list-tasks-wrap">
+        <div class="chips" id="task-chips">
+          <button class="chip active" data-f="all">Tutte</button>
+          <button class="chip" data-f="mine">Le mie</button>
+          <button class="chip" data-f="partner">Del partner</button>
+          <button class="chip" data-f="todo">Da fare</button>
+        </div>
+        <div id="tasks-list"></div>
+      </div>
+      <div id="list-shop-wrap" class="hidden">
+        <div class="section-title"><span>Lista della spesa</span><button class="link-btn" id="shop-clear">Svuota fatti</button></div>
+        <div id="shop-list"></div>
+      </div>
+    </section>
+
+    <!-- SPESE -->
+    <section id="page-expenses" class="page hidden">
+      <div class="cal-head">
+        <button id="m-prev">‹</button>
+        <div class="m-label" id="m-label" style="text-transform:capitalize">—</div>
+        <button id="m-next">›</button>
+      </div>
+      <div class="grad-card" style="margin-bottom:14px">
+        <div class="label">Bilancio spese condivise</div>
+        <div class="big-amount" id="bal-amount">€0,00</div>
+        <div class="muted" id="bal-note" style="font-size:14px">—</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><div class="s-label" id="stat0-label">—</div><div class="s-val" id="stat0-val">€0</div></div>
+        <div class="stat"><div class="s-label" id="stat1-label">—</div><div class="s-val" id="stat1-val">€0</div></div>
+      </div>
+      <div class="section-title"><span>Totale mese</span><span id="exp-total">€0</span></div>
+      <div id="exp-cats" style="margin-bottom:6px"></div>
+      <div class="section-title"><span>Movimenti</span></div>
+      <div id="exp-list"></div>
+    </section>
+
+    <!-- IMPOSTAZIONI -->
+    <section id="page-settings" class="page hidden">
+      <div class="section-title"><span>Impostazioni</span></div>
+      <div class="item" id="set-switch-user"><div class="emoji">🔄</div><div class="body"><div class="t1">Cambia profilo</div><div class="t2">Attualmente: <span id="set-current-user">—</span></div></div></div>
+      <div class="item" id="set-names"><div class="emoji">✏️</div><div class="body"><div class="t1">Modifica nomi</div><div class="t2">Cambia i nomi dei membri</div></div></div>
+      <div class="item"><div class="emoji">👨‍👩‍👧</div><div class="body"><div class="t1">Codice famiglia</div><div class="t2" id="set-family">—</div></div></div>
+      <div class="item" id="set-share"><div class="emoji">📤</div><div class="body"><div class="t1">Invita il partner</div><div class="t2">Come collegare l'altro telefono</div></div></div>
+      <div class="item" id="set-reset"><div class="emoji">⚠️</div><div class="body"><div class="t1">Reimposta configurazione</div><div class="t2">Cancella la config da questo telefono</div></div></div>
+      <p class="note">Insieme · v1.0 — gratuito, senza pubblicità. I dati sono salvati sul tuo account Firebase. Solo chi conosce codice famiglia e configurazione può accedervi.</p>
+    </section>
+  </main>
+
+  <button class="fab" id="fab">+</button>
+  <nav class="tabbar">
+    <button data-tab="home" class="active"><span class="ic">🏠</span>Bacheca</button>
+    <button data-tab="calendar"><span class="ic">📅</span>Calendario</button>
+    <button data-tab="lists"><span class="ic">✅</span>Liste</button>
+    <button data-tab="expenses"><span class="ic">💶</span>Spese</button>
+    <button data-tab="settings"><span class="ic">⚙️</span>Altro</button>
+  </nav>
+</div>
+
+<div id="modal-root"></div>
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, doc, setDoc, getDoc, addDoc, deleteDoc, updateDoc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ---------- Costanti ---------- */
+const CATS=[
+  {id:"spesa",e:"🛒",l:"Spesa"},{id:"casa",e:"🏠",l:"Casa/Bollette"},
+  {id:"cibo",e:"🍽️",l:"Cibo/Fuori"},{id:"trasporti",e:"🚗",l:"Trasporti"},
+  {id:"salute",e:"💊",l:"Salute"},{id:"svago",e:"🎉",l:"Svago"},
+  {id:"bimbi",e:"🧸",l:"Bimbi"},{id:"altro",e:"📦",l:"Altro"}
+];
+const catOf=id=>CATS.find(c=>c.id===id)||CATS[CATS.length-1];
+const MONTHS=["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
+const DOW=["Lun","Mar","Mer","Gio","Ven","Sab","Dom"];
+const eur=n=>"€"+(Number(n)||0).toLocaleString("it-IT",{minimumFractionDigits:2,maximumFractionDigits:2});
+const eur0=n=>"€"+Math.round(Number(n)||0).toLocaleString("it-IT");
+
+/* ---------- Stato ---------- */
+let db=null,cfg=null,family=null,meta={members:["Io","Partner"]};
+let me=0;
+let expenses=[],tasks=[],shop=[],events=[],notes=[];
+let expMonth=curMonthIdx(), calYM={y:new Date().getFullYear(),m:new Date().getMonth()}, calSel=todayStr();
+let curTab="home",taskFilter="all",listMode="tasks";
+let unsubs=[];
+const LS={cfg:"in_cfg",family:"in_family",me:"in_me"};
+const $=s=>document.querySelector(s);
+const el=(t,c)=>{const e=document.createElement(t);if(c)e.className=c;return e;};
+
+function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function curMonthIdx(){const d=new Date();return d.getFullYear()*12+d.getMonth();}
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),1900);}
+function userColor(i){return i===2?"var(--both)":(i===0?"var(--u0)":"var(--u1)");}
+function userName(i){if(i===2)return "Famiglia";return (meta.members&&meta.members[i])||["Io","Partner"][i];}
+function escapeHtml(s){return String(s==null?"":s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
+function fmtDate(s){if(!s)return "";const d=new Date(s+"T00:00:00");return d.getDate()+" "+MONTHS[d.getMonth()].slice(0,3);}
+function fmtDateFull(s){if(!s)return "";const d=new Date(s+"T00:00:00");return DOW[(d.getDay()+6)%7]+" "+d.getDate()+" "+MONTHS[d.getMonth()];}
+function inMonthIdx(s,m){if(!s)return false;const d=new Date(s+"T00:00:00");return d.getFullYear()*12+d.getMonth()===m;}
+
+/* ---------- Boot ---------- */
+function b64encode(obj){return btoa(unescape(encodeURIComponent(JSON.stringify(obj))));}
+function b64decode(s){return JSON.parse(decodeURIComponent(escape(atob(s))));}
+function handleJoinLink(){
+  const h=location.hash||"";const m=h.match(/join=([^&]+)/);
+  if(!m)return;
+  try{
+    const data=b64decode(decodeURIComponent(m[1]));
+    if(data&&data.cfg&&data.family){
+      localStorage.setItem(LS.cfg,JSON.stringify(data.cfg));
+      localStorage.setItem(LS.family,data.family);
+      localStorage.removeItem(LS.me);
     }
-    h += '<div class="card" style="margin-top:14px"><h3>How to submit</h3><p class="muted" style="margin:6px 0 0;font-size:14px">' + esc(k.channel) + '</p>';
-    h += '<ol style="margin:10px 0 0;padding-left:18px;font-size:14px;color:var(--soft)"><li>Download &amp; <b>sign</b> the module (place + date + signature).</li><li>Attach it and a copy of your ID to the email/<b>PEC</b> below.</li><li>Send it to the competent office (or bring it in person).</li></ol>';
-    h += '<button class="btn btn-primary btn-block" id="printModuleBtn" type="button" style="margin-top:12px">Download the module to sign (PDF) ↓</button>';
-    h += '<p class="muted" style="margin:8px 0 0;font-size:12px">Opens your print dialog — choose “Save as PDF”.</p></div>';
+  }catch(e){console.error("join link non valido",e);}
+  history.replaceState(null,"",location.pathname+location.search);
+}
+function boot(){
+  window.__insiemeBooted=true;
+  handleJoinLink();
+  const rawCfg=localStorage.getItem(LS.cfg);family=localStorage.getItem(LS.family);
+  const rawMe=localStorage.getItem(LS.me);
+  if(!rawCfg||!family){show("setup");return;}
+  try{cfg=JSON.parse(rawCfg);}catch(e){show("setup");return;}
+  if(!connectFirebase()){show("setup");return;}
+  if(rawMe===null){ensureMeta().then(()=>{renderWhoPick();show("who");});return;}
+  me=parseInt(rawMe,10)||0;startApp();
+}
+function connectFirebase(){try{db=getFirestore(initializeApp(cfg));return true;}catch(e){console.error(e);return false;}}
+function show(w){["loading","setup","who"].forEach(s=>$("#screen-"+s).classList.add("hidden"));$("#app").classList.add("hidden");if(w==="app")$("#app").classList.remove("hidden");else $("#screen-"+w).classList.remove("hidden");}
 
-    var fh = k.fields.map(function (f) {
-      return '<div><dt>' + esc(f.label) + '</dt><dd>' + (f.value ? esc(f.value) : '<span class="todo">— to complete —</span>') + '</dd>' + (f.note ? '<dd class="note">' + esc(f.note) + '</dd>' : '') + '</div>';
-    }).join("");
-    h += '<div class="card"><div class="between"><h3>Form field values (AA4/8)</h3>' + copyBtn(k.fields.map(function (f) { return f.label + ": " + (f.value || "—"); }).join("\n")) + '</div><dl class="fields" style="margin-top:8px">' + fh + '</dl></div>';
+/* ---------- Setup ---------- */
+function parseCfg(text){
+  let t=(text||"").trim();const i=t.indexOf("{"),j=t.lastIndexOf("}");
+  if(i<0||j<0)throw new Error("Non trovo l'oggetto { … }. Copia tutto l'oggetto firebaseConfig.");
+  t=t.slice(i,j+1);let obj;
+  try{obj=(new Function("return ("+t+")"))();}catch(e){throw new Error("Configurazione non valida. Copiala esattamente come appare in Firebase.");}
+  if(!obj||!obj.projectId||!obj.apiKey)throw new Error("Mancano apiKey o projectId. Copia l'intero oggetto.");
+  return obj;
+}
+$("#cfg-save").addEventListener("click",async()=>{
+  const errBox=$("#setup-err");errBox.classList.add("hidden");
+  try{
+    const parsed=parseCfg($("#cfg-input").value);
+    const fam=$("#cfg-family").value.trim().toLowerCase().replace(/\s+/g,"-");
+    const n0=$("#cfg-name0").value.trim(),n1=$("#cfg-name1").value.trim();
+    if(!fam)throw new Error("Inserisci un codice famiglia.");
+    if(!n0||!n1)throw new Error("Inserisci entrambi i nomi.");
+    cfg=parsed;family=fam;
+    if(!connectFirebase())throw new Error("Impossibile connettersi a Firebase.");
+    const metaRef=doc(db,"families",family,"meta","config");
+    const snap=await getDoc(metaRef);
+    if(!snap.exists())await setDoc(metaRef,{members:[n0,n1],createdAt:serverTimestamp()});
+    localStorage.setItem(LS.cfg,JSON.stringify(cfg));
+    localStorage.setItem(LS.family,family);localStorage.removeItem(LS.me);
+    await ensureMeta();renderWhoPick();show("who");
+  }catch(e){errBox.textContent=e.message||"Errore.";errBox.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"});}
+});
 
-    h += '<div class="card"><div class="between"><h3>Email to the office (Italian)</h3>' + copyBtn(k.email.italian) + '</div>';
-    h += '<p class="muted" style="margin:8px 0 6px;font-size:12px"><b>To:</b> ' + esc(k.email.to) + '</p>';
-    h += '<textarea readonly rows="13">' + esc(k.email.italian) + '</textarea>';
-    h += '<div class="between" style="margin-top:12px"><h3 style="font-size:14px">English translation</h3>' + copyBtn(k.email.english) + '</div>';
-    h += '<textarea readonly rows="11">' + esc(k.email.english) + '</textarea></div>';
-
-    h += '<div class="card"><h3>At the office — what to bring</h3><ul class="bring">' + k.bring.map(function (b) { return "<li><b>✓</b><span>" + esc(b) + "</span></li>"; }).join("") + '</ul>';
-    h += '<h3 style="margin-top:14px">What to say</h3><p class="say">' + esc(k.say) + '</p></div>';
-    return h;
-  }
-
-  document.getElementById("genBtn").addEventListener("click", function () {
-    var p = {
-      firstName: val("firstName"), lastName: val("lastName"), sex: val("sex"),
-      dateOfBirth: val("dateOfBirth"), nationality: val("nationality"),
-      euStatus: val("euStatus"), location: val("location"), reason: val("reason"),
-      countryOfBirth: val("countryOfBirth"), cityOfBirth: val("cityOfBirth"),
-      provinceOfBirth: val("provinceOfBirth"), addressComune: val("addressComune"),
-      addressProvincia: val("addressProvincia"), addressStreet: val("addressStreet"),
-      addressCap: val("addressCap"), contactEmail: val("contactEmail"),
-      documentType: val("documentType"), documentNumber: val("documentNumber")
-    };
-    lastKit = buildKit(p);
-    var out = document.getElementById("cfOut");
-    out.innerHTML = renderKit(lastKit);
-    out.scrollIntoView({ behavior: "smooth", block: "start" });
+async function ensureMeta(){try{const s=await getDoc(doc(db,"families",family,"meta","config"));if(s.exists())meta=s.data();}catch(e){console.error(e);}}
+function renderWhoPick(){
+  const box=$("#who-pick");box.innerHTML="";
+  [0,1].forEach(i=>{
+    const b=el("button");const av=el("div","av");av.style.background=userColor(i);av.textContent=(userName(i)[0]||"?").toUpperCase();
+    const nm=el("div");nm.textContent=userName(i);b.appendChild(av);b.appendChild(nm);
+    b.onclick=()=>{me=i;localStorage.setItem(LS.me,String(i));startApp();};box.appendChild(b);
   });
+}
 
-  /* ---------- Signable module: print / save as PDF ---------- */
-  var lastKit = null;
-  function moduleHtml(k) {
-    var rows = k.fields.map(function (f) {
-      return '<div class="mf"><div class="ml">' + esc(f.label) + '</div><div class="mv">' +
-        (f.value ? esc(f.value) : "________________________________") + "</div>" +
-        (f.note ? '<div class="mn">' + esc(f.note) + "</div>" : "") + "</div>";
-    }).join("");
-    var missing = k.missing.length
-      ? '<div class="m-sec">Da completare / Still needed</div>' + k.missing.map(function (m) { return '<div class="mv">•  ' + esc(m) + "</div>"; }).join("")
-      : "";
-    return '' +
-      '<div class="m-h1">' + esc(k.form) + "</div>" +
-      '<div class="m-sub">Modulo precompilato da firmare e inviare (PEC/email o di persona) con copia di un documento d’identità. — Pre-filled module to sign and submit with a copy of your ID.</div>' +
-      '<div class="m-sec">Richiedente / Applicant</div>' + rows + missing +
-      '<div class="m-sec">Dichiarazione e richiesta / Declaration and request</div>' +
-      '<div class="m-decl">Il/La sottoscritto/a, identificato/a dai dati sopra riportati, CHIEDE l’attribuzione del codice fiscale ai sensi della normativa vigente, dichiara che i dati corrispondono al vero e allega copia di un documento d’identità valido. — The undersigned requests the attribution of the Codice Fiscale, declares the data is true and attaches a copy of a valid ID.</div>' +
-      '<div class="m-sign"><div><div class="m-cap">Luogo e data / Place and date</div><div class="m-line"></div></div>' +
-      '<div><div class="m-cap">Firma / Signature</div><div class="m-line"></div></div></div>' +
-      '<div class="m-foot">Buddy è uno strumento informativo, non consulenza legale o fiscale. Verifica l’ufficio competente e i requisiti aggiornati sulle fonti ufficiali.</div>';
-  }
-  document.addEventListener("click", function (e) {
-    if (!e.target.closest || !e.target.closest("#printModuleBtn") || !lastKit) return;
-    document.getElementById("moduleSheet").innerHTML = moduleHtml(lastKit);
-    window.print();
+/* ---------- App start ---------- */
+async function startApp(){show("app");await ensureMeta();renderChrome();subscribe();bindUI();buildCalDows();renderAll();}
+function renderChrome(){
+  $("#who-chip-name").textContent=userName(me);$("#who-chip-dot").style.background=userColor(me);
+  $("#set-current-user").textContent=userName(me);$("#set-family").textContent=family;
+  $("#stat0-label").textContent="Pagato "+userName(0);$("#stat1-label").textContent="Pagato "+userName(1);
+}
+function subscribe(){
+  unsubs.forEach(u=>{try{u()}catch(e){}});unsubs=[];
+  const base=(c,cb)=>unsubs.push(onSnapshot(query(collection(db,"families",family,c)),qs=>{cb(qs.docs.map(d=>({id:d.id,...d.data()})));renderAll();},e=>{console.error(e);toast("Errore sync");}));
+  unsubs.push(onSnapshot(doc(db,"families",family,"meta","config"),s=>{if(s.exists()){meta=s.data();renderChrome();renderAll();}}));
+  base("expenses",a=>expenses=a);
+  base("tasks",a=>tasks=a);
+  base("shopping",a=>shop=a);
+  base("events",a=>events=a);
+  base("notes",a=>notes=a);
+}
+
+/* ---------- Render root ---------- */
+function renderAll(){renderHome();renderCalendar();renderTasks();renderShop();renderExpenses();}
+
+/* ---------- Bilancio helper ---------- */
+function balanceForMonth(m){
+  const shared=expenses.filter(e=>e.shared!==false&&inMonthIdx(e.date,m));
+  const paid=[0,0];shared.forEach(e=>{if(e.paidBy===0||e.paidBy===1)paid[e.paidBy]+=Number(e.amount)||0;});
+  const tot=paid[0]+paid[1];const net0=paid[0]-tot/2;
+  return {tot,net0,paid};
+}
+function balNoteHtml(net0,tot){
+  if(tot<=0)return {amt:"€0,00",col:"var(--txt)",note:"Nessuna spesa condivisa"};
+  if(Math.abs(net0)<0.005)return {amt:"Pari 🎉",col:"var(--green)",note:"Siete in pari"};
+  const debtor=net0>0?1:0,creditor=net0>0?0:1,a=Math.abs(net0);
+  return {amt:eur(a),col:me===creditor?"var(--green)":"var(--red)",note:`<b>${escapeHtml(userName(debtor))}</b> deve dare <b>${eur(a)}</b> a <b>${escapeHtml(userName(creditor))}</b>`};
+}
+
+/* ---------- BACHECA ---------- */
+function renderHome(){
+  const b=balanceForMonth(expMonth),info=balNoteHtml(b.net0,b.tot);
+  $("#home-month").textContent=MONTHS[expMonth%12];
+  $("#home-bal").textContent=info.amt;$("#home-bal").style.color=info.col;$("#home-bal-note").innerHTML=info.note;
+  // prossimi eventi
+  const t=todayStr();
+  const up=events.filter(e=>(e.date||"")>=t).sort((a,b)=>(a.date||"").localeCompare(b.date||"")||(a.time||"").localeCompare(b.time||"")).slice(0,3);
+  const ev=$("#home-events");ev.innerHTML="";
+  if(up.length===0)ev.innerHTML=`<div class="empty" style="padding:18px">Nessun impegno in programma</div>`;
+  up.forEach(e=>ev.appendChild(eventItem(e)));
+  // attività da fare
+  const td=tasks.filter(x=>!x.done).sort((a,b)=>(a.date||"9999").localeCompare(b.date||"9999")).slice(0,3);
+  const tk=$("#home-tasks");tk.innerHTML="";
+  if(td.length===0)tk.innerHTML=`<div class="empty" style="padding:18px">Tutto fatto! 🎉</div>`;
+  td.forEach(x=>tk.appendChild(taskItem(x)));
+  // note
+  const nb=$("#home-notes");nb.innerHTML="";
+  const ns=notes.slice().sort((a,b)=>(b.createdMs||0)-(a.createdMs||0)).slice(0,6);
+  if(ns.length===0)nb.innerHTML=`<div class="empty" style="padding:18px">Ancora nessuna nota</div>`;
+  ns.forEach(n=>{
+    const d=el("div","note-item");
+    d.innerHTML=`<div class="nt">${escapeHtml(n.text)}</div><div class="nm"><span class="pill" style="background:${userColor(n.by)}22;color:${userColor(n.by)}"><span class="pd" style="background:${userColor(n.by)}"></span>${escapeHtml(userName(n.by))}</span><button class="del-btn" style="margin-left:auto">×</button></div>`;
+    d.querySelector(".del-btn").onclick=()=>del("notes",n.id);
+    nb.appendChild(d);
   });
+}
+function eventItem(e){
+  const it=el("div","item");
+  const dt=[fmtDate(e.date),e.time||""].filter(Boolean).join(" · ");
+  it.innerHTML=`<div class="emoji">📅</div><div class="body"><div class="t1">${escapeHtml(e.title||"")}</div>
+    <div class="t2"><span class="pill" style="background:${userColor(e.who)}22;color:${userColor(e.who)}"><span class="pd" style="background:${userColor(e.who)}"></span>${escapeHtml(userName(e.who))}</span><span>${dt}</span>${e.location?`<span>📍 ${escapeHtml(e.location)}</span>`:""}</div></div>
+    <button class="del-btn">×</button>`;
+  it.querySelector(".del-btn").onclick=()=>del("events",e.id);
+  return it;
+}
+function taskItem(x){
+  const it=el("div","item"+(x.done?" done":""));
+  const dt=[x.date?fmtDate(x.date):"",x.time||""].filter(Boolean).join(" · ");
+  it.innerHTML=`<button class="check">${x.done?"✓":""}</button><div class="body"><div class="t1">${escapeHtml(x.title||"")}</div>
+    <div class="t2"><span class="pill" style="background:${userColor(x.who)}22;color:${userColor(x.who)}"><span class="pd" style="background:${userColor(x.who)}"></span>${escapeHtml(userName(x.who))}</span>${dt?`<span>${dt}</span>`:""}${x.notes?`<span>📝 ${escapeHtml(x.notes)}</span>`:""}</div></div>
+    <button class="del-btn">×</button>`;
+  it.querySelector(".check").onclick=()=>upd("tasks",x.id,{done:!x.done});
+  it.querySelector(".del-btn").onclick=()=>del("tasks",x.id);
+  return it;
+}
 
-  /* ---------- Questure directory (real data + official links) ---------- */
-  var REGIONS = [
-    ["Abruzzo", [["L'Aquila","AQ"],["Chieti","CH"],["Pescara","PE"],["Teramo","TE"]]],
-    ["Basilicata", [["Potenza","PZ"],["Matera","MT"]]],
-    ["Calabria", [["Catanzaro","CZ"],["Cosenza","CS"],["Crotone","KR"],["Reggio Calabria","RC"],["Vibo Valentia","VV"]]],
-    ["Campania", [["Napoli","NA"],["Avellino","AV"],["Benevento","BN"],["Caserta","CE"],["Salerno","SA"]]],
-    ["Emilia-Romagna", [["Bologna","BO"],["Ferrara","FE"],["Forlì-Cesena","FC"],["Modena","MO"],["Parma","PR"],["Piacenza","PC"],["Ravenna","RA"],["Reggio Emilia","RE"],["Rimini","RN"]]],
-    ["Friuli-Venezia Giulia", [["Trieste","TS"],["Gorizia","GO"],["Pordenone","PN"],["Udine","UD"]]],
-    ["Lazio", [["Roma","RM"],["Frosinone","FR"],["Latina","LT"],["Rieti","RI"],["Viterbo","VT"]]],
-    ["Liguria", [["Genova","GE"],["Imperia","IM"],["La Spezia","SP"],["Savona","SV"]]],
-    ["Lombardia", [["Milano","MI"],["Bergamo","BG"],["Brescia","BS"],["Como","CO"],["Cremona","CR"],["Lecco","LC"],["Lodi","LO"],["Mantova","MN"],["Monza e Brianza","MB"],["Pavia","PV"],["Sondrio","SO"],["Varese","VA"]]],
-    ["Marche", [["Ancona","AN"],["Ascoli Piceno","AP"],["Fermo","FM"],["Macerata","MC"],["Pesaro e Urbino","PU"]]],
-    ["Molise", [["Campobasso","CB"],["Isernia","IS"]]],
-    ["Piemonte", [["Torino","TO"],["Alessandria","AL"],["Asti","AT"],["Biella","BI"],["Cuneo","CN"],["Novara","NO"],["Verbano-Cusio-Ossola","VB"],["Vercelli","VC"]]],
-    ["Puglia", [["Bari","BA"],["Barletta-Andria-Trani","BT"],["Brindisi","BR"],["Foggia","FG"],["Lecce","LE"],["Taranto","TA"]]],
-    ["Sardegna", [["Cagliari","CA"],["Nuoro","NU"],["Oristano","OR"],["Sassari","SS"],["Sud Sardegna","SU"]]],
-    ["Sicilia", [["Palermo","PA"],["Agrigento","AG"],["Caltanissetta","CL"],["Catania","CT"],["Enna","EN"],["Messina","ME"],["Ragusa","RG"],["Siracusa","SR"],["Trapani","TP"]]],
-    ["Toscana", [["Firenze","FI"],["Arezzo","AR"],["Grosseto","GR"],["Livorno","LI"],["Lucca","LU"],["Massa-Carrara","MS"],["Pisa","PI"],["Pistoia","PT"],["Prato","PO"],["Siena","SI"]]],
-    ["Trentino-Alto Adige", [["Trento","TN"],["Bolzano","BZ"]]],
-    ["Umbria", [["Perugia","PG"],["Terni","TR"]]],
-    ["Valle d'Aosta", [["Aosta","AO"]]],
-    ["Veneto", [["Venezia","VE"],["Belluno","BL"],["Padova","PD"],["Rovigo","RO"],["Treviso","TV"],["Verona","VR"],["Vicenza","VI"]]]
-  ];
-  var PDF = { MI: "https://questure.poliziadistato.it/statics/03/competenze-commissariati-citta-di-milano.pdf?lang=it" };
-  var SERVICES = [
-    "Permesso di soggiorno — first issue, renewal, conversion, duplicate",
-    "Carta di soggiorno / permesso UE per soggiornanti di lungo periodo",
-    "Ricongiungimento familiare (nulla osta and follow-up)",
-    "Dichiarazione di presenza / hospitality declarations",
-    "Documents for citizenship and long-stay procedures"
-  ];
-  function slug(n) { return n.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/['’\-\s]/g, ""); }
-  function siteSearch(t) { return "https://www.google.com/search?q=" + encodeURIComponent("site:questure.poliziadistato.it " + t); }
-  function mapsSearch(t) { return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(t); }
-
-  var pcount = REGIONS.reduce(function (n, r) { return n + r[1].length; }, 0);
-  document.getElementById("pcount").textContent = pcount;
-
-  var selected = null, query = "";
-  function renderList() {
-    var q = query.trim().toLowerCase(), html = "";
-    REGIONS.forEach(function (reg) {
-      var provs = reg[1].filter(function (p) {
-        return !q || p[0].toLowerCase().indexOf(q) >= 0 || p[1].toLowerCase().indexOf(q) >= 0 || reg[0].toLowerCase().indexOf(q) >= 0;
-      });
-      if (!provs.length) return;
-      html += '<div class="region-label">' + esc(reg[0]) + '</div><div class="chips">';
-      provs.forEach(function (p) {
-        html += '<button class="chip" type="button" data-n="' + esc(p[0]) + '" data-s="' + esc(p[1]) + '" aria-pressed="' + (selected && selected[1] === p[1] ? "true" : "false") + '">' + esc(p[0]) + ' <small>(' + esc(p[1]) + ')</small></button>';
-      });
-      html += '</div>';
-    });
-    if (!html) html = '<p class="muted">No province matches “' + esc(query) + '”.</p>';
-    document.getElementById("provList").innerHTML = html;
-  }
-  function renderDetail() {
-    var d = document.getElementById("provDetail");
-    if (!selected) { d.innerHTML = ""; return; }
-    var name = selected[0], sig = selected[1];
-    var pdf = PDF[sig];
-    var h = '<div class="card"><div class="between"><div><h3>Questura di ' + esc(name) + '</h3><p class="muted" style="margin:2px 0 0;font-size:13px">Ufficio Immigrazione</p></div><span class="badge badge-neutral">' + esc(sig) + '</span></div>';
-    h += '<div class="callout" style="margin-top:12px"><b>Territorial competence:</b> the whole province of ' + esc(name) + ' (' + esc(sig) + '). If you live here, this is your Ufficio Immigrazione.</div>';
-    h += '<h3 style="margin-top:14px;font-size:14px">What it handles</h3><ul class="bring">' + SERVICES.map(function (s) { return '<li><b>•</b><span>' + esc(s) + '</span></li>'; }).join("") + '</ul>';
-    h += '<div class="row" style="margin-top:14px">';
-    h += '<a class="btn btn-primary btn-sm" target="_blank" rel="noreferrer" href="https://questure.poliziadistato.it/it/' + slug(name) + '">Official Questura page ↗</a>';
-    h += '<a class="btn btn-secondary btn-sm" target="_blank" rel="noreferrer" href="' + siteSearch(name + " ufficio immigrazione permesso di soggiorno") + '">Immigration info ↗</a>';
-    h += '<a class="btn btn-secondary btn-sm" target="_blank" rel="noreferrer" href="' + mapsSearch("Questura di " + name + " Ufficio Immigrazione") + '">Map ↗</a></div>';
-    h += '<div style="margin-top:16px;border-top:1px solid var(--line-soft);padding-top:14px"><h3 style="font-size:14px">Commissariati &amp; territorial competence</h3>';
-    h += '<p class="muted" style="margin:6px 0 0;font-size:13.5px">The Questura publishes the commissariati and the streets each covers (competenza territoriale) as an official PDF.</p>';
-    h += '<a class="link" style="display:inline-block;margin-top:8px" target="_blank" rel="noreferrer" href="' + (pdf || siteSearch(name + " competenze commissariati")) + '">' + (pdf ? "Commissariati competence — official PDF ↗" : "Official commissariati PDF (Polizia di Stato) ↗") + '</a></div>';
-    h += '</div>';
-    d.innerHTML = h;
-    d.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }
-  document.getElementById("provList").addEventListener("click", function (e) {
-    var c = e.target.closest(".chip"); if (!c) return;
-    selected = [c.dataset.n, c.dataset.s]; renderList(); renderDetail();
+/* ---------- CALENDARIO ---------- */
+function buildCalDows(){const r=$("#cal-dows");r.innerHTML="";DOW.forEach(d=>{const c=el("div","cal-dow");c.textContent=d;r.appendChild(c);});}
+function renderCalendar(){
+  $("#cal-label").textContent=MONTHS[calYM.m]+" "+calYM.y;
+  const grid=$("#cal-grid");grid.innerHTML="";
+  const first=new Date(calYM.y,calYM.m,1);
+  const startDow=(first.getDay()+6)%7; // Mon=0
+  const daysInMonth=new Date(calYM.y,calYM.m+1,0).getDate();
+  const prevDays=new Date(calYM.y,calYM.m,0).getDate();
+  const cells=[];
+  for(let i=startDow-1;i>=0;i--)cells.push({d:prevDays-i,out:true,m:calYM.m-1});
+  for(let d=1;d<=daysInMonth;d++)cells.push({d,out:false,m:calYM.m});
+  while(cells.length%7!==0||cells.length<42)cells.push({d:cells.length-(startDow+daysInMonth)+1,out:true,m:calYM.m+1});
+  cells.slice(0,42).forEach(c=>{
+    const y=calYM.y+(c.m<0?-1:c.m>11?1:0);const mm=(c.m+12)%12;
+    const ds=y+"-"+String(mm+1).padStart(2,"0")+"-"+String(c.d).padStart(2,"0");
+    const cell=el("div","cal-cell"+(c.out?" out":""));
+    if(ds===todayStr())cell.classList.add("today");
+    if(ds===calSel)cell.classList.add("sel");
+    const dayEvents=events.filter(e=>e.date===ds);
+    const dots=el("div","dots");
+    [...new Set(dayEvents.map(e=>e.who))].slice(0,3).forEach(w=>{const i=el("i");i.style.background=userColor(w);dots.appendChild(i);});
+    const num=el("div");num.textContent=c.d;cell.appendChild(num);cell.appendChild(dots);
+    cell.onclick=()=>{calSel=ds;renderCalendar();};
+    grid.appendChild(cell);
   });
-  document.getElementById("provSearch").addEventListener("input", function (e) { query = e.target.value; renderList(); });
-  renderList();
+  $("#cal-day-label").textContent=fmtDateFull(calSel);
+  const box=$("#cal-day-events");box.innerHTML="";
+  const dayEv=events.filter(e=>e.date===calSel).sort((a,b)=>(a.time||"").localeCompare(b.time||""));
+  if(dayEv.length===0)box.innerHTML=`<div class="empty" style="padding:18px">Nessun evento questo giorno</div>`;
+  dayEv.forEach(e=>box.appendChild(eventItem(e)));
+}
 
-  /* Start on the Codice Fiscale so the value is obvious immediately */
-})();
+/* ---------- LISTE: attività ---------- */
+function renderTasks(){
+  const list=$("#tasks-list");list.innerHTML="";
+  let arr=tasks.slice();
+  if(taskFilter==="mine")arr=arr.filter(t=>t.who===me);
+  else if(taskFilter==="partner")arr=arr.filter(t=>t.who!==me&&t.who!==2);
+  else if(taskFilter==="todo")arr=arr.filter(t=>!t.done);
+  arr.sort((a,b)=>{if(!!a.done!==!!b.done)return a.done?1:-1;return (a.date||"9999").localeCompare(b.date||"9999")||(a.time||"").localeCompare(b.time||"");});
+  if(arr.length===0){list.innerHTML=`<div class="empty"><div class="big">✅</div>Nessuna attività qui.<br>Tocca <b>+</b> per aggiungerne una.</div>`;return;}
+  arr.forEach(x=>list.appendChild(taskItem(x)));
+}
+/* ---------- LISTE: spesa ---------- */
+function renderShop(){
+  const list=$("#shop-list");list.innerHTML="";
+  const arr=shop.slice().sort((a,b)=>{if(!!a.done!==!!b.done)return a.done?1:-1;return (a.createdMs||0)-(b.createdMs||0);});
+  if(arr.length===0){list.innerHTML=`<div class="empty"><div class="big">🛒</div>Lista vuota.<br>Tocca <b>+</b> per aggiungere un prodotto.</div>`;return;}
+  arr.forEach(s=>{
+    const it=el("div","item"+(s.done?" done":""));
+    it.innerHTML=`<button class="check">${s.done?"✓":""}</button><div class="body"><div class="t1">${escapeHtml(s.name||"")}</div>${s.qty?`<div class="t2">${escapeHtml(s.qty)}</div>`:""}</div><button class="del-btn">×</button>`;
+    it.querySelector(".check").onclick=()=>upd("shopping",s.id,{done:!s.done});
+    it.querySelector(".del-btn").onclick=()=>del("shopping",s.id);
+    list.appendChild(it);
+  });
+}
+
+/* ---------- SPESE ---------- */
+function renderExpenses(){
+  $("#m-label").textContent=MONTHS[expMonth%12]+" "+Math.floor(expMonth/12);
+  const monthExp=expenses.filter(e=>inMonthIdx(e.date,expMonth)).sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.createdMs||0)-(a.createdMs||0));
+  const paid=[0,0];monthExp.forEach(e=>{if(e.paidBy===0||e.paidBy===1)paid[e.paidBy]+=Number(e.amount)||0;});
+  $("#stat0-val").textContent=eur0(paid[0]);$("#stat1-val").textContent=eur0(paid[1]);
+  $("#exp-total").textContent=eur0(paid[0]+paid[1]);
+  const b=balanceForMonth(expMonth),info=balNoteHtml(b.net0,b.tot);
+  $("#bal-amount").textContent=info.amt;$("#bal-amount").style.color=info.col;$("#bal-note").innerHTML=info.note;
+  // categorie
+  const byCat={};monthExp.forEach(e=>{byCat[e.category]=(byCat[e.category]||0)+(Number(e.amount)||0);});
+  const total=paid[0]+paid[1];
+  const cats=Object.entries(byCat).sort((a,b)=>b[1]-a[1]).slice(0,4);
+  const cb=$("#exp-cats");cb.innerHTML="";
+  cats.forEach(([cid,val])=>{
+    const c=catOf(cid),pct=total>0?Math.round(val/total*100):0;
+    const it=el("div","item");
+    it.innerHTML=`<div class="emoji">${c.e}</div><div class="body"><div class="t1">${c.l}</div><div class="t2">${pct}% del mese</div></div><div class="amt">${eur(val)}</div>`;
+    cb.appendChild(it);
+  });
+  // movimenti
+  const list=$("#exp-list");list.innerHTML="";
+  if(monthExp.length===0){list.innerHTML=`<div class="empty"><div class="big">🧾</div>Nessuna spesa questo mese.</div>`;return;}
+  monthExp.forEach(e=>{
+    const c=catOf(e.category),it=el("div","item");
+    it.innerHTML=`<div class="emoji">${c.e}</div><div class="body"><div class="t1">${escapeHtml(e.description||c.l)}</div>
+      <div class="t2"><span>${fmtDate(e.date)}</span><span class="tag"><span class="pd" style="width:8px;height:8px;border-radius:50%;background:${userColor(e.paidBy)}"></span>${escapeHtml(userName(e.paidBy))}</span>${e.shared===false?'<span class="tag">personale</span>':''}</div></div>
+      <div class="amt">${eur(e.amount)}</div><button class="del-btn">×</button>`;
+    it.querySelector(".del-btn").onclick=()=>del("expenses",e.id);
+    list.appendChild(it);
+  });
+}
+
+/* ---------- Data ops ---------- */
+async function upd(c,id,data){try{await updateDoc(doc(db,"families",family,c,id),data);}catch(e){toast("Errore");}}
+function del(c,id){
+  openSheet(`<div class="grab"></div><h2>Eliminare?</h2><p class="muted" style="margin:4px 0 18px">L'azione non è reversibile.</p>
+    <button class="btn-primary danger" id="dy">Elimina</button><button class="btn-ghost" id="dn">Annulla</button>`);
+  $("#dy").onclick=async()=>{try{await deleteDoc(doc(db,"families",family,c,id));toast("Eliminato");}catch(e){toast("Errore");}closeSheet();};
+  $("#dn").onclick=closeSheet;
+}
+
+/* ---------- Sheets ---------- */
+function openSheet(html){const r=$("#modal-root");r.innerHTML=`<div class="overlay" id="ov"><div class="sheet">${html}</div></div>`;$("#ov").onclick=e=>{if(e.target.id==="ov")closeSheet();};}
+function closeSheet(){$("#modal-root").innerHTML="";}
+function segUsers(id,sel,withBoth){
+  const arr=withBoth?[0,1,2]:[0,1];
+  return `<div class="seg" id="${id}">`+arr.map(i=>`<button data-i="${i}" class="${i===sel?"on on"+i:""}">${escapeHtml(userName(i))}</button>`).join("")+`</div>`;
+}
+function bindSeg(id,onPick){
+  const s=$("#"+id);let val=parseInt(s.querySelector(".on")?.dataset.i??"0",10);
+  [...s.children].forEach(b=>b.onclick=()=>{val=parseInt(b.dataset.i,10);[...s.children].forEach(x=>x.className="");b.classList.add("on","on"+val);onPick&&onPick(val);});
+  return ()=>val;
+}
+
+function openExpenseSheet(){
+  const today=todayStr();
+  openSheet(`<div class="grab"></div><h2>Nuova spesa</h2>
+    <div class="field" style="margin-top:12px"><label>Importo (€)</label><input id="e-amount" type="number" inputmode="decimal" step="0.01" placeholder="0,00" style="font-size:22px;font-weight:700"></div>
+    <div class="field"><label>Descrizione</label><input id="e-desc" type="text" placeholder="es. Spesa supermercato"></div>
+    <div class="field"><label>Categoria</label><div class="cat-grid" id="e-cats"></div></div>
+    <div class="field"><label>Chi ha pagato</label>${segUsers("e-paid",me,false)}</div>
+    <div class="field"><div class="toggle-row" id="e-shared-row"><div><div style="font-weight:600">Spesa condivisa</div><div style="font-size:12.5px;color:var(--muted)">Divisa 50/50 nel bilancio</div></div><div class="switch on" id="e-shared"></div></div></div>
+    <div class="field"><label>Data</label><input id="e-date" type="date" value="${today}"></div>
+    <button class="btn-primary" id="e-save">Salva spesa</button><button class="btn-ghost" id="e-cancel">Annulla</button>`);
+  let cat="spesa",shared=true;
+  const cg=$("#e-cats");
+  CATS.forEach(c=>{const b=el("button");if(c.id===cat)b.classList.add("on");b.innerHTML=`<span class="ce">${c.e}</span>${c.l}`;b.onclick=()=>{cat=c.id;[...cg.children].forEach(x=>x.classList.remove("on"));b.classList.add("on");};cg.appendChild(b);});
+  const getPaid=bindSeg("e-paid");
+  $("#e-shared-row").onclick=()=>{shared=!shared;$("#e-shared").classList.toggle("on",shared);};
+  $("#e-cancel").onclick=closeSheet;$("#e-amount").focus();
+  $("#e-save").onclick=async()=>{
+    const amount=parseFloat(($("#e-amount").value||"").replace(",","."));
+    if(!amount||amount<=0){toast("Inserisci un importo valido");return;}
+    try{await addDoc(collection(db,"families",family,"expenses"),{amount,description:$("#e-desc").value.trim(),category:cat,paidBy:getPaid(),shared,date:$("#e-date").value||today,by:me,createdMs:Date.now(),createdAt:serverTimestamp()});toast("Spesa aggiunta");closeSheet();}
+    catch(e){toast("Errore nel salvataggio");console.error(e);}
+  };
+}
+function openTaskSheet(){
+  const today=todayStr();
+  openSheet(`<div class="grab"></div><h2>Nuova attività</h2>
+    <div class="field" style="margin-top:12px"><label>Cosa</label><input id="t-title" type="text" placeholder="es. Portare l'auto dal meccanico"></div>
+    <div class="field"><label>Di chi</label>${segUsers("t-who",me,true)}</div>
+    <div class="field" style="display:flex;gap:10px"><div style="flex:1"><label>Entro il</label><input id="t-date" type="date"></div><div style="flex:1"><label>Ora</label><input id="t-time" type="time"></div></div>
+    <div class="field"><label>Note</label><textarea id="t-notes" placeholder="Facoltative…"></textarea></div>
+    <button class="btn-primary" id="t-save">Salva attività</button><button class="btn-ghost" id="t-cancel">Annulla</button>`);
+  const getWho=bindSeg("t-who");$("#t-cancel").onclick=closeSheet;$("#t-title").focus();
+  $("#t-save").onclick=async()=>{
+    const title=$("#t-title").value.trim();if(!title){toast("Inserisci una descrizione");return;}
+    try{await addDoc(collection(db,"families",family,"tasks"),{title,who:getWho(),date:$("#t-date").value||"",time:$("#t-time").value||"",notes:$("#t-notes").value.trim(),done:false,by:me,createdMs:Date.now(),createdAt:serverTimestamp()});toast("Attività aggiunta");closeSheet();}
+    catch(e){toast("Errore");console.error(e);}
+  };
+}
+function openEventSheet(preDate){
+  const today=preDate||todayStr();
+  openSheet(`<div class="grab"></div><h2>Nuovo evento</h2>
+    <div class="field" style="margin-top:12px"><label>Titolo</label><input id="v-title" type="text" placeholder="es. Cena con i genitori"></div>
+    <div class="field"><label>Per chi</label>${segUsers("v-who",2,true)}</div>
+    <div class="field" style="display:flex;gap:10px"><div style="flex:1"><label>Data</label><input id="v-date" type="date" value="${today}"></div><div style="flex:1"><label>Ora</label><input id="v-time" type="time"></div></div>
+    <div class="field"><label>Luogo</label><input id="v-loc" type="text" placeholder="Facoltativo"></div>
+    <div class="field"><label>Note</label><textarea id="v-notes" placeholder="Facoltative…"></textarea></div>
+    <button class="btn-primary" id="v-save">Salva evento</button><button class="btn-ghost" id="v-cancel">Annulla</button>`);
+  const getWho=bindSeg("v-who");$("#v-cancel").onclick=closeSheet;$("#v-title").focus();
+  $("#v-save").onclick=async()=>{
+    const title=$("#v-title").value.trim();if(!title){toast("Inserisci un titolo");return;}
+    const date=$("#v-date").value||today;
+    try{await addDoc(collection(db,"families",family,"events"),{title,who:getWho(),date,time:$("#v-time").value||"",location:$("#v-loc").value.trim(),notes:$("#v-notes").value.trim(),by:me,createdMs:Date.now(),createdAt:serverTimestamp()});toast("Evento aggiunto");closeSheet();if(curTab==="calendar"){calSel=date;calYM={y:parseInt(date.slice(0,4)),m:parseInt(date.slice(5,7))-1};}}
+    catch(e){toast("Errore");console.error(e);}
+  };
+}
+function openShopSheet(){
+  openSheet(`<div class="grab"></div><h2>Aggiungi alla lista</h2>
+    <div class="field" style="margin-top:12px"><label>Prodotto</label><input id="s-name" type="text" placeholder="es. Latte"></div>
+    <div class="field"><label>Quantità / note</label><input id="s-qty" type="text" placeholder="es. 2 confezioni (facoltativo)"></div>
+    <button class="btn-primary" id="s-save">Aggiungi</button><button class="btn-ghost" id="s-cancel">Annulla</button>`);
+  $("#s-cancel").onclick=closeSheet;$("#s-name").focus();
+  const save=async()=>{const name=$("#s-name").value.trim();if(!name){toast("Inserisci un prodotto");return;}try{await addDoc(collection(db,"families",family,"shopping"),{name,qty:$("#s-qty").value.trim(),done:false,by:me,createdMs:Date.now(),createdAt:serverTimestamp()});toast("Aggiunto");closeSheet();}catch(e){toast("Errore");}};
+  $("#s-save").onclick=save;
+  $("#s-name").addEventListener("keydown",e=>{if(e.key==="Enter")save();});
+}
+function openAddMenu(){
+  openSheet(`<div class="grab"></div><h2>Cosa vuoi aggiungere?</h2><div class="add-menu" style="margin-top:14px">
+    <button data-a="event"><span class="me">📅</span>Evento in calendario</button>
+    <button data-a="task"><span class="me">✅</span>Attività da fare</button>
+    <button data-a="shop"><span class="me">🛒</span>Prodotto lista spesa</button>
+    <button data-a="expense"><span class="me">💶</span>Spesa (soldi)</button>
+    </div><button class="btn-ghost" id="am-cancel">Annulla</button>`);
+  $("#am-cancel").onclick=closeSheet;
+  document.querySelectorAll(".add-menu button").forEach(b=>b.onclick=()=>{closeSheet();quickAdd(b.dataset.a);});
+}
+function quickAdd(a){if(a==="event")openEventSheet();else if(a==="task")openTaskSheet();else if(a==="shop")openShopSheet();else if(a==="expense")openExpenseSheet();}
+
+/* ---------- Impostazioni ---------- */
+function openNamesSheet(){
+  openSheet(`<div class="grab"></div><h2>Modifica nomi</h2>
+    <div class="field" style="margin-top:12px"><label>Nome 1</label><input id="n0" type="text" value="${escapeHtml(userName(0))}"></div>
+    <div class="field"><label>Nome 2</label><input id="n1" type="text" value="${escapeHtml(userName(1))}"></div>
+    <button class="btn-primary" id="n-save">Salva</button><button class="btn-ghost" id="n-cancel">Annulla</button>`);
+  $("#n-cancel").onclick=closeSheet;
+  $("#n-save").onclick=async()=>{const n0=$("#n0").value.trim()||"Io",n1=$("#n1").value.trim()||"Partner";try{await setDoc(doc(db,"families",family,"meta","config"),{members:[n0,n1]},{merge:true});toast("Nomi aggiornati");closeSheet();}catch(e){toast("Errore");}};
+}
+function inviteLink(){return location.origin+location.pathname+"#join="+encodeURIComponent(b64encode({cfg,family}));}
+function openShareSheet(){
+  const link=inviteLink();
+  openSheet(`<div class="grab"></div><h2>Invita il partner</h2>
+    <p class="muted" style="margin:6px 0 14px;font-size:14px">Il modo più semplice: invia questo <b>link d'invito</b> al partner (WhatsApp, ecc.). Aprendolo sul suo telefono, l'app si collega da sola alla vostra famiglia — dovrà solo scegliere il proprio nome.</p>
+    <div class="card" style="margin-bottom:12px"><div class="label">Link d'invito</div>
+      <div class="muted" style="font-size:12.5px;margin-top:6px;word-break:break-all">${escapeHtml(link)}</div></div>
+    <button class="btn-primary" id="sh-share">📤 Invia link d'invito</button>
+    <button class="btn-ghost" id="sh-copylink">Copia link</button>
+    <div class="label" style="margin:18px 0 8px">In alternativa, a mano</div>
+    <div class="card" style="margin-bottom:10px"><div class="label">Codice famiglia</div><div style="font-size:18px;font-weight:700;margin-top:4px">${escapeHtml(family)}</div></div>
+    <button class="btn-ghost" id="sh-copycfg">Copia configurazione Firebase</button>
+    <button class="btn-ghost" id="sh-close">Chiudi</button>`);
+  $("#sh-close").onclick=closeSheet;
+  $("#sh-share").onclick=async()=>{
+    const payload={title:"Insieme — invito famiglia",text:"Ti invito su Insieme, il nostro organizer di famiglia. Apri questo link sul telefono:",url:link};
+    try{ if(navigator.share){await navigator.share(payload);} else {await navigator.clipboard.writeText(link);toast("Link copiato");} }
+    catch(e){ if(e&&e.name!=="AbortError")toast("Condivisione non riuscita"); }
+  };
+  $("#sh-copylink").onclick=async()=>{try{await navigator.clipboard.writeText(link);toast("Link copiato");}catch(e){toast("Copia non riuscita");}};
+  $("#sh-copycfg").onclick=async()=>{try{await navigator.clipboard.writeText("Codice famiglia: "+family+"\n\nConfigurazione Firebase:\n"+JSON.stringify(cfg,null,2));toast("Configurazione copiata");}catch(e){toast("Copia non riuscita");}};
+}
+
+/* ---------- UI binding ---------- */
+function bindUI(){
+  document.querySelectorAll(".tabbar button").forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+  $("#fab").onclick=()=>{
+    if(curTab==="calendar")openEventSheet(calSel);
+    else if(curTab==="lists")listMode==="tasks"?openTaskSheet():openShopSheet();
+    else if(curTab==="expenses")openExpenseSheet();
+    else openAddMenu();
+  };
+  $("#who-chip").onclick=()=>switchTab("settings");
+  // quick actions bacheca
+  document.querySelectorAll(".qa").forEach(q=>q.onclick=()=>quickAdd(q.dataset.add));
+  document.querySelectorAll("[data-goto]").forEach(x=>x.onclick=()=>switchTab(x.dataset.goto));
+  // nota bacheca
+  $("#note-add").onclick=async()=>{const t=$("#note-input").value.trim();if(!t)return;try{await addDoc(collection(db,"families",family,"notes"),{text:t,by:me,createdMs:Date.now(),createdAt:serverTimestamp()});$("#note-input").value="";toast("Aggiunto");}catch(e){toast("Errore");}};
+  // calendario
+  $("#cal-prev").onclick=()=>{calYM.m--;if(calYM.m<0){calYM.m=11;calYM.y--;}renderCalendar();};
+  $("#cal-next").onclick=()=>{calYM.m++;if(calYM.m>11){calYM.m=0;calYM.y++;}renderCalendar();};
+  // liste seg
+  $("#seg-tasks").onclick=()=>setListMode("tasks");
+  $("#seg-shop").onclick=()=>setListMode("shop");
+  document.querySelectorAll("#task-chips .chip").forEach(ch=>ch.onclick=()=>{taskFilter=ch.dataset.f;document.querySelectorAll("#task-chips .chip").forEach(x=>x.classList.remove("active"));ch.classList.add("active");renderTasks();});
+  $("#shop-clear").onclick=async()=>{const done=shop.filter(s=>s.done);for(const s of done){try{await deleteDoc(doc(db,"families",family,"shopping",s.id));}catch(e){}}toast("Rimossi");};
+  // spese month
+  $("#m-prev").onclick=()=>{expMonth--;renderExpenses();renderHome();};
+  $("#m-next").onclick=()=>{expMonth++;renderExpenses();renderHome();};
+  // settings
+  $("#set-switch-user").onclick=()=>{localStorage.removeItem(LS.me);location.reload();};
+  $("#set-names").onclick=openNamesSheet;
+  $("#set-share").onclick=openShareSheet;
+  $("#set-reset").onclick=()=>{
+    openSheet(`<div class="grab"></div><h2>Reimpostare?</h2><p class="muted" style="margin:4px 0 18px">Verrà cancellata la configurazione da <b>questo telefono</b>. I dati sul cloud restano.</p><button class="btn-primary danger" id="ry">Reimposta</button><button class="btn-ghost" id="rn">Annulla</button>`);
+    $("#ry").onclick=()=>{localStorage.removeItem(LS.cfg);localStorage.removeItem(LS.family);localStorage.removeItem(LS.me);location.reload();};
+    $("#rn").onclick=closeSheet;
+  };
+}
+function setListMode(m){listMode=m;$("#seg-tasks").classList.toggle("on",m==="tasks");$("#seg-shop").classList.toggle("on",m==="shop");$("#list-tasks-wrap").classList.toggle("hidden",m!=="tasks");$("#list-shop-wrap").classList.toggle("hidden",m!=="shop");}
+function switchTab(tab){
+  curTab=tab;
+  ["home","calendar","lists","expenses","settings"].forEach(t=>$("#page-"+t).classList.toggle("hidden",t!==tab));
+  document.querySelectorAll(".tabbar button").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  $("#fab").classList.toggle("hidden",tab==="settings");
+  const titles={home:"Insieme",calendar:"Calendario",lists:"Liste",expenses:"Spese",settings:"Impostazioni"};
+  const subs={home:"La nostra famiglia",calendar:"Eventi e appuntamenti",lists:"Attività e spesa",expenses:"Budget condiviso",settings:""};
+  $("#app-title").textContent=titles[tab];$("#app-sub").textContent=subs[tab];
+  window.scrollTo({top:0});
+}
+
+boot();
 </script>
 </body>
 </html>
