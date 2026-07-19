@@ -8,13 +8,19 @@ proprio telefono e l'altro le vede in tempo reale.
 
 ## Cosa fa
 
-- **🏠 Bacheca** — panoramica del giorno: bilancio spese, prossimi impegni, attività da fare e una bacheca di note condivise.
-- **📅 Calendario** — eventi e appuntamenti condivisi, colorati per persona (tu / partner / famiglia).
-- **✅ Liste** — attività da fare (assegnabili a ciascuno) + lista della spesa con spunta.
-- **💶 Spese** — spese familiari con categorie, totali del mese e **bilancio automatico** (chi deve dare quanto all'altro, diviso 50/50 sulle spese condivise).
-- **⚙️ Altro** — cambio profilo, modifica nomi, invito del partner.
+- **🏠 Bacheca** — panoramica del giorno: saldo spese, prossimi impegni, attività da fare e una bacheca di note condivise.
+- **📅 Calendario** — eventi e appuntamenti condivisi, colorati per persona, con **ricorrenze** (ogni giorno/settimana/mese).
+- **✅ Liste** — attività da fare (assegnabili a ciascuno, modificabili) + lista della spesa con spunta.
+- **💶 Spese** — categorie, totali del mese e **bilancio automatico multi-persona**: split in parti uguali o **personalizzato**, spese **ricorrenti** (es. affitto), e "rimborsi consigliati" (chi deve dare quanto a chi).
+- **💬 Chat** — messaggi di famiglia in tempo reale.
+- **🍽️ Pasti & Ricette** — pianificatore settimanale dei pasti + ricettario condiviso.
+- **📇 Rubrica** — contatti condivisi (con chiamata/SMS/email diretti).
+- **🔔 Promemoria** — notifiche per eventi e attività (quando l'app è installata come PWA).
+- **👨‍👩‍👧 Membri** — più di due persone, con nomi e colori; modifica di ogni elemento (spese, attività, eventi).
 
-I dati si **sincronizzano in tempo reale** tra i due telefoni tramite Firebase (piano gratuito).
+I dati si **sincronizzano in tempo reale** tra i telefoni tramite Firebase (piano gratuito).
+
+> Nota sui promemoria: le notifiche in **background** su iPhone sono limitate dal sistema; funzionano quando l'app è aperta o installata in schermata Home. Per notifiche push totalmente affidabili servirebbe l'app nativa (percorso TestFlight, a parte).
 
 ## Come si usa (2 minuti, una sola volta)
 

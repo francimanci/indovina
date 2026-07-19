@@ -13,198 +13,230 @@
   <link rel="apple-touch-icon" href="icon-180.png">
   <link rel="icon" type="image/png" href="icon-192.png">
   <style>
-  :root{
-    --bg:#ffffff;--surface:#ffffff;--surface-2:#f4f4f6;--surface-3:#eaeaee;
-    --txt:#0a0a0b;--txt-2:#6b6b73;--muted:#9a9aa2;--line:#ececed;--line-2:#e1e1e5;
-    --accent:#0a0a0b;--accent-contrast:#ffffff;
-    --green:#0a8f4d;--red:#dc4038;
-    --u0:#4f5bd5;--u1:#c4437f;--both:#2f8f7f;
-    --shadow:0 6px 24px rgba(0,0,0,.10);--radius:16px;
-  }
-  @media (prefers-color-scheme:dark){:root{
-    --bg:#000000;--surface:#0c0c0e;--surface-2:#161618;--surface-3:#232326;
-    --txt:#f5f5f7;--txt-2:#a1a1a8;--muted:#77777f;--line:#212124;--line-2:#2c2c30;
-    --accent:#ffffff;--accent-contrast:#0a0a0b;
-    --green:#30d158;--red:#ff453a;--u0:#8b96ff;--u1:#ff84b4;--both:#4fd0bd;
-    --shadow:0 8px 30px rgba(0,0,0,.5);
-  }}
-  :root[data-theme="light"]{
-    --bg:#ffffff;--surface:#ffffff;--surface-2:#f4f4f6;--surface-3:#eaeaee;
-    --txt:#0a0a0b;--txt-2:#6b6b73;--muted:#9a9aa2;--line:#ececed;--line-2:#e1e1e5;
-    --accent:#0a0a0b;--accent-contrast:#ffffff;--green:#0a8f4d;--red:#dc4038;
-    --u0:#4f5bd5;--u1:#c4437f;--both:#2f8f7f;--shadow:0 6px 24px rgba(0,0,0,.10);
-  }
-  :root[data-theme="dark"]{
-    --bg:#000000;--surface:#0c0c0e;--surface-2:#161618;--surface-3:#232326;
-    --txt:#f5f5f7;--txt-2:#a1a1a8;--muted:#77777f;--line:#212124;--line-2:#2c2c30;
-    --accent:#ffffff;--accent-contrast:#0a0a0b;--green:#30d158;--red:#ff453a;
-    --u0:#8b96ff;--u1:#ff84b4;--both:#4fd0bd;--shadow:0 8px 30px rgba(0,0,0,.5);
-  }
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{margin:0;padding:0}
-  body{font-family:system-ui,-apple-system,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--txt);line-height:1.42;padding-bottom:calc(80px + env(safe-area-inset-bottom));-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
-  input,select,textarea{font-family:inherit;font-size:16px}
-  .hidden{display:none!important}
-  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+    :root{
+      --bg:#ffffff;--surface:#ffffff;--surface-2:#f4f4f6;--surface-3:#eaeaee;
+      --txt:#0a0a0b;--txt-2:#6b6b73;--muted:#9a9aa2;--line:#ececed;--line-2:#e1e1e5;
+      --accent:#0a0a0b;--accent-contrast:#ffffff;
+      --green:#0a8f4d;--red:#dc4038;
+      --shadow:0 6px 24px rgba(0,0,0,.10);--radius:16px;
+    }
+    @media (prefers-color-scheme:dark){:root{
+      --bg:#000000;--surface:#0c0c0e;--surface-2:#161618;--surface-3:#232326;
+      --txt:#f5f5f7;--txt-2:#a1a1a8;--muted:#77777f;--line:#212124;--line-2:#2c2c30;
+      --accent:#ffffff;--accent-contrast:#0a0a0b;--green:#30d158;--red:#ff453a;
+      --shadow:0 8px 30px rgba(0,0,0,.5);
+    }}
+    :root[data-theme="light"]{
+      --bg:#ffffff;--surface:#ffffff;--surface-2:#f4f4f6;--surface-3:#eaeaee;
+      --txt:#0a0a0b;--txt-2:#6b6b73;--muted:#9a9aa2;--line:#ececed;--line-2:#e1e1e5;
+      --accent:#0a0a0b;--accent-contrast:#ffffff;--green:#0a8f4d;--red:#dc4038;--shadow:0 6px 24px rgba(0,0,0,.10);
+    }
+    :root[data-theme="dark"]{
+      --bg:#000000;--surface:#0c0c0e;--surface-2:#161618;--surface-3:#232326;
+      --txt:#f5f5f7;--txt-2:#a1a1a8;--muted:#77777f;--line:#212124;--line-2:#2c2c30;
+      --accent:#ffffff;--accent-contrast:#0a0a0b;--green:#30d158;--red:#ff453a;--shadow:0 8px 30px rgba(0,0,0,.5);
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;padding:0}
+    body{font-family:system-ui,-apple-system,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--txt);line-height:1.42;padding-bottom:calc(80px + env(safe-area-inset-bottom));-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+    input,select,textarea{font-family:inherit;font-size:16px}
+    .hidden{display:none!important}
+    :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-  header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top) + 14px) 18px 13px}
-  .h-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
-  header h1{font-size:22px;margin:0;font-weight:700;letter-spacing:-.02em}
-  header .sub{font-size:13px;color:var(--txt-2);margin-top:1px}
-  .who-chip{display:flex;align-items:center;gap:7px;background:var(--surface-2);padding:7px 12px;border-radius:99px;font-size:13px;font-weight:600;color:var(--txt)}
-  .who-dot{width:9px;height:9px;border-radius:50%;background:var(--txt)}
+    header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top) + 14px) 18px 13px}
+    .h-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .h-left{display:flex;align-items:center;gap:10px;min-width:0}
+    .hdr-back{width:34px;height:34px;flex:0 0 34px;border-radius:10px;background:var(--surface-2);display:flex;align-items:center;justify-content:center}
+    .hdr-back svg{width:20px;height:20px}
+    header h1{font-size:22px;margin:0;font-weight:700;letter-spacing:-.02em}
+    header .sub{font-size:13px;color:var(--txt-2);margin-top:1px}
+    .who-chip{display:flex;align-items:center;gap:7px;background:var(--surface-2);padding:7px 12px;border-radius:99px;font-size:13px;font-weight:600;color:var(--txt);flex:0 0 auto}
+    .who-dot{width:9px;height:9px;border-radius:50%;background:var(--txt)}
 
-  main{max-width:600px;margin:0 auto;padding:16px 16px 24px}
-  .page{animation:fade .25s ease}
-  @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+    main{max-width:600px;margin:0 auto;padding:16px 16px 24px}
+    .page{animation:fade .25s ease}
+    @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 
-  .card{background:var(--surface-2);border-radius:var(--radius);padding:16px}
-  .grad-card{background:var(--surface-2);border-radius:20px;padding:20px}
-  .label{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
-  .big-amount{font-size:40px;font-weight:700;margin:8px 0 3px;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
-  .muted{color:var(--txt-2)}
-  .section-title{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin:26px 4px 10px;display:flex;justify-content:space-between;align-items:center}
-  .link-btn{color:var(--txt-2);font-size:13.5px;font-weight:600}
-  .section-title .link-btn{text-transform:none;letter-spacing:0}
+    .card{background:var(--surface-2);border-radius:var(--radius);padding:16px}
+    .grad-card{background:var(--surface-2);border-radius:20px;padding:20px}
+    .label{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+    .big-amount{font-size:40px;font-weight:700;margin:8px 0 3px;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+    .muted{color:var(--txt-2)}
+    .section-title{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin:24px 4px 10px;display:flex;justify-content:space-between;align-items:center}
+    .link-btn{color:var(--txt-2);font-size:13.5px;font-weight:600}
+    .section-title .link-btn{text-transform:none;letter-spacing:0}
 
-  .stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
-  .stat{background:var(--surface-2);border-radius:14px;padding:14px 15px}
-  .stat .s-label{font-size:12px;color:var(--txt-2);font-weight:500}
-  .stat .s-val{font-size:22px;font-weight:700;margin-top:4px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+    .stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
+    .stat{background:var(--surface-2);border-radius:14px;padding:14px 15px}
+    .stat .s-label{font-size:12px;color:var(--txt-2);font-weight:500}
+    .stat .s-val{font-size:22px;font-weight:700;margin-top:4px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 
-  .item{display:flex;align-items:center;gap:13px;background:var(--surface-2);border-radius:14px;padding:13px 14px;margin-bottom:8px;position:relative}
-  .item .emoji{font-size:18px;width:38px;height:38px;flex:0 0 38px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--line);border-radius:10px}
-  .item .body{flex:1;min-width:0}
-  .item .t1{font-weight:600;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:-.01em}
-  .item .t2{font-size:12.5px;color:var(--txt-2);margin-top:2px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .item .amt{font-weight:700;font-size:16px;white-space:nowrap;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-  .del-btn{background:transparent;color:var(--muted);font-size:20px;padding:2px 6px;line-height:1;border-radius:8px}
-  .del-btn:active{background:var(--surface-3)}
-  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600}
-  .pill .pd{width:7px;height:7px;border-radius:50%}
-  .tag{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:500;padding:2px 9px;border-radius:99px;background:var(--surface);border:1px solid var(--line);color:var(--txt-2)}
+    .item{display:flex;align-items:center;gap:13px;background:var(--surface-2);border-radius:14px;padding:13px 14px;margin-bottom:8px;position:relative}
+    .item.tap{cursor:pointer}
+    .item .emoji{font-size:18px;width:38px;height:38px;flex:0 0 38px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+    .item .avatar{width:38px;height:38px;flex:0 0 38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:15px}
+    .item .body{flex:1;min-width:0}
+    .item .t1{font-weight:600;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:-.01em}
+    .item .t2{font-size:12.5px;color:var(--txt-2);margin-top:2px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .item .amt{font-weight:700;font-size:16px;white-space:nowrap;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+    .row-actions{display:flex;align-items:center;gap:2px}
+    .icon-btn{background:transparent;color:var(--muted);padding:4px 6px;line-height:1;border-radius:8px;font-size:15px}
+    .icon-btn svg{width:17px;height:17px;display:block}
+    .icon-btn:active{background:var(--surface-3)}
+    .chev{color:var(--muted)}.chev svg{width:18px;height:18px}
+    .pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600}
+    .pill .pd{width:7px;height:7px;border-radius:50%}
+    .tag{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:500;padding:2px 9px;border-radius:99px;background:var(--surface);border:1px solid var(--line);color:var(--txt-2)}
 
-  .empty{text-align:center;color:var(--muted);padding:30px 20px;font-size:14.5px}
-  .empty .big{font-size:34px;margin-bottom:8px;opacity:.85}
+    .empty{text-align:center;color:var(--muted);padding:30px 20px;font-size:14.5px}
+    .empty .big{font-size:34px;margin-bottom:8px;opacity:.85}
 
-  .check{width:24px;height:24px;flex:0 0 24px;border-radius:50%;border:1.8px solid var(--line-2);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--accent-contrast);background:transparent;transition:.15s}
-  .done .check{background:var(--accent);border-color:var(--accent)}
-  .done .t1{text-decoration:line-through;color:var(--muted)}
+    .check{width:24px;height:24px;flex:0 0 24px;border-radius:50%;border:1.8px solid var(--line-2);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--accent-contrast);background:transparent;transition:.15s}
+    .done .check{background:var(--accent);border-color:var(--accent)}
+    .done .t1{text-decoration:line-through;color:var(--muted)}
 
-  .chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
-  .chips::-webkit-scrollbar{display:none}
-  .chip{flex:0 0 auto;padding:8px 15px;border-radius:99px;background:var(--surface-2);font-size:13px;font-weight:600;color:var(--txt-2)}
-  .chip.active{background:var(--accent);color:var(--accent-contrast)}
+    .chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
+    .chips::-webkit-scrollbar{display:none}
+    .chip{flex:0 0 auto;padding:8px 15px;border-radius:99px;background:var(--surface-2);font-size:13px;font-weight:600;color:var(--txt-2)}
+    .chip.active{background:var(--accent);color:var(--accent-contrast)}
 
-  .seg2{display:flex;background:var(--surface-2);border-radius:12px;padding:4px;margin-bottom:16px;gap:4px}
-  .seg2 button{flex:1;padding:10px;border-radius:9px;font-weight:600;font-size:14px;color:var(--txt-2)}
-  .seg2 button.on{background:var(--bg);color:var(--txt);box-shadow:0 1px 3px rgba(0,0,0,.14)}
+    .seg2{display:flex;background:var(--surface-2);border-radius:12px;padding:4px;margin-bottom:16px;gap:4px}
+    .seg2 button{flex:1;padding:10px;border-radius:9px;font-weight:600;font-size:14px;color:var(--txt-2)}
+    .seg2 button.on{background:var(--bg);color:var(--txt);box-shadow:0 1px 3px rgba(0,0,0,.14)}
 
-  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-  .cal-head .m-label{font-weight:700;font-size:18px;text-transform:capitalize;letter-spacing:-.02em}
-  .cal-head button{font-size:20px;width:38px;height:38px;border-radius:11px;background:var(--surface-2);color:var(--txt)}
-  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
-  .cal-dow{text-align:center;font-size:11px;color:var(--muted);font-weight:600;padding-bottom:4px}
-  .cal-cell{aspect-ratio:1;border-radius:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:600;background:var(--surface-2);border:1.5px solid transparent;color:var(--txt);font-variant-numeric:tabular-nums}
-  .cal-cell.out{color:var(--muted);background:transparent;opacity:.5}
-  .cal-cell.today{border-color:var(--line-2)}
-  .cal-cell.sel{background:var(--accent);color:var(--accent-contrast);border-color:var(--accent)}
-  .cal-cell .dots{display:flex;gap:2px;margin-top:3px;height:5px}
-  .cal-cell .dots i{width:5px;height:5px;border-radius:50%;display:block}
+    .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .cal-head .m-label{font-weight:700;font-size:18px;text-transform:capitalize;letter-spacing:-.02em}
+    .cal-head button{font-size:20px;width:38px;height:38px;border-radius:11px;background:var(--surface-2);color:var(--txt)}
+    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+    .cal-dow{text-align:center;font-size:11px;color:var(--muted);font-weight:600;padding-bottom:4px}
+    .cal-cell{aspect-ratio:1;border-radius:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:600;background:var(--surface-2);border:1.5px solid transparent;color:var(--txt);font-variant-numeric:tabular-nums}
+    .cal-cell.out{color:var(--muted);background:transparent;opacity:.5}
+    .cal-cell.today{border-color:var(--line-2)}
+    .cal-cell.sel{background:var(--accent);color:var(--accent-contrast);border-color:var(--accent)}
+    .cal-cell .dots{display:flex;gap:2px;margin-top:3px;height:5px}
+    .cal-cell .dots i{width:5px;height:5px;border-radius:50%;display:block}
 
-  .fab{position:fixed;right:18px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:30;width:54px;height:54px;border-radius:50%;background:var(--accent);color:var(--accent-contrast);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
-  .fab svg{width:24px;height:24px}
-  .fab:active{transform:scale(.94)}
+    .fab{position:fixed;right:18px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:30;width:54px;height:54px;border-radius:50%;background:var(--accent);color:var(--accent-contrast);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+    .fab svg{width:24px;height:24px}
+    .fab:active{transform:scale(.94)}
 
-  nav.tabbar{position:fixed;bottom:0;left:0;right:0;z-index:25;background:var(--bg);border-top:1px solid var(--line);display:flex;padding:9px 0 calc(9px + env(safe-area-inset-bottom))}
-  .tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);font-size:10.5px;font-weight:600;padding:2px 0}
-  .tabbar button svg{width:24px;height:24px}
-  .tabbar button.active{color:var(--txt)}
+    nav.tabbar{position:fixed;bottom:0;left:0;right:0;z-index:25;background:var(--bg);border-top:1px solid var(--line);display:flex;padding:9px 0 calc(9px + env(safe-area-inset-bottom))}
+    .tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);font-size:10.5px;font-weight:600;padding:2px 0}
+    .tabbar button svg{width:24px;height:24px}
+    .tabbar button.active{color:var(--txt)}
 
-  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;display:flex;align-items:flex-end;justify-content:center;animation:fade .2s}
-  .sheet{background:var(--bg);width:100%;max-width:600px;border-radius:22px 22px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom));max-height:92vh;overflow-y:auto;animation:slideUp .28s cubic-bezier(.2,.8,.2,1);box-shadow:var(--shadow);border-top:1px solid var(--line)}
-  @keyframes slideUp{from{transform:translateY(100%)}to{transform:none}}
-  .sheet h2{margin:0 0 4px;font-size:20px;letter-spacing:-.02em}
-  .grab{width:40px;height:5px;background:var(--line-2);border-radius:99px;margin:-2px auto 16px}
-  .field{margin-bottom:14px}
-  .field label{display:block;font-size:13px;color:var(--txt-2);font-weight:600;margin-bottom:6px}
-  .field input,.field select,.field textarea{width:100%;padding:13px 14px;border-radius:12px;background:var(--surface-2);border:1px solid transparent;color:var(--txt);outline:none}
-  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
-  .field textarea{resize:vertical;min-height:60px}
-  .seg{display:flex;gap:8px}
-  .seg button{flex:1;padding:12px;border-radius:12px;background:var(--surface-2);font-weight:600;font-size:14px;color:var(--txt-2)}
-  .seg button.on{background:var(--accent);color:var(--accent-contrast)}
-  .seg button.on0{background:var(--u0);color:#fff}
-  .seg button.on1{background:var(--u1);color:#fff}
-  .seg button.on2{background:var(--both);color:#fff}
-  .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-  .cat-grid button{padding:10px 4px;border-radius:12px;background:var(--surface-2);border:1.5px solid transparent;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--txt-2)}
-  .cat-grid button.on{border-color:var(--accent);color:var(--txt)}
-  .cat-grid button .ce{font-size:20px}
-  .btn-primary{width:100%;padding:15px;border-radius:13px;background:var(--accent);color:var(--accent-contrast);font-weight:700;font-size:16px;margin-top:6px;letter-spacing:-.01em}
-  .btn-primary:active{opacity:.85}
-  .btn-primary.danger{background:var(--red);color:#fff}
-  .btn-ghost{width:100%;padding:13px;border-radius:13px;background:transparent;color:var(--txt-2);font-weight:600;font-size:14px;margin-top:4px}
-  .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;background:var(--surface-2);border-radius:12px}
-  .switch{width:46px;height:28px;border-radius:99px;background:var(--line-2);position:relative;transition:.2s;flex:0 0 46px}
-  .switch.on{background:var(--green)}
-  .switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s}
-  .switch.on::after{left:21px}
-  .add-menu button{width:100%;display:flex;align-items:center;gap:14px;padding:15px;border-radius:13px;background:var(--surface-2);margin-bottom:10px;font-size:16px;font-weight:600;color:var(--txt)}
-  .add-menu button .me{font-size:22px}
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;display:flex;align-items:flex-end;justify-content:center;animation:fade .2s}
+    .sheet{background:var(--bg);width:100%;max-width:600px;border-radius:22px 22px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom));max-height:92vh;overflow-y:auto;animation:slideUp .28s cubic-bezier(.2,.8,.2,1);box-shadow:var(--shadow);border-top:1px solid var(--line)}
+    @keyframes slideUp{from{transform:translateY(100%)}to{transform:none}}
+    .sheet h2{margin:0 0 4px;font-size:20px;letter-spacing:-.02em}
+    .grab{width:40px;height:5px;background:var(--line-2);border-radius:99px;margin:-2px auto 16px}
+    .field{margin-bottom:14px}
+    .field label{display:block;font-size:13px;color:var(--txt-2);font-weight:600;margin-bottom:6px}
+    .field input,.field select,.field textarea{width:100%;padding:13px 14px;border-radius:12px;background:var(--surface-2);border:1px solid transparent;color:var(--txt);outline:none}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+    .field textarea{resize:vertical;min-height:60px}
+    .seg{display:flex;gap:8px;flex-wrap:wrap}
+    .seg button{flex:1 1 auto;min-width:70px;padding:11px;border-radius:12px;background:var(--surface-2);font-weight:600;font-size:14px;color:var(--txt-2)}
+    .seg button.on{background:var(--accent);color:var(--accent-contrast)}
+    .seg.people button.on{color:#fff}
+    .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .cat-grid button{padding:10px 4px;border-radius:12px;background:var(--surface-2);border:1.5px solid transparent;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--txt-2)}
+    .cat-grid button.on{border-color:var(--accent);color:var(--txt)}
+    .cat-grid button .ce{font-size:20px}
+    .part-grid{display:flex;flex-wrap:wrap;gap:8px}
+    .part-grid button{padding:8px 13px;border-radius:99px;background:var(--surface-2);font-weight:600;font-size:13px;color:var(--txt-2);display:inline-flex;align-items:center;gap:6px}
+    .part-grid button .pd{width:8px;height:8px;border-radius:50%;opacity:.4}
+    .part-grid button.on{color:#fff}
+    .part-grid button.on .pd{opacity:1;background:#fff!important}
+    .split-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+    .split-row .nm{flex:1;font-size:14px;font-weight:600}
+    .split-row input{width:110px;text-align:right}
+    .btn-primary{width:100%;padding:15px;border-radius:13px;background:var(--accent);color:var(--accent-contrast);font-weight:700;font-size:16px;margin-top:6px;letter-spacing:-.01em}
+    .btn-primary:active{opacity:.85}
+    .btn-primary.danger{background:var(--red);color:#fff}
+    .btn-ghost{width:100%;padding:13px;border-radius:13px;background:transparent;color:var(--txt-2);font-weight:600;font-size:14px;margin-top:4px}
+    .btn-ghost.danger{color:var(--red)}
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;background:var(--surface-2);border-radius:12px}
+    .switch{width:46px;height:28px;border-radius:99px;background:var(--line-2);position:relative;transition:.2s;flex:0 0 46px}
+    .switch.on{background:var(--green)}
+    .switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s}
+    .switch.on::after{left:21px}
+    .add-menu button{width:100%;display:flex;align-items:center;gap:14px;padding:15px;border-radius:13px;background:var(--surface-2);margin-bottom:10px;font-size:16px;font-weight:600;color:var(--txt)}
+    .add-menu button .me{font-size:22px}
 
-  .center-screen{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:26px 22px;max-width:520px;margin:0 auto}
-  .logo{font-size:50px;text-align:center;margin-bottom:8px}
-  .center-screen h1{text-align:center;font-size:28px;margin:0 0 6px;letter-spacing:-.03em}
-  .center-screen p.lead{text-align:center;color:var(--txt-2);font-size:15px;margin:0 0 24px}
-  .steps{background:var(--surface-2);border-radius:16px;padding:18px;margin-bottom:18px;font-size:14px}
-  .steps ol{margin:8px 0 0;padding-left:20px}
-  .steps li{margin-bottom:9px;color:var(--txt-2)}
-  .steps li b{color:var(--txt)} .steps a{color:var(--txt);font-weight:600}
-  .who-pick{display:flex;gap:14px;margin-top:10px}
-  .who-pick button{flex:1;padding:24px 14px;border-radius:18px;background:var(--surface-2);border:1.5px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:10px;font-size:17px;font-weight:700}
-  .who-pick button .av{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff}
-  .who-pick button:active{transform:scale(.97)}
-  .note{font-size:12.5px;color:var(--muted);margin-top:10px;text-align:center;line-height:1.5}
-  .err{background:rgba(220,64,56,.12);border:1px solid var(--red);color:var(--red);padding:11px 13px;border-radius:12px;font-size:13.5px;margin-bottom:14px}
-  .toast{position:fixed;bottom:calc(100px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--txt);color:var(--bg);padding:11px 18px;border-radius:99px;font-size:13.5px;z-index:60;box-shadow:var(--shadow);opacity:0;transition:.25s;pointer-events:none;font-weight:500}
-  .toast.show{opacity:1}
-  code{background:var(--surface-2);padding:1px 6px;border-radius:6px;font-size:12.5px}
-  .loading-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--muted)}
-  .spinner{width:32px;height:32px;border:2.5px solid var(--line-2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .note-item{background:var(--surface-2);border-radius:13px;padding:13px 14px;margin-bottom:8px}
-  .note-item .nt{font-size:14.5px;white-space:pre-wrap;word-break:break-word}
-  .note-item .nm{font-size:11.5px;color:var(--muted);margin-top:7px;display:flex;align-items:center;gap:6px}
-  .qa-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 4px}
-  .qa{background:var(--surface-2);border-radius:14px;padding:13px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--txt-2)}
-  .qa .qe{font-size:20px}
-</style>
+    .center-screen{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:26px 22px;max-width:520px;margin:0 auto}
+    .logo{font-size:50px;text-align:center;margin-bottom:8px}
+    .center-screen h1{text-align:center;font-size:28px;margin:0 0 6px;letter-spacing:-.03em}
+    .center-screen p.lead{text-align:center;color:var(--txt-2);font-size:15px;margin:0 0 24px}
+    .steps{background:var(--surface-2);border-radius:16px;padding:18px;margin-bottom:18px;font-size:14px}
+    .steps ol{margin:8px 0 0;padding-left:20px}
+    .steps li{margin-bottom:9px;color:var(--txt-2)}
+    .steps li b{color:var(--txt)} .steps a{color:var(--txt);font-weight:600}
+    .who-pick{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
+    .who-pick button{flex:1 1 40%;min-width:120px;padding:22px 14px;border-radius:18px;background:var(--surface-2);border:1.5px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:10px;font-size:17px;font-weight:700}
+    .who-pick button .av{width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:23px;color:#fff}
+    .who-pick button:active{transform:scale(.97)}
+    .note{font-size:12.5px;color:var(--muted);margin-top:10px;text-align:center;line-height:1.5}
+    .err{background:rgba(220,64,56,.12);border:1px solid var(--red);color:var(--red);padding:11px 13px;border-radius:12px;font-size:13.5px;margin-bottom:14px}
+    .toast{position:fixed;bottom:calc(100px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--txt);color:var(--bg);padding:11px 18px;border-radius:99px;font-size:13.5px;z-index:60;box-shadow:var(--shadow);opacity:0;transition:.25s;pointer-events:none;font-weight:500}
+    .toast.show{opacity:1}
+    code{background:var(--surface-2);padding:1px 6px;border-radius:6px;font-size:12.5px}
+    .loading-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--muted)}
+    .spinner{width:32px;height:32px;border:2.5px solid var(--line-2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .note-item{background:var(--surface-2);border-radius:13px;padding:13px 14px;margin-bottom:8px}
+    .note-item .nt{font-size:14.5px;white-space:pre-wrap;word-break:break-word}
+    .note-item .nm{font-size:11.5px;color:var(--muted);margin-top:7px;display:flex;align-items:center;gap:6px}
+    .qa-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 4px}
+    .qa{background:var(--surface-2);border-radius:14px;padding:13px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--txt-2)}
+    .qa .qe{font-size:20px}
+
+    .chat-scroll{padding-bottom:80px}
+    .bubble{max-width:78%;padding:9px 13px;border-radius:16px;margin-bottom:8px;font-size:14.5px;line-height:1.35;word-break:break-word;white-space:pre-wrap}
+    .bubble .who{font-size:11px;font-weight:700;margin-bottom:2px}
+    .bubble.them{background:var(--surface-2);border-bottom-left-radius:5px;align-self:flex-start;margin-right:auto}
+    .bubble.me{background:var(--accent);color:var(--accent-contrast);border-bottom-right-radius:5px;align-self:flex-end;margin-left:auto}
+    .bubble .tm{font-size:10px;opacity:.6;margin-top:3px;text-align:right}
+    .chat-col{display:flex;flex-direction:column}
+    .chat-bar{position:fixed;left:0;right:0;bottom:0;z-index:26;background:var(--bg);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:flex;gap:8px;align-items:flex-end;max-width:600px;margin:0 auto}
+    .chat-bar textarea{flex:1;max-height:110px;min-height:44px;padding:11px 14px;border-radius:20px;background:var(--surface-2);border:1px solid transparent;color:var(--txt);outline:none;resize:none}
+    .chat-send{width:44px;height:44px;flex:0 0 44px;border-radius:50%;background:var(--accent);color:var(--accent-contrast);display:flex;align-items:center;justify-content:center}
+    .chat-send svg{width:20px;height:20px}
+    .day-sep{text-align:center;font-size:11.5px;color:var(--muted);font-weight:600;margin:10px 0}
+
+    .week-day{background:var(--surface-2);border-radius:14px;padding:12px 14px;margin-bottom:9px}
+    .week-day .wd-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+    .week-day .wd-h .d1{font-weight:700;font-size:15px;text-transform:capitalize}
+    .week-day .wd-h .d2{font-size:12px;color:var(--muted)}
+    .slot{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line)}
+    .slot:first-of-type{border-top:none}
+    .slot .sl-l{font-size:11px;color:var(--muted);font-weight:700;width:56px;flex:0 0 56px;text-transform:uppercase;letter-spacing:.04em}
+    .slot .sl-v{flex:1;font-size:14px}
+    .slot .sl-v.empty{color:var(--muted)}
+  </style>
 </head>
 <body>
 
 <div id="screen-loading" class="loading-screen"><div class="spinner"></div><div>Caricamento…</div></div>
 
 <script>
-  // Watchdog: se i componenti (Firebase) non si caricano, evita lo spinner infinito
   window.addEventListener('load', function () {
     setTimeout(function () {
       var ld = document.getElementById('screen-loading');
       if (!window.__insiemeBooted && ld && !ld.classList.contains('hidden')) {
-        ld.innerHTML = '<div style="text-align:center;padding:34px 26px;color:#9aa0c7;max-width:420px">'
+        ld.innerHTML = '<div style="text-align:center;padding:34px 26px;color:var(--muted);max-width:420px">'
           + '<div style="font-size:44px">📡</div>'
-          + '<h2 style="color:#eef0ff;margin:10px 0 6px">Connessione assente</h2>'
+          + '<h2 style="color:var(--txt);margin:10px 0 6px">Connessione assente</h2>'
           + '<p style="font-size:14.5px">Non riesco a caricare i componenti dell\'app. Serve una connessione a Internet al primo avvio. Controlla la rete e riprova.</p>'
-          + '<button onclick="location.reload()" style="margin-top:16px;padding:13px 22px;border-radius:13px;background:#6366f1;color:#fff;border:none;font-weight:700;font-size:15px">Riprova</button>'
+          + '<button onclick="location.reload()" style="margin-top:16px;padding:13px 22px;border-radius:13px;background:var(--accent);color:var(--accent-contrast);border:none;font-weight:700;font-size:15px">Riprova</button>'
           + '</div>';
       }
     }, 8000);
   });
 </script>
 
-<!-- SETUP -->
 <div id="screen-setup" class="center-screen hidden">
   <div class="logo">🏡</div>
   <h1>Insieme</h1>
@@ -228,14 +260,13 @@
   ...
 }'></textarea>
   </div>
-  <div class="field"><label>Codice famiglia (parola segreta uguale per entrambi)</label><input id="cfg-family" type="text" placeholder="es. casa-rossi-2026" autocapitalize="none" autocorrect="off"></div>
+  <div class="field"><label>Codice famiglia (parola segreta uguale per tutti)</label><input id="cfg-family" type="text" placeholder="es. casa-rossi-2026" autocapitalize="none" autocorrect="off"></div>
   <div class="field"><label>Il tuo nome</label><input id="cfg-name0" type="text" placeholder="es. Francesco" autocapitalize="words"></div>
   <div class="field"><label>Nome del/della partner</label><input id="cfg-name1" type="text" placeholder="es. Maria" autocapitalize="words"></div>
   <button class="btn-primary" id="cfg-save">Salva e continua</button>
-  <p class="note">La configurazione resta sul tuo telefono. Sull'altro telefono usate lo <b>stesso</b> codice famiglia e la <b>stessa</b> configurazione per condividere gli stessi dati.</p>
+  <p class="note">Potrai aggiungere altri membri in seguito. La configurazione resta sul tuo telefono.</p>
 </div>
 
-<!-- WHO -->
 <div id="screen-who" class="center-screen hidden">
   <div class="logo">👋</div>
   <h1>Chi sei?</h1>
@@ -244,19 +275,20 @@
   <p class="note">Potrai cambiarlo dalle impostazioni.</p>
 </div>
 
-<!-- APP -->
 <div id="app" class="hidden">
   <header>
     <div class="h-top">
-      <div><h1 id="app-title">Insieme</h1><div class="sub" id="app-sub">La nostra famiglia</div></div>
+      <div class="h-left">
+        <button class="hdr-back hidden" id="hdr-back" aria-label="Indietro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <div><h1 id="app-title">Insieme</h1><div class="sub" id="app-sub">La nostra famiglia</div></div>
+      </div>
       <button class="who-chip" id="who-chip"><span class="who-dot" id="who-chip-dot"></span><span id="who-chip-name">—</span></button>
     </div>
   </header>
   <main>
-    <!-- BACHECA -->
     <section id="page-home" class="page">
       <div class="grad-card" style="margin-bottom:6px">
-        <div class="label">Bilancio spese condivise · <span id="home-month">—</span></div>
+        <div class="label">Il tuo saldo · <span id="home-month">—</span></div>
         <div class="big-amount" id="home-bal">€0,00</div>
         <div class="muted" id="home-bal-note" style="font-size:14px">—</div>
       </div>
@@ -276,27 +308,21 @@
       <div id="home-notes"></div>
     </section>
 
-    <!-- CALENDARIO -->
     <section id="page-calendar" class="page hidden">
-      <div class="cal-head">
-        <button id="cal-prev">‹</button>
-        <div class="m-label" id="cal-label">—</div>
-        <button id="cal-next">›</button>
-      </div>
+      <div class="cal-head"><button id="cal-prev">‹</button><div class="m-label" id="cal-label">—</div><button id="cal-next">›</button></div>
       <div class="cal-grid" id="cal-dows"></div>
       <div class="cal-grid" id="cal-grid" style="margin-top:5px"></div>
       <div class="section-title"><span id="cal-day-label">Eventi</span></div>
       <div id="cal-day-events"></div>
     </section>
 
-    <!-- LISTE -->
     <section id="page-lists" class="page hidden">
       <div class="seg2"><button id="seg-tasks" class="on">✅ Attività</button><button id="seg-shop">🛒 Lista spesa</button></div>
       <div id="list-tasks-wrap">
         <div class="chips" id="task-chips">
           <button class="chip active" data-f="all">Tutte</button>
           <button class="chip" data-f="mine">Le mie</button>
-          <button class="chip" data-f="partner">Del partner</button>
+          <button class="chip" data-f="others">Altri</button>
           <button class="chip" data-f="todo">Da fare</button>
         </div>
         <div id="tasks-list"></div>
@@ -307,41 +333,65 @@
       </div>
     </section>
 
-    <!-- SPESE -->
     <section id="page-expenses" class="page hidden">
-      <div class="cal-head">
-        <button id="m-prev">‹</button>
-        <div class="m-label" id="m-label" style="text-transform:capitalize">—</div>
-        <button id="m-next">›</button>
-      </div>
+      <div class="cal-head"><button id="m-prev">‹</button><div class="m-label" id="m-label" style="text-transform:capitalize">—</div><button id="m-next">›</button></div>
       <div class="grad-card" style="margin-bottom:14px">
-        <div class="label">Bilancio spese condivise</div>
+        <div class="label">Il tuo saldo del mese</div>
         <div class="big-amount" id="bal-amount">€0,00</div>
         <div class="muted" id="bal-note" style="font-size:14px">—</div>
       </div>
-      <div class="stat-row">
-        <div class="stat"><div class="s-label" id="stat0-label">—</div><div class="s-val" id="stat0-val">€0</div></div>
-        <div class="stat"><div class="s-label" id="stat1-label">—</div><div class="s-val" id="stat1-val">€0</div></div>
-      </div>
-      <div class="section-title"><span>Totale mese</span><span id="exp-total">€0</span></div>
+      <div id="settle-wrap"></div>
+      <div class="section-title"><span>Saldi per persona</span><span id="exp-total">€0</span></div>
+      <div id="exp-balances"></div>
+      <div class="section-title"><span>Per categoria</span></div>
       <div id="exp-cats" style="margin-bottom:6px"></div>
       <div class="section-title"><span>Movimenti</span></div>
       <div id="exp-list"></div>
     </section>
 
-    <!-- IMPOSTAZIONI -->
     <section id="page-settings" class="page hidden">
+      <div class="section-title"><span>Famiglia</span></div>
+      <div class="item tap" id="go-chat"><div class="emoji">💬</div><div class="body"><div class="t1">Chat di famiglia</div><div class="t2" id="chat-sub">Messaggi condivisi</div></div><span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
+      <div class="item tap" id="go-meals"><div class="emoji">🍽️</div><div class="body"><div class="t1">Pasti &amp; Ricette</div><div class="t2">Pianifica la settimana</div></div><span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
+      <div class="item tap" id="go-contacts"><div class="emoji">📇</div><div class="body"><div class="t1">Rubrica</div><div class="t2">Contatti condivisi</div></div><span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
+
       <div class="section-title"><span>Impostazioni</span></div>
-      <div class="item" id="set-switch-user"><div class="emoji">🔄</div><div class="body"><div class="t1">Cambia profilo</div><div class="t2">Attualmente: <span id="set-current-user">—</span></div></div></div>
-      <div class="item" id="set-names"><div class="emoji">✏️</div><div class="body"><div class="t1">Modifica nomi</div><div class="t2">Cambia i nomi dei membri</div></div></div>
-      <div class="item"><div class="emoji">👨‍👩‍👧</div><div class="body"><div class="t1">Codice famiglia</div><div class="t2" id="set-family">—</div></div></div>
-      <div class="item" id="set-share"><div class="emoji">📤</div><div class="body"><div class="t1">Invita il partner</div><div class="t2">Come collegare l'altro telefono</div></div></div>
-      <div class="item" id="set-reset"><div class="emoji">⚠️</div><div class="body"><div class="t1">Reimposta configurazione</div><div class="t2">Cancella la config da questo telefono</div></div></div>
-      <p class="note">Insieme · v1.0 — gratuito, senza pubblicità. I dati sono salvati sul tuo account Firebase. Solo chi conosce codice famiglia e configurazione può accedervi.</p>
+      <div class="item tap" id="set-notify"><div class="emoji">🔔</div><div class="body"><div class="t1">Promemoria</div><div class="t2" id="notify-sub">Attiva le notifiche</div></div><span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
+      <div class="item tap" id="set-members"><div class="emoji">👨‍👩‍👧</div><div class="body"><div class="t1">Membri della famiglia</div><div class="t2" id="members-sub">—</div></div><span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
+      <div class="item tap" id="set-switch-user"><div class="emoji">🔄</div><div class="body"><div class="t1">Cambia profilo</div><div class="t2">Attualmente: <span id="set-current-user">—</span></div></div><span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
+      <div class="item tap" id="set-share"><div class="emoji">📤</div><div class="body"><div class="t1">Invita in famiglia</div><div class="t2">Collega un altro telefono</div></div><span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
+      <div class="item tap" id="set-reset"><div class="emoji">⚠️</div><div class="body"><div class="t1">Reimposta configurazione</div><div class="t2">Cancella la config da questo telefono</div></div><span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
+      <p class="note">Insieme · v2.0 — gratuito, senza pubblicità. I dati sono sul tuo Firebase.</p>
+    </section>
+
+    <section id="page-chat" class="page hidden">
+      <div class="chat-col chat-scroll" id="chat-list"></div>
+    </section>
+
+    <section id="page-meals" class="page hidden">
+      <div class="seg2"><button id="seg-week" class="on">🗓️ Settimana</button><button id="seg-recipes">📖 Ricette</button></div>
+      <div id="meals-week-wrap">
+        <div class="cal-head"><button id="wk-prev">‹</button><div class="m-label" id="wk-label" style="font-size:15px">—</div><button id="wk-next">›</button></div>
+        <div id="week-list"></div>
+      </div>
+      <div id="meals-recipes-wrap" class="hidden">
+        <div class="section-title"><span>Le nostre ricette</span></div>
+        <div id="recipes-list"></div>
+      </div>
+    </section>
+
+    <section id="page-contacts" class="page hidden">
+      <div class="section-title"><span>Rubrica condivisa</span></div>
+      <div id="contacts-list"></div>
     </section>
   </main>
 
   <button class="fab" id="fab" aria-label="Aggiungi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5.5v13M5.5 12h13"/></svg></button>
+  <div class="chat-bar hidden" id="chat-bar">
+    <textarea id="chat-input" rows="1" placeholder="Scrivi un messaggio…"></textarea>
+    <button class="chat-send" id="chat-send" aria-label="Invia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button>
+  </div>
+
   <nav class="tabbar">
     <button data-tab="home" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.7 12 3.5l9 7.2"/><path d="M5.2 9.4V20.5h13.6V9.4"/></svg>Bacheca</button>
     <button data-tab="calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.2" y="4.8" width="17.6" height="15.5" rx="2.6"/><path d="M3.2 9.3h17.6M8 3.3v3M16 3.3v3"/></svg>Calendario</button>
@@ -358,7 +408,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, doc, setDoc, getDoc, addDoc, deleteDoc, updateDoc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* ---------- Costanti ---------- */
 const CATS=[
   {id:"spesa",e:"🛒",l:"Spesa"},{id:"casa",e:"🏠",l:"Casa/Bollette"},
   {id:"cibo",e:"🍽️",l:"Cibo/Fuori"},{id:"trasporti",e:"🚗",l:"Trasporti"},
@@ -368,48 +417,60 @@ const CATS=[
 const catOf=id=>CATS.find(c=>c.id===id)||CATS[CATS.length-1];
 const MONTHS=["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
 const DOW=["Lun","Mar","Mer","Gio","Ven","Sab","Dom"];
+const DOWLONG=["lunedì","martedì","mercoledì","giovedì","venerdì","sabato","domenica"];
+const PALETTE=["#4f5bd5","#c4437f","#2f8f7f","#d1873b","#7048c4","#3b82c4","#c0453f","#5a8f3b"];
+const FAMILY_COLOR="#78788a";
+const RECUR_EVENT=[{v:"none",l:"Mai"},{v:"daily",l:"Ogni giorno"},{v:"weekly",l:"Ogni sett."},{v:"monthly",l:"Ogni mese"}];
 const eur=n=>"€"+(Number(n)||0).toLocaleString("it-IT",{minimumFractionDigits:2,maximumFractionDigits:2});
 const eur0=n=>"€"+Math.round(Number(n)||0).toLocaleString("it-IT");
 
-/* ---------- Stato ---------- */
 let db=null,cfg=null,family=null,meta={members:["Io","Partner"]};
 let me=0;
-let expenses=[],tasks=[],shop=[],events=[],notes=[];
-let expMonth=curMonthIdx(), calYM={y:new Date().getFullYear(),m:new Date().getMonth()}, calSel=todayStr();
-let curTab="home",taskFilter="all",listMode="tasks";
-let unsubs=[];
-const LS={cfg:"in_cfg",family:"in_family",me:"in_me"};
+let expenses=[],tasks=[],shop=[],events=[],notes=[],messages=[],meals=[],recipes=[],contacts=[];
+let expMonth=curMonthIdx(),calYM={y:new Date().getFullYear(),m:new Date().getMonth()},calSel=todayStr();
+let weekOffset=0;
+let curTab="home",curSub=null,taskFilter="all",listMode="tasks",mealsMode="week";
+let unsubs=[],reminderTimer=null;
+const LS={cfg:"in_cfg",family:"in_family",me:"in_me",fired:"in_fired"};
 const $=s=>document.querySelector(s);
 const el=(t,c)=>{const e=document.createElement(t);if(c)e.className=c;return e;};
 
-function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function pad(n){return String(n).padStart(2,"0");}
+function todayStr(){const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
 function curMonthIdx(){const d=new Date();return d.getFullYear()*12+d.getMonth();}
-function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),1900);}
-function userColor(i){return i===2?"var(--both)":(i===0?"var(--u0)":"var(--u1)");}
-function userName(i){if(i===2)return "Famiglia";return (meta.members&&meta.members[i])||["Io","Partner"][i];}
-function escapeHtml(s){return String(s==null?"":s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
-function fmtDate(s){if(!s)return "";const d=new Date(s+"T00:00:00");return d.getDate()+" "+MONTHS[d.getMonth()].slice(0,3);}
-function fmtDateFull(s){if(!s)return "";const d=new Date(s+"T00:00:00");return DOW[(d.getDay()+6)%7]+" "+d.getDate()+" "+MONTHS[d.getMonth()];}
-function inMonthIdx(s,m){if(!s)return false;const d=new Date(s+"T00:00:00");return d.getFullYear()*12+d.getMonth()===m;}
+function parseD(s){return [parseInt(s.slice(0,4)),parseInt(s.slice(5,7))-1,parseInt(s.slice(8,10))];}
+function daysInMonth(y,m){return new Date(y,m+1,0).getDate();}
+function monthIdxOf(s){const p=parseD(s);return p[0]*12+p[1];}
+function dayOf(s){return parseD(s)[2];}
+function mkStr(y,m,d){return y+"-"+pad(m+1)+"-"+pad(Math.min(d,daysInMonth(y,m)));}
+function dateForMonthIdx(idx,day){const y=Math.floor(idx/12),m=idx%12;return mkStr(y,m,day);}
+function addDaysStr(s,n){const p=parseD(s);const dt=new Date(p[0],p[1],p[2]+n);return dt.getFullYear()+"-"+pad(dt.getMonth()+1)+"-"+pad(dt.getDate());}
+function addMonthsStr(s,n){const p=parseD(s);const ny=p[0]+Math.floor((p[1]+n)/12),nm=((p[1]+n)%12+12)%12;return mkStr(ny,nm,p[2]);}
+function cmp(a,b){return (a||"").localeCompare(b||"");}
+function fmtDate(s){if(!s)return "";const p=parseD(s);return p[2]+" "+MONTHS[p[1]].slice(0,3);}
+function fmtDateFull(s){if(!s)return "";const p=parseD(s);const dt=new Date(p[0],p[1],p[2]);return DOWLONG[(dt.getDay()+6)%7]+" "+p[2]+" "+MONTHS[p[1]];}
+function weekStartMonday(base){const dt=new Date(base);const off=(dt.getDay()+6)%7;dt.setDate(dt.getDate()-off);return dt;}
 
-/* ---------- Boot ---------- */
+function members(){return (meta.members&&meta.members.length?meta.members:["Io","Partner"]);}
+function memberCount(){return members().length;}
+function userName(i){if(i===-1)return "Famiglia";const m=members();return m[i]||("Membro "+(i+1));}
+function userColor(i){if(i===-1)return FAMILY_COLOR;return PALETTE[((i%PALETTE.length)+PALETTE.length)%PALETTE.length];}
+function initial(i){return (userName(i)[0]||"?").toUpperCase();}
+function range(n){return Array.from({length:n},(_,i)=>i);}
+
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),1900);}
+function escapeHtml(s){return String(s==null?"":s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
+
 function b64encode(obj){return btoa(unescape(encodeURIComponent(JSON.stringify(obj))));}
 function b64decode(s){return JSON.parse(decodeURIComponent(escape(atob(s))));}
 function handleJoinLink(){
-  const h=location.hash||"";const m=h.match(/join=([^&]+)/);
-  if(!m)return;
-  try{
-    const data=b64decode(decodeURIComponent(m[1]));
-    if(data&&data.cfg&&data.family){
-      localStorage.setItem(LS.cfg,JSON.stringify(data.cfg));
-      localStorage.setItem(LS.family,data.family);
-      localStorage.removeItem(LS.me);
-    }
-  }catch(e){console.error("join link non valido",e);}
+  const h=location.hash||"";const m=h.match(/join=([^&]+)/);if(!m)return;
+  try{const data=b64decode(decodeURIComponent(m[1]));if(data&&data.cfg&&data.family){localStorage.setItem(LS.cfg,JSON.stringify(data.cfg));localStorage.setItem(LS.family,data.family);localStorage.removeItem(LS.me);}}catch(e){console.error(e);}
   history.replaceState(null,"",location.pathname+location.search);
 }
 function boot(){
   window.__insiemeBooted=true;
+  if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{});}
   handleJoinLink();
   const rawCfg=localStorage.getItem(LS.cfg);family=localStorage.getItem(LS.family);
   const rawMe=localStorage.getItem(LS.me);
@@ -422,7 +483,6 @@ function boot(){
 function connectFirebase(){try{db=getFirestore(initializeApp(cfg));return true;}catch(e){console.error(e);return false;}}
 function show(w){["loading","setup","who"].forEach(s=>$("#screen-"+s).classList.add("hidden"));$("#app").classList.add("hidden");if(w==="app")$("#app").classList.remove("hidden");else $("#screen-"+w).classList.remove("hidden");}
 
-/* ---------- Setup ---------- */
 function parseCfg(text){
   let t=(text||"").trim();const i=t.indexOf("{"),j=t.lastIndexOf("}");
   if(i<0||j<0)throw new Error("Non trovo l'oggetto { … }. Copia tutto l'oggetto firebaseConfig.");
@@ -444,272 +504,398 @@ $("#cfg-save").addEventListener("click",async()=>{
     const metaRef=doc(db,"families",family,"meta","config");
     const snap=await getDoc(metaRef);
     if(!snap.exists())await setDoc(metaRef,{members:[n0,n1],createdAt:serverTimestamp()});
-    localStorage.setItem(LS.cfg,JSON.stringify(cfg));
-    localStorage.setItem(LS.family,family);localStorage.removeItem(LS.me);
+    localStorage.setItem(LS.cfg,JSON.stringify(cfg));localStorage.setItem(LS.family,family);localStorage.removeItem(LS.me);
     await ensureMeta();renderWhoPick();show("who");
   }catch(e){errBox.textContent=e.message||"Errore.";errBox.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"});}
 });
-
 async function ensureMeta(){try{const s=await getDoc(doc(db,"families",family,"meta","config"));if(s.exists())meta=s.data();}catch(e){console.error(e);}}
 function renderWhoPick(){
   const box=$("#who-pick");box.innerHTML="";
-  [0,1].forEach(i=>{
-    const b=el("button");const av=el("div","av");av.style.background=userColor(i);av.textContent=(userName(i)[0]||"?").toUpperCase();
-    const nm=el("div");nm.textContent=userName(i);b.appendChild(av);b.appendChild(nm);
+  members().forEach((nm,i)=>{
+    const b=el("button");const av=el("div","av");av.style.background=userColor(i);av.textContent=initial(i);
+    const label=el("div");label.textContent=nm;b.appendChild(av);b.appendChild(label);
     b.onclick=()=>{me=i;localStorage.setItem(LS.me,String(i));startApp();};box.appendChild(b);
   });
 }
 
-/* ---------- App start ---------- */
-async function startApp(){show("app");await ensureMeta();renderChrome();subscribe();bindUI();buildCalDows();renderAll();}
+async function startApp(){show("app");await ensureMeta();renderChrome();subscribe();bindUI();buildCalDows();renderAll();startReminders();}
 function renderChrome(){
   $("#who-chip-name").textContent=userName(me);$("#who-chip-dot").style.background=userColor(me);
-  $("#set-current-user").textContent=userName(me);$("#set-family").textContent=family;
-  $("#stat0-label").textContent="Pagato "+userName(0);$("#stat1-label").textContent="Pagato "+userName(1);
+  $("#set-current-user").textContent=userName(me);
+  $("#members-sub").textContent=members().join(", ");
+  $("#notify-sub").textContent=("Notification" in window && Notification.permission==="granted")?"Attive":"Attiva le notifiche";
 }
 function subscribe(){
   unsubs.forEach(u=>{try{u()}catch(e){}});unsubs=[];
   const base=(c,cb)=>unsubs.push(onSnapshot(query(collection(db,"families",family,c)),qs=>{cb(qs.docs.map(d=>({id:d.id,...d.data()})));renderAll();},e=>{console.error(e);toast("Errore sync");}));
   unsubs.push(onSnapshot(doc(db,"families",family,"meta","config"),s=>{if(s.exists()){meta=s.data();renderChrome();renderAll();}}));
-  base("expenses",a=>expenses=a);
-  base("tasks",a=>tasks=a);
-  base("shopping",a=>shop=a);
-  base("events",a=>events=a);
-  base("notes",a=>notes=a);
+  base("expenses",a=>expenses=a);base("tasks",a=>tasks=a);base("shopping",a=>shop=a);
+  base("events",a=>events=a);base("notes",a=>notes=a);base("messages",a=>messages=a);
+  base("meals",a=>meals=a);base("recipes",a=>recipes=a);base("contacts",a=>contacts=a);
+}
+function renderAll(){renderHome();renderCalendar();renderTasks();renderShop();renderExpenses();renderChat();renderMeals();renderRecipes();renderContacts();updateChatSub();}
+
+function expandEvents(fromStr,toStr){
+  const out=[];
+  events.forEach(ev=>{
+    if(!ev.date)return;
+    const recur=ev.recur||"none";
+    if(recur==="none"){ if(cmp(ev.date,fromStr)>=0&&cmp(ev.date,toStr)<=0)out.push({...ev,_date:ev.date,_master:ev.id}); return; }
+    let cur=ev.date,guard=0;
+    const endLimit=ev.recurEnd&&cmp(ev.recurEnd,toStr)<0?ev.recurEnd:toStr;
+    while(cmp(cur,endLimit)<=0&&guard<800){
+      if(cmp(cur,fromStr)>=0)out.push({...ev,_date:cur,_master:ev.id,_recur:true});
+      cur=recur==="daily"?addDaysStr(cur,1):recur==="weekly"?addDaysStr(cur,7):addMonthsStr(cur,1);
+      guard++;
+    }
+  });
+  return out;
+}
+function expandExpensesMonth(idx){
+  const out=[];
+  expenses.forEach(e=>{
+    if(!e.date)return;
+    if((e.recur||"none")==="monthly"){
+      const s=monthIdxOf(e.date);
+      if(idx>=s)out.push({...e,_date:dateForMonthIdx(idx,dayOf(e.date)),_master:e.id,_recur:true});
+    }else if(monthIdxOf(e.date)===idx){out.push({...e,_date:e.date,_master:e.id});}
+  });
+  return out;
 }
 
-/* ---------- Render root ---------- */
-function renderAll(){renderHome();renderCalendar();renderTasks();renderShop();renderExpenses();}
-
-/* ---------- Bilancio helper ---------- */
-function balanceForMonth(m){
-  const shared=expenses.filter(e=>e.shared!==false&&inMonthIdx(e.date,m));
-  const paid=[0,0];shared.forEach(e=>{if(e.paidBy===0||e.paidBy===1)paid[e.paidBy]+=Number(e.amount)||0;});
-  const tot=paid[0]+paid[1];const net0=paid[0]-tot/2;
-  return {tot,net0,paid};
+function computeBalances(instances){
+  const n=memberCount();const paid=Array(n).fill(0),owed=Array(n).fill(0);let sharedTotal=0;
+  instances.forEach(e=>{
+    const amt=Number(e.amount)||0;if(amt<=0)return;
+    let P=(Array.isArray(e.participants)&&e.participants.length?e.participants:range(n)).filter(i=>i>=0&&i<n);
+    if(!P.length)P=range(n);
+    if(e.paidBy>=0&&e.paidBy<n)paid[e.paidBy]+=amt;
+    if(P.length>1)sharedTotal+=amt;
+    if(e.split==="custom"&&e.shares){P.forEach(i=>owed[i]+=Number(e.shares[i])||0);}
+    else{const sh=amt/P.length;P.forEach(i=>owed[i]+=sh);}
+  });
+  const net=paid.map((p,i)=>p-owed[i]);
+  return {paid,owed,net,sharedTotal,total:paid.reduce((a,b)=>a+b,0)};
 }
-function balNoteHtml(net0,tot){
-  if(tot<=0)return {amt:"€0,00",col:"var(--txt)",note:"Nessuna spesa condivisa"};
-  if(Math.abs(net0)<0.005)return {amt:"Pari 🎉",col:"var(--green)",note:"Siete in pari"};
-  const debtor=net0>0?1:0,creditor=net0>0?0:1,a=Math.abs(net0);
-  return {amt:eur(a),col:me===creditor?"var(--green)":"var(--red)",note:`<b>${escapeHtml(userName(debtor))}</b> deve dare <b>${eur(a)}</b> a <b>${escapeHtml(userName(creditor))}</b>`};
+function settle(net){
+  const cr=[],de=[];net.forEach((a,i)=>{if(a>0.005)cr.push({i,a});else if(a<-0.005)de.push({i,a:-a});});
+  cr.sort((x,y)=>y.a-x.a);de.sort((x,y)=>y.a-x.a);
+  const tx=[];let p=0,q=0;
+  while(p<cr.length&&q<de.length){const amt=Math.min(cr[p].a,de[q].a);tx.push({from:de[q].i,to:cr[p].i,amount:amt});cr[p].a-=amt;de[q].a-=amt;if(cr[p].a<0.005)p++;if(de[q].a<0.005)q++;}
+  return tx;
 }
 
-/* ---------- BACHECA ---------- */
+function whoPill(i){return `<span class="pill" style="color:${userColor(i)}"><span class="pd" style="background:${userColor(i)}"></span>${escapeHtml(userName(i))}</span>`;}
+function editSvg(){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>`;}
+
 function renderHome(){
-  const b=balanceForMonth(expMonth),info=balNoteHtml(b.net0,b.tot);
+  const b=computeBalances(expandExpensesMonth(expMonth));const my=b.net[me]||0;
   $("#home-month").textContent=MONTHS[expMonth%12];
-  $("#home-bal").textContent=info.amt;$("#home-bal").style.color=info.col;$("#home-bal-note").innerHTML=info.note;
-  // prossimi eventi
+  const ba=$("#home-bal");
+  if(Math.abs(my)<0.005){ba.textContent="In pari";ba.style.color="var(--green)";$("#home-bal-note").textContent="Sei in pari con la famiglia";}
+  else if(my>0){ba.textContent="+"+eur(my);ba.style.color="var(--green)";$("#home-bal-note").textContent="Ti devono questo importo";}
+  else{ba.textContent="−"+eur(-my);ba.style.color="var(--red)";$("#home-bal-note").textContent="Devi dare questo importo";}
   const t=todayStr();
-  const up=events.filter(e=>(e.date||"")>=t).sort((a,b)=>(a.date||"").localeCompare(b.date||"")||(a.time||"").localeCompare(b.time||"")).slice(0,3);
+  const up=expandEvents(t,addDaysStr(t,45)).sort((a,b)=>cmp(a._date,b._date)||cmp(a.time,b.time)).slice(0,3);
   const ev=$("#home-events");ev.innerHTML="";
-  if(up.length===0)ev.innerHTML=`<div class="empty" style="padding:18px">Nessun impegno in programma</div>`;
+  if(!up.length)ev.innerHTML=`<div class="empty" style="padding:18px">Nessun impegno in programma</div>`;
   up.forEach(e=>ev.appendChild(eventItem(e)));
-  // attività da fare
-  const td=tasks.filter(x=>!x.done).sort((a,b)=>(a.date||"9999").localeCompare(b.date||"9999")).slice(0,3);
+  const td=tasks.filter(x=>!x.done).sort((a,b)=>cmp(a.date||"9999",b.date||"9999")).slice(0,3);
   const tk=$("#home-tasks");tk.innerHTML="";
-  if(td.length===0)tk.innerHTML=`<div class="empty" style="padding:18px">Tutto fatto! 🎉</div>`;
+  if(!td.length)tk.innerHTML=`<div class="empty" style="padding:18px">Tutto fatto! 🎉</div>`;
   td.forEach(x=>tk.appendChild(taskItem(x)));
-  // note
   const nb=$("#home-notes");nb.innerHTML="";
   const ns=notes.slice().sort((a,b)=>(b.createdMs||0)-(a.createdMs||0)).slice(0,6);
-  if(ns.length===0)nb.innerHTML=`<div class="empty" style="padding:18px">Ancora nessuna nota</div>`;
+  if(!ns.length)nb.innerHTML=`<div class="empty" style="padding:18px">Ancora nessuna nota</div>`;
   ns.forEach(n=>{
     const d=el("div","note-item");
-    d.innerHTML=`<div class="nt">${escapeHtml(n.text)}</div><div class="nm"><span class="pill" style="background:${userColor(n.by)}22;color:${userColor(n.by)}"><span class="pd" style="background:${userColor(n.by)}"></span>${escapeHtml(userName(n.by))}</span><button class="del-btn" style="margin-left:auto">×</button></div>`;
-    d.querySelector(".del-btn").onclick=()=>del("notes",n.id);
-    nb.appendChild(d);
+    d.innerHTML=`<div class="nt">${escapeHtml(n.text)}</div><div class="nm">${whoPill(n.by)}<button class="icon-btn del" style="margin-left:auto">✕</button></div>`;
+    d.querySelector(".del").onclick=()=>del("notes",n.id);nb.appendChild(d);
   });
 }
 function eventItem(e){
-  const it=el("div","item");
-  const dt=[fmtDate(e.date),e.time||""].filter(Boolean).join(" · ");
-  it.innerHTML=`<div class="emoji">📅</div><div class="body"><div class="t1">${escapeHtml(e.title||"")}</div>
-    <div class="t2"><span class="pill" style="background:${userColor(e.who)}22;color:${userColor(e.who)}"><span class="pd" style="background:${userColor(e.who)}"></span>${escapeHtml(userName(e.who))}</span><span>${dt}</span>${e.location?`<span>📍 ${escapeHtml(e.location)}</span>`:""}</div></div>
-    <button class="del-btn">×</button>`;
-  it.querySelector(".del-btn").onclick=()=>del("events",e.id);
+  const it=el("div","item tap");const dt=[fmtDate(e._date||e.date),e.time||""].filter(Boolean).join(" · ");
+  it.innerHTML=`<div class="emoji">📅</div><div class="body"><div class="t1">${escapeHtml(e.title||"")}${e._recur?' 🔁':''}</div>
+    <div class="t2">${whoPill(e.who)}<span>${dt}</span>${e.location?`<span>📍 ${escapeHtml(e.location)}</span>`:""}</div></div>
+    <div class="row-actions"><button class="icon-btn ed">${editSvg()}</button><button class="icon-btn del">✕</button></div>`;
+  it.querySelector(".ed").onclick=(ev)=>{ev.stopPropagation();openEventSheet(getMaster(events,e._master));};
+  it.querySelector(".del").onclick=(ev)=>{ev.stopPropagation();del("events",e._master);};
+  it.onclick=()=>openEventSheet(getMaster(events,e._master));
   return it;
 }
 function taskItem(x){
-  const it=el("div","item"+(x.done?" done":""));
-  const dt=[x.date?fmtDate(x.date):"",x.time||""].filter(Boolean).join(" · ");
+  const it=el("div","item"+(x.done?" done":""));const dt=[x.date?fmtDate(x.date):"",x.time||""].filter(Boolean).join(" · ");
   it.innerHTML=`<button class="check">${x.done?"✓":""}</button><div class="body"><div class="t1">${escapeHtml(x.title||"")}</div>
-    <div class="t2"><span class="pill" style="background:${userColor(x.who)}22;color:${userColor(x.who)}"><span class="pd" style="background:${userColor(x.who)}"></span>${escapeHtml(userName(x.who))}</span>${dt?`<span>${dt}</span>`:""}${x.notes?`<span>📝 ${escapeHtml(x.notes)}</span>`:""}</div></div>
-    <button class="del-btn">×</button>`;
+    <div class="t2">${whoPill(x.who)}${dt?`<span>${dt}</span>`:""}${x.notes?`<span>📝 ${escapeHtml(x.notes)}</span>`:""}</div></div>
+    <div class="row-actions"><button class="icon-btn ed">${editSvg()}</button><button class="icon-btn del">✕</button></div>`;
   it.querySelector(".check").onclick=()=>upd("tasks",x.id,{done:!x.done});
-  it.querySelector(".del-btn").onclick=()=>del("tasks",x.id);
+  it.querySelector(".ed").onclick=()=>openTaskSheet(x);
+  it.querySelector(".del").onclick=()=>del("tasks",x.id);
   return it;
 }
 
-/* ---------- CALENDARIO ---------- */
 function buildCalDows(){const r=$("#cal-dows");r.innerHTML="";DOW.forEach(d=>{const c=el("div","cal-dow");c.textContent=d;r.appendChild(c);});}
 function renderCalendar(){
   $("#cal-label").textContent=MONTHS[calYM.m]+" "+calYM.y;
-  const grid=$("#cal-grid");grid.innerHTML="";
-  const first=new Date(calYM.y,calYM.m,1);
-  const startDow=(first.getDay()+6)%7; // Mon=0
-  const daysInMonth=new Date(calYM.y,calYM.m+1,0).getDate();
-  const prevDays=new Date(calYM.y,calYM.m,0).getDate();
-  const cells=[];
-  for(let i=startDow-1;i>=0;i--)cells.push({d:prevDays-i,out:true,m:calYM.m-1});
-  for(let d=1;d<=daysInMonth;d++)cells.push({d,out:false,m:calYM.m});
-  while(cells.length%7!==0||cells.length<42)cells.push({d:cells.length-(startDow+daysInMonth)+1,out:true,m:calYM.m+1});
+  const first=new Date(calYM.y,calYM.m,1);const startDow=(first.getDay()+6)%7;
+  const dim=daysInMonth(calYM.y,calYM.m);const prevDim=new Date(calYM.y,calYM.m,0).getDate();
+  const monthStart=mkStr(calYM.y,calYM.m,1),monthEnd=mkStr(calYM.y,calYM.m,dim);
+  const occ=expandEvents(monthStart,monthEnd);const byDate={};occ.forEach(o=>{(byDate[o._date]=byDate[o._date]||[]).push(o);});
+  const grid=$("#cal-grid");grid.innerHTML="";const cells=[];
+  for(let i=startDow-1;i>=0;i--)cells.push({d:prevDim-i,out:true,mo:calYM.m-1});
+  for(let d=1;d<=dim;d++)cells.push({d,out:false,mo:calYM.m});
+  let tail=1;while(cells.length<42)cells.push({d:tail++,out:true,mo:calYM.m+1});
   cells.slice(0,42).forEach(c=>{
-    const y=calYM.y+(c.m<0?-1:c.m>11?1:0);const mm=(c.m+12)%12;
-    const ds=y+"-"+String(mm+1).padStart(2,"0")+"-"+String(c.d).padStart(2,"0");
+    let y=calYM.y,mo=c.mo;if(mo<0){mo=11;y--;}if(mo>11){mo=0;y++;}
+    const ds=mkStr(y,mo,c.d);
     const cell=el("div","cal-cell"+(c.out?" out":""));
     if(ds===todayStr())cell.classList.add("today");
     if(ds===calSel)cell.classList.add("sel");
-    const dayEvents=events.filter(e=>e.date===ds);
-    const dots=el("div","dots");
-    [...new Set(dayEvents.map(e=>e.who))].slice(0,3).forEach(w=>{const i=el("i");i.style.background=userColor(w);dots.appendChild(i);});
-    const num=el("div");num.textContent=c.d;cell.appendChild(num);cell.appendChild(dots);
-    cell.onclick=()=>{calSel=ds;renderCalendar();};
-    grid.appendChild(cell);
+    const num=el("div");num.textContent=c.d;cell.appendChild(num);
+    const dots=el("div","dots");[...new Set((byDate[ds]||[]).map(e=>e.who))].slice(0,3).forEach(w=>{const i=el("i");i.style.background=userColor(w);dots.appendChild(i);});
+    cell.appendChild(dots);cell.onclick=()=>{calSel=ds;renderCalendar();};grid.appendChild(cell);
   });
   $("#cal-day-label").textContent=fmtDateFull(calSel);
   const box=$("#cal-day-events");box.innerHTML="";
-  const dayEv=events.filter(e=>e.date===calSel).sort((a,b)=>(a.time||"").localeCompare(b.time||""));
-  if(dayEv.length===0)box.innerHTML=`<div class="empty" style="padding:18px">Nessun evento questo giorno</div>`;
+  const dayEv=(byDate[calSel]||[]).sort((a,b)=>cmp(a.time,b.time));
+  if(!dayEv.length)box.innerHTML=`<div class="empty" style="padding:18px">Nessun evento questo giorno</div>`;
   dayEv.forEach(e=>box.appendChild(eventItem(e)));
 }
 
-/* ---------- LISTE: attività ---------- */
 function renderTasks(){
-  const list=$("#tasks-list");list.innerHTML="";
-  let arr=tasks.slice();
+  const list=$("#tasks-list");list.innerHTML="";let arr=tasks.slice();
   if(taskFilter==="mine")arr=arr.filter(t=>t.who===me);
-  else if(taskFilter==="partner")arr=arr.filter(t=>t.who!==me&&t.who!==2);
+  else if(taskFilter==="others")arr=arr.filter(t=>t.who!==me&&t.who!==-1);
   else if(taskFilter==="todo")arr=arr.filter(t=>!t.done);
-  arr.sort((a,b)=>{if(!!a.done!==!!b.done)return a.done?1:-1;return (a.date||"9999").localeCompare(b.date||"9999")||(a.time||"").localeCompare(b.time||"");});
-  if(arr.length===0){list.innerHTML=`<div class="empty"><div class="big">✅</div>Nessuna attività qui.<br>Tocca <b>+</b> per aggiungerne una.</div>`;return;}
+  arr.sort((a,b)=>{if(!!a.done!==!!b.done)return a.done?1:-1;return cmp(a.date||"9999",b.date||"9999")||cmp(a.time,b.time);});
+  if(!arr.length){list.innerHTML=`<div class="empty"><div class="big">✅</div>Nessuna attività qui.<br>Tocca <b>+</b> per aggiungerne una.</div>`;return;}
   arr.forEach(x=>list.appendChild(taskItem(x)));
 }
-/* ---------- LISTE: spesa ---------- */
 function renderShop(){
   const list=$("#shop-list");list.innerHTML="";
   const arr=shop.slice().sort((a,b)=>{if(!!a.done!==!!b.done)return a.done?1:-1;return (a.createdMs||0)-(b.createdMs||0);});
-  if(arr.length===0){list.innerHTML=`<div class="empty"><div class="big">🛒</div>Lista vuota.<br>Tocca <b>+</b> per aggiungere un prodotto.</div>`;return;}
+  if(!arr.length){list.innerHTML=`<div class="empty"><div class="big">🛒</div>Lista vuota.<br>Tocca <b>+</b> per aggiungere un prodotto.</div>`;return;}
   arr.forEach(s=>{
     const it=el("div","item"+(s.done?" done":""));
-    it.innerHTML=`<button class="check">${s.done?"✓":""}</button><div class="body"><div class="t1">${escapeHtml(s.name||"")}</div>${s.qty?`<div class="t2">${escapeHtml(s.qty)}</div>`:""}</div><button class="del-btn">×</button>`;
+    it.innerHTML=`<button class="check">${s.done?"✓":""}</button><div class="body"><div class="t1">${escapeHtml(s.name||"")}</div>${s.qty?`<div class="t2">${escapeHtml(s.qty)}</div>`:""}</div><button class="icon-btn del">✕</button>`;
     it.querySelector(".check").onclick=()=>upd("shopping",s.id,{done:!s.done});
-    it.querySelector(".del-btn").onclick=()=>del("shopping",s.id);
-    list.appendChild(it);
+    it.querySelector(".del").onclick=()=>del("shopping",s.id);list.appendChild(it);
   });
 }
 
-/* ---------- SPESE ---------- */
 function renderExpenses(){
   $("#m-label").textContent=MONTHS[expMonth%12]+" "+Math.floor(expMonth/12);
-  const monthExp=expenses.filter(e=>inMonthIdx(e.date,expMonth)).sort((a,b)=>(b.date||"").localeCompare(a.date||"")||(b.createdMs||0)-(a.createdMs||0));
-  const paid=[0,0];monthExp.forEach(e=>{if(e.paidBy===0||e.paidBy===1)paid[e.paidBy]+=Number(e.amount)||0;});
-  $("#stat0-val").textContent=eur0(paid[0]);$("#stat1-val").textContent=eur0(paid[1]);
-  $("#exp-total").textContent=eur0(paid[0]+paid[1]);
-  const b=balanceForMonth(expMonth),info=balNoteHtml(b.net0,b.tot);
-  $("#bal-amount").textContent=info.amt;$("#bal-amount").style.color=info.col;$("#bal-note").innerHTML=info.note;
-  // categorie
-  const byCat={};monthExp.forEach(e=>{byCat[e.category]=(byCat[e.category]||0)+(Number(e.amount)||0);});
-  const total=paid[0]+paid[1];
-  const cats=Object.entries(byCat).sort((a,b)=>b[1]-a[1]).slice(0,4);
-  const cb=$("#exp-cats");cb.innerHTML="";
-  cats.forEach(([cid,val])=>{
-    const c=catOf(cid),pct=total>0?Math.round(val/total*100):0;
-    const it=el("div","item");
-    it.innerHTML=`<div class="emoji">${c.e}</div><div class="body"><div class="t1">${c.l}</div><div class="t2">${pct}% del mese</div></div><div class="amt">${eur(val)}</div>`;
-    cb.appendChild(it);
+  const inst=expandExpensesMonth(expMonth).sort((a,b)=>cmp(b._date,a._date)||(b.createdMs||0)-(a.createdMs||0));
+  const b=computeBalances(inst);
+  $("#exp-total").textContent=eur0(b.total);
+  const my=b.net[me]||0;const ba=$("#bal-amount");
+  if(Math.abs(my)<0.005){ba.textContent="In pari 🎉";ba.style.color="var(--green)";$("#bal-note").textContent="Sei in pari con la famiglia";}
+  else if(my>0){ba.textContent="+"+eur(my);ba.style.color="var(--green)";$("#bal-note").textContent="Gli altri ti devono in tutto questo importo";}
+  else{ba.textContent="−"+eur(-my);ba.style.color="var(--red)";$("#bal-note").textContent="Devi dare in tutto questo importo";}
+  const tx=settle(b.net.slice());const sw=$("#settle-wrap");sw.innerHTML="";
+  if(tx.length){
+    const st=el("div","section-title");st.innerHTML="<span>Rimborsi consigliati</span>";sw.appendChild(st);
+    tx.forEach(t=>{const it=el("div","item");
+      it.innerHTML=`<div class="avatar" style="background:${userColor(t.from)}">${initial(t.from)}</div><div class="body"><div class="t1">${escapeHtml(userName(t.from))} → ${escapeHtml(userName(t.to))}</div><div class="t2">rimborso spese condivise</div></div><div class="amt">${eur(t.amount)}</div>`;
+      sw.appendChild(it);});
+  }
+  const bb=$("#exp-balances");bb.innerHTML="";
+  members().forEach((nm,i)=>{
+    const it=el("div","item");const net=b.net[i]||0;
+    const netTxt=Math.abs(net)<0.005?'<span class="muted">in pari</span>':(net>0?`<span style="color:var(--green)">+${eur(net)}</span>`:`<span style="color:var(--red)">−${eur(-net)}</span>`);
+    it.innerHTML=`<div class="avatar" style="background:${userColor(i)}">${initial(i)}</div><div class="body"><div class="t1">${escapeHtml(nm)}</div><div class="t2">ha pagato ${eur(b.paid[i]||0)}</div></div><div class="amt">${netTxt}</div>`;
+    bb.appendChild(it);
   });
-  // movimenti
+  const byCat={};inst.forEach(e=>{byCat[e.category]=(byCat[e.category]||0)+(Number(e.amount)||0);});
+  const cats=Object.entries(byCat).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const cb=$("#exp-cats");cb.innerHTML="";
+  if(!cats.length)cb.innerHTML=`<div class="empty" style="padding:16px">Nessuna spesa</div>`;
+  cats.forEach(([cid,val])=>{const c=catOf(cid),pct=b.total>0?Math.round(val/b.total*100):0;const it=el("div","item");
+    it.innerHTML=`<div class="emoji">${c.e}</div><div class="body"><div class="t1">${c.l}</div><div class="t2">${pct}% del mese</div></div><div class="amt">${eur(val)}</div>`;cb.appendChild(it);});
   const list=$("#exp-list");list.innerHTML="";
-  if(monthExp.length===0){list.innerHTML=`<div class="empty"><div class="big">🧾</div>Nessuna spesa questo mese.</div>`;return;}
-  monthExp.forEach(e=>{
-    const c=catOf(e.category),it=el("div","item");
-    it.innerHTML=`<div class="emoji">${c.e}</div><div class="body"><div class="t1">${escapeHtml(e.description||c.l)}</div>
-      <div class="t2"><span>${fmtDate(e.date)}</span><span class="tag"><span class="pd" style="width:8px;height:8px;border-radius:50%;background:${userColor(e.paidBy)}"></span>${escapeHtml(userName(e.paidBy))}</span>${e.shared===false?'<span class="tag">personale</span>':''}</div></div>
-      <div class="amt">${eur(e.amount)}</div><button class="del-btn">×</button>`;
-    it.querySelector(".del-btn").onclick=()=>del("expenses",e.id);
-    list.appendChild(it);
+  if(!inst.length){list.innerHTML=`<div class="empty"><div class="big">🧾</div>Nessuna spesa questo mese.</div>`;return;}
+  inst.forEach(e=>{const c=catOf(e.category);const it=el("div","item tap");
+    const shared=(Array.isArray(e.participants)?e.participants.length:memberCount())>1;
+    it.innerHTML=`<div class="emoji">${c.e}</div><div class="body"><div class="t1">${escapeHtml(e.description||c.l)}${e._recur?' 🔁':''}</div>
+      <div class="t2"><span>${fmtDate(e._date)}</span><span class="tag"><span style="width:8px;height:8px;border-radius:50%;background:${userColor(e.paidBy)}"></span>${escapeHtml(userName(e.paidBy))}</span>${shared?'':'<span class="tag">personale</span>'}</div></div>
+      <div class="amt">${eur(e.amount)}</div>`;
+    it.onclick=()=>openExpenseSheet(getMaster(expenses,e._master));list.appendChild(it);
   });
 }
 
-/* ---------- Data ops ---------- */
+function updateChatSub(){const last=messages.slice().sort((a,b)=>(b.createdMs||0)-(a.createdMs||0))[0];const s=$("#chat-sub");if(s)s.textContent=last?(userName(last.by)+": "+String(last.text).slice(0,28)):"Nessun messaggio";}
+function renderChat(){
+  const box=$("#chat-list");if(!box)return;const atBottom=curSub==="chat";
+  box.innerHTML="";const arr=messages.slice().sort((a,b)=>(a.createdMs||0)-(b.createdMs||0));
+  if(!arr.length){box.innerHTML=`<div class="empty" style="padding:40px 20px"><div class="big">💬</div>Ancora nessun messaggio.<br>Scrivi qui sotto 👇</div>`;return;}
+  let lastDay="";
+  arr.forEach(m=>{
+    const day=fmtDateFull(new Date(m.createdMs||Date.now()).toISOString().slice(0,10));
+    if(day!==lastDay){const s=el("div","day-sep");s.textContent=day;box.appendChild(s);lastDay=day;}
+    const mine=m.by===me;const b=el("div","bubble "+(mine?"me":"them"));
+    const tm=new Date(m.createdMs||Date.now());const hh=pad(tm.getHours())+":"+pad(tm.getMinutes());
+    b.innerHTML=`${mine?"":`<div class="who" style="color:${userColor(m.by)}">${escapeHtml(userName(m.by))}</div>`}<div>${escapeHtml(m.text)}</div><div class="tm">${hh}</div>`;
+    box.appendChild(b);
+  });
+  if(atBottom)setTimeout(()=>window.scrollTo({top:document.body.scrollHeight}),30);
+}
+
+function renderMeals(){
+  const wrap=$("#week-list");if(!wrap)return;wrap.innerHTML="";
+  const start=weekStartMonday(new Date());start.setDate(start.getDate()+weekOffset*7);
+  const startStr=start.getFullYear()+"-"+pad(start.getMonth()+1)+"-"+pad(start.getDate());
+  const endD=new Date(start);endD.setDate(endD.getDate()+6);
+  $("#wk-label").textContent=start.getDate()+" "+MONTHS[start.getMonth()].slice(0,3)+" – "+endD.getDate()+" "+MONTHS[endD.getMonth()].slice(0,3);
+  for(let i=0;i<7;i++){
+    const ds=addDaysStr(startStr,i);const p=parseD(ds);
+    const dd=el("div","week-day");
+    const pranzo=meals.find(m=>m.date===ds&&m.slot==="pranzo");const cena=meals.find(m=>m.date===ds&&m.slot==="cena");
+    dd.innerHTML=`<div class="wd-h"><div class="d1">${DOWLONG[i]}</div><div class="d2">${p[2]} ${MONTHS[p[1]].slice(0,3)}</div></div>
+      <div class="slot" data-slot="pranzo"><div class="sl-l">Pranzo</div><div class="sl-v ${pranzo?'':'empty'}">${pranzo?escapeHtml(pranzo.title):"+ aggiungi"}</div></div>
+      <div class="slot" data-slot="cena"><div class="sl-l">Cena</div><div class="sl-v ${cena?'':'empty'}">${cena?escapeHtml(cena.title):"+ aggiungi"}</div></div>`;
+    dd.querySelector('[data-slot="pranzo"]').onclick=()=>openMealSheet(ds,"pranzo",pranzo);
+    dd.querySelector('[data-slot="cena"]').onclick=()=>openMealSheet(ds,"cena",cena);
+    wrap.appendChild(dd);
+  }
+}
+function renderRecipes(){
+  const box=$("#recipes-list");if(!box)return;box.innerHTML="";
+  const arr=recipes.slice().sort((a,b)=>cmp((a.name||"").toLowerCase(),(b.name||"").toLowerCase()));
+  if(!arr.length){box.innerHTML=`<div class="empty"><div class="big">📖</div>Nessuna ricetta.<br>Tocca <b>+</b> per aggiungerne una.</div>`;return;}
+  arr.forEach(r=>{const it=el("div","item tap");
+    it.innerHTML=`<div class="emoji">🍲</div><div class="body"><div class="t1">${escapeHtml(r.name||"")}</div><div class="t2">${r.ingredients?escapeHtml(String(r.ingredients).split("\n")[0]).slice(0,40):"Ricetta"}</div></div><span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>`;
+    it.onclick=()=>openRecipeView(r);box.appendChild(it);
+  });
+}
+
+function renderContacts(){
+  const box=$("#contacts-list");if(!box)return;box.innerHTML="";
+  const arr=contacts.slice().sort((a,b)=>cmp((a.name||"").toLowerCase(),(b.name||"").toLowerCase()));
+  if(!arr.length){box.innerHTML=`<div class="empty"><div class="big">📇</div>Rubrica vuota.<br>Tocca <b>+</b> per aggiungere un contatto.</div>`;return;}
+  arr.forEach(c=>{const it=el("div","item tap");const col=PALETTE[Math.abs(hashStr(c.name||""))%PALETTE.length];
+    it.innerHTML=`<div class="avatar" style="background:${col}">${(c.name||"?")[0].toUpperCase()}</div><div class="body"><div class="t1">${escapeHtml(c.name||"")}</div><div class="t2">${c.phone?escapeHtml(c.phone):(c.email?escapeHtml(c.email):"contatto")}</div></div><span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>`;
+    it.onclick=()=>openContactView(c);box.appendChild(it);
+  });
+}
+function hashStr(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return h;}
+
+function getMaster(arr,id){return arr.find(x=>x.id===id)||null;}
 async function upd(c,id,data){try{await updateDoc(doc(db,"families",family,c,id),data);}catch(e){toast("Errore");}}
 function del(c,id){
+  if(!id){toast("Errore");return;}
   openSheet(`<div class="grab"></div><h2>Eliminare?</h2><p class="muted" style="margin:4px 0 18px">L'azione non è reversibile.</p>
     <button class="btn-primary danger" id="dy">Elimina</button><button class="btn-ghost" id="dn">Annulla</button>`);
   $("#dy").onclick=async()=>{try{await deleteDoc(doc(db,"families",family,c,id));toast("Eliminato");}catch(e){toast("Errore");}closeSheet();};
   $("#dn").onclick=closeSheet;
 }
 
-/* ---------- Sheets ---------- */
 function openSheet(html){const r=$("#modal-root");r.innerHTML=`<div class="overlay" id="ov"><div class="sheet">${html}</div></div>`;$("#ov").onclick=e=>{if(e.target.id==="ov")closeSheet();};}
 function closeSheet(){$("#modal-root").innerHTML="";}
-function segUsers(id,sel,withBoth){
-  const arr=withBoth?[0,1,2]:[0,1];
-  return `<div class="seg" id="${id}">`+arr.map(i=>`<button data-i="${i}" class="${i===sel?"on on"+i:""}">${escapeHtml(userName(i))}</button>`).join("")+`</div>`;
+function segPeople(id,sel,withFamily){
+  const arr=members().map((_,i)=>i);if(withFamily)arr.push(-1);
+  return `<div class="seg people" id="${id}">`+arr.map(i=>`<button data-i="${i}" class="${i===sel?"on":""}" style="${i===sel?`background:${userColor(i)}`:""}">${escapeHtml(userName(i))}</button>`).join("")+`</div>`;
 }
-function bindSeg(id,onPick){
+function bindPeople(id){
   const s=$("#"+id);let val=parseInt(s.querySelector(".on")?.dataset.i??"0",10);
-  [...s.children].forEach(b=>b.onclick=()=>{val=parseInt(b.dataset.i,10);[...s.children].forEach(x=>x.className="");b.classList.add("on","on"+val);onPick&&onPick(val);});
+  [...s.children].forEach(b=>b.onclick=()=>{val=parseInt(b.dataset.i,10);[...s.children].forEach(x=>{x.className="";x.style.background="";});b.classList.add("on");b.style.background=userColor(val);});
   return ()=>val;
 }
 
-function openExpenseSheet(){
-  const today=todayStr();
-  openSheet(`<div class="grab"></div><h2>Nuova spesa</h2>
-    <div class="field" style="margin-top:12px"><label>Importo (€)</label><input id="e-amount" type="number" inputmode="decimal" step="0.01" placeholder="0,00" style="font-size:22px;font-weight:700"></div>
-    <div class="field"><label>Descrizione</label><input id="e-desc" type="text" placeholder="es. Spesa supermercato"></div>
+function openExpenseSheet(existing){
+  const ed=existing&&existing.id;const today=todayStr();
+  const parts0=(existing&&Array.isArray(existing.participants)&&existing.participants.length)?existing.participants.slice():members().map((_,i)=>i);
+  openSheet(`<div class="grab"></div><h2>${ed?"Modifica spesa":"Nuova spesa"}</h2>
+    <div class="field" style="margin-top:12px"><label>Importo (€)</label><input id="e-amount" type="number" inputmode="decimal" step="0.01" placeholder="0,00" style="font-size:22px;font-weight:700" value="${ed?existing.amount:""}"></div>
+    <div class="field"><label>Descrizione</label><input id="e-desc" type="text" placeholder="es. Spesa supermercato" value="${ed?escapeHtml(existing.description||""):""}"></div>
     <div class="field"><label>Categoria</label><div class="cat-grid" id="e-cats"></div></div>
-    <div class="field"><label>Chi ha pagato</label>${segUsers("e-paid",me,false)}</div>
-    <div class="field"><div class="toggle-row" id="e-shared-row"><div><div style="font-weight:600">Spesa condivisa</div><div style="font-size:12.5px;color:var(--muted)">Divisa 50/50 nel bilancio</div></div><div class="switch on" id="e-shared"></div></div></div>
-    <div class="field"><label>Data</label><input id="e-date" type="date" value="${today}"></div>
-    <button class="btn-primary" id="e-save">Salva spesa</button><button class="btn-ghost" id="e-cancel">Annulla</button>`);
-  let cat="spesa",shared=true;
-  const cg=$("#e-cats");
-  CATS.forEach(c=>{const b=el("button");if(c.id===cat)b.classList.add("on");b.innerHTML=`<span class="ce">${c.e}</span>${c.l}`;b.onclick=()=>{cat=c.id;[...cg.children].forEach(x=>x.classList.remove("on"));b.classList.add("on");};cg.appendChild(b);});
-  const getPaid=bindSeg("e-paid");
-  $("#e-shared-row").onclick=()=>{shared=!shared;$("#e-shared").classList.toggle("on",shared);};
-  $("#e-cancel").onclick=closeSheet;$("#e-amount").focus();
+    <div class="field"><label>Chi ha pagato</label>${segPeople("e-paid",ed?existing.paidBy:me,false)}</div>
+    <div class="field"><label>Divisa tra</label><div class="part-grid" id="e-parts"></div></div>
+    <div class="field"><label>Come dividere</label><div class="seg" id="e-splitmode"><button data-v="equal" class="on">In parti uguali</button><button data-v="custom">Importi personalizzati</button></div></div>
+    <div class="field hidden" id="e-custom-wrap"><label>Quota di ciascuno (€)</label><div id="e-custom"></div><div class="muted" id="e-custom-sum" style="font-size:12.5px"></div></div>
+    <div class="field"><label>Ricorrenza</label><div class="seg" id="e-recur"><button data-v="none" class="on">Una tantum</button><button data-v="monthly">Ogni mese</button></div></div>
+    <div class="field"><label>Data</label><input id="e-date" type="date" value="${ed?existing.date:today}"></div>
+    <button class="btn-primary" id="e-save">${ed?"Salva modifiche":"Salva spesa"}</button>
+    ${ed?'<button class="btn-ghost danger" id="e-del">Elimina spesa</button>':''}
+    <button class="btn-ghost" id="e-cancel">Annulla</button>`);
+  let cat=ed?(existing.category||"spesa"):"spesa";
+  const cg=$("#e-cats");CATS.forEach(c=>{const b=el("button");if(c.id===cat)b.classList.add("on");b.innerHTML=`<span class="ce">${c.e}</span>${c.l}`;b.onclick=()=>{cat=c.id;[...cg.children].forEach(x=>x.classList.remove("on"));b.classList.add("on");};cg.appendChild(b);});
+  const getPaid=bindPeople("e-paid");
+  let parts=parts0.slice();
+  const pg=$("#e-parts");
+  members().forEach((nm,i)=>{const b=el("button");const on=parts.includes(i);if(on){b.classList.add("on");b.style.background=userColor(i);}
+    b.innerHTML=`<span class="pd" style="background:${userColor(i)}"></span>${escapeHtml(nm)}`;
+    b.onclick=()=>{if(parts.includes(i)){if(parts.length<=1){toast("Almeno una persona");return;}parts=parts.filter(x=>x!==i);b.classList.remove("on");b.style.background="";}else{parts.push(i);b.classList.add("on");b.style.background=userColor(i);}if(splitMode==="custom")buildCustom();};
+    pg.appendChild(b);});
+  let splitMode=ed&&existing.split==="custom"?"custom":"equal";
+  const sm=$("#e-splitmode");[...sm.children].forEach(b=>{b.classList.toggle("on",b.dataset.v===splitMode);b.onclick=()=>{splitMode=b.dataset.v;[...sm.children].forEach(x=>x.classList.remove("on"));b.classList.add("on");$("#e-custom-wrap").classList.toggle("hidden",splitMode!=="custom");if(splitMode==="custom")buildCustom();};});
+  $("#e-custom-wrap").classList.toggle("hidden",splitMode!=="custom");
+  const customVals=(ed&&existing.shares)?{...existing.shares}:{};
+  function buildCustom(){const box=$("#e-custom");box.innerHTML="";parts.forEach(i=>{
+    const row=el("div","split-row");row.innerHTML=`<div class="nm" style="color:${userColor(i)}">${escapeHtml(userName(i))}</div><input type="number" inputmode="decimal" step="0.01" data-i="${i}" placeholder="0,00" value="${customVals[i]!=null?customVals[i]:""}">`;
+    row.querySelector("input").oninput=(e)=>{customVals[i]=e.target.value;updSum();};box.appendChild(row);});updSum();}
+  function updSum(){const sum=parts.reduce((s,i)=>s+(parseFloat(String(customVals[i]).replace(",","."))||0),0);const amt=parseFloat(($("#e-amount").value||"").replace(",","."))||0;$("#e-custom-sum").textContent=`Somma quote: ${eur(sum)} · Totale: ${eur(amt)}`;}
+  if(splitMode==="custom")buildCustom();
+  $("#e-amount").addEventListener("input",()=>{if(splitMode==="custom")updSum();});
+  let recur=ed?(existing.recur||"none"):"none";const rc=$("#e-recur");[...rc.children].forEach(b=>{b.classList.toggle("on",b.dataset.v===recur);b.onclick=()=>{recur=b.dataset.v;[...rc.children].forEach(x=>x.classList.remove("on"));b.classList.add("on");};});
+  $("#e-cancel").onclick=closeSheet;if(ed)$("#e-del").onclick=()=>del("expenses",existing.id);
+  if(!ed)$("#e-amount").focus();
   $("#e-save").onclick=async()=>{
     const amount=parseFloat(($("#e-amount").value||"").replace(",","."));
     if(!amount||amount<=0){toast("Inserisci un importo valido");return;}
-    try{await addDoc(collection(db,"families",family,"expenses"),{amount,description:$("#e-desc").value.trim(),category:cat,paidBy:getPaid(),shared,date:$("#e-date").value||today,by:me,createdMs:Date.now(),createdAt:serverTimestamp()});toast("Spesa aggiunta");closeSheet();}
-    catch(e){toast("Errore nel salvataggio");console.error(e);}
+    const payload={amount,description:$("#e-desc").value.trim(),category:cat,paidBy:getPaid(),participants:parts.slice(),split:splitMode,date:$("#e-date").value||today,recur};
+    if(splitMode==="custom"){const shares={};parts.forEach(i=>shares[i]=Math.round((parseFloat(String(customVals[i]).replace(",","."))||0)*100)/100);payload.shares=shares;}else{payload.shares=null;}
+    try{
+      if(ed){await updateDoc(doc(db,"families",family,"expenses",existing.id),payload);toast("Spesa aggiornata");}
+      else{payload.by=me;payload.createdMs=Date.now();payload.createdAt=serverTimestamp();await addDoc(collection(db,"families",family,"expenses"),payload);toast("Spesa aggiunta");}
+      closeSheet();
+    }catch(e){toast("Errore nel salvataggio");console.error(e);}
   };
 }
-function openTaskSheet(){
-  const today=todayStr();
-  openSheet(`<div class="grab"></div><h2>Nuova attività</h2>
-    <div class="field" style="margin-top:12px"><label>Cosa</label><input id="t-title" type="text" placeholder="es. Portare l'auto dal meccanico"></div>
-    <div class="field"><label>Di chi</label>${segUsers("t-who",me,true)}</div>
-    <div class="field" style="display:flex;gap:10px"><div style="flex:1"><label>Entro il</label><input id="t-date" type="date"></div><div style="flex:1"><label>Ora</label><input id="t-time" type="time"></div></div>
-    <div class="field"><label>Note</label><textarea id="t-notes" placeholder="Facoltative…"></textarea></div>
-    <button class="btn-primary" id="t-save">Salva attività</button><button class="btn-ghost" id="t-cancel">Annulla</button>`);
-  const getWho=bindSeg("t-who");$("#t-cancel").onclick=closeSheet;$("#t-title").focus();
+
+function openTaskSheet(existing){
+  const ed=existing&&existing.id;
+  openSheet(`<div class="grab"></div><h2>${ed?"Modifica attività":"Nuova attività"}</h2>
+    <div class="field" style="margin-top:12px"><label>Cosa</label><input id="t-title" type="text" placeholder="es. Portare l'auto dal meccanico" value="${ed?escapeHtml(existing.title||""):""}"></div>
+    <div class="field"><label>Di chi</label>${segPeople("t-who",ed?existing.who:me,true)}</div>
+    <div class="field" style="display:flex;gap:10px"><div style="flex:1"><label>Entro il</label><input id="t-date" type="date" value="${ed?(existing.date||""):""}"></div><div style="flex:1"><label>Ora</label><input id="t-time" type="time" value="${ed?(existing.time||""):""}"></div></div>
+    <div class="field"><label>Note</label><textarea id="t-notes" placeholder="Facoltative…">${ed?escapeHtml(existing.notes||""):""}</textarea></div>
+    <button class="btn-primary" id="t-save">${ed?"Salva modifiche":"Salva attività"}</button>
+    ${ed?'<button class="btn-ghost danger" id="t-del">Elimina attività</button>':''}
+    <button class="btn-ghost" id="t-cancel">Annulla</button>`);
+  const getWho=bindPeople("t-who");$("#t-cancel").onclick=closeSheet;if(ed)$("#t-del").onclick=()=>del("tasks",existing.id);
+  if(!ed)$("#t-title").focus();
   $("#t-save").onclick=async()=>{
     const title=$("#t-title").value.trim();if(!title){toast("Inserisci una descrizione");return;}
-    try{await addDoc(collection(db,"families",family,"tasks"),{title,who:getWho(),date:$("#t-date").value||"",time:$("#t-time").value||"",notes:$("#t-notes").value.trim(),done:false,by:me,createdMs:Date.now(),createdAt:serverTimestamp()});toast("Attività aggiunta");closeSheet();}
-    catch(e){toast("Errore");console.error(e);}
+    const payload={title,who:getWho(),date:$("#t-date").value||"",time:$("#t-time").value||"",notes:$("#t-notes").value.trim()};
+    try{if(ed){await updateDoc(doc(db,"families",family,"tasks",existing.id),payload);toast("Aggiornata");}else{payload.done=false;payload.by=me;payload.createdMs=Date.now();payload.createdAt=serverTimestamp();await addDoc(collection(db,"families",family,"tasks"),payload);toast("Attività aggiunta");}closeSheet();}catch(e){toast("Errore");console.error(e);}
   };
 }
-function openEventSheet(preDate){
-  const today=preDate||todayStr();
-  openSheet(`<div class="grab"></div><h2>Nuovo evento</h2>
-    <div class="field" style="margin-top:12px"><label>Titolo</label><input id="v-title" type="text" placeholder="es. Cena con i genitori"></div>
-    <div class="field"><label>Per chi</label>${segUsers("v-who",2,true)}</div>
-    <div class="field" style="display:flex;gap:10px"><div style="flex:1"><label>Data</label><input id="v-date" type="date" value="${today}"></div><div style="flex:1"><label>Ora</label><input id="v-time" type="time"></div></div>
-    <div class="field"><label>Luogo</label><input id="v-loc" type="text" placeholder="Facoltativo"></div>
-    <div class="field"><label>Note</label><textarea id="v-notes" placeholder="Facoltative…"></textarea></div>
-    <button class="btn-primary" id="v-save">Salva evento</button><button class="btn-ghost" id="v-cancel">Annulla</button>`);
-  const getWho=bindSeg("v-who");$("#v-cancel").onclick=closeSheet;$("#v-title").focus();
+
+function openEventSheet(existing,preDate){
+  const ed=existing&&existing.id;const today=preDate||todayStr();
+  openSheet(`<div class="grab"></div><h2>${ed?"Modifica evento":"Nuovo evento"}</h2>
+    <div class="field" style="margin-top:12px"><label>Titolo</label><input id="v-title" type="text" placeholder="es. Cena con i genitori" value="${ed?escapeHtml(existing.title||""):""}"></div>
+    <div class="field"><label>Per chi</label>${segPeople("v-who",ed?existing.who:-1,true)}</div>
+    <div class="field" style="display:flex;gap:10px"><div style="flex:1"><label>Data</label><input id="v-date" type="date" value="${ed?existing.date:today}"></div><div style="flex:1"><label>Ora</label><input id="v-time" type="time" value="${ed?(existing.time||""):""}"></div></div>
+    <div class="field"><label>Ripeti</label><div class="seg" id="v-recur">${RECUR_EVENT.map(r=>`<button data-v="${r.v}" class="${(ed?(existing.recur||"none"):"none")===r.v?"on":""}">${r.l}</button>`).join("")}</div></div>
+    <div class="field"><label>Luogo</label><input id="v-loc" type="text" placeholder="Facoltativo" value="${ed?escapeHtml(existing.location||""):""}"></div>
+    <div class="field"><label>Note</label><textarea id="v-notes" placeholder="Facoltative…">${ed?escapeHtml(existing.notes||""):""}</textarea></div>
+    <button class="btn-primary" id="v-save">${ed?"Salva modifiche":"Salva evento"}</button>
+    ${ed?'<button class="btn-ghost danger" id="v-del">Elimina evento</button>':''}
+    <button class="btn-ghost" id="v-cancel">Annulla</button>`);
+  const getWho=bindPeople("v-who");
+  let recur=ed?(existing.recur||"none"):"none";const rc=$("#v-recur");[...rc.children].forEach(b=>b.onclick=()=>{recur=b.dataset.v;[...rc.children].forEach(x=>x.classList.remove("on"));b.classList.add("on");});
+  $("#v-cancel").onclick=closeSheet;if(ed)$("#v-del").onclick=()=>del("events",existing.id);
+  if(!ed)$("#v-title").focus();
   $("#v-save").onclick=async()=>{
     const title=$("#v-title").value.trim();if(!title){toast("Inserisci un titolo");return;}
     const date=$("#v-date").value||today;
-    try{await addDoc(collection(db,"families",family,"events"),{title,who:getWho(),date,time:$("#v-time").value||"",location:$("#v-loc").value.trim(),notes:$("#v-notes").value.trim(),by:me,createdMs:Date.now(),createdAt:serverTimestamp()});toast("Evento aggiunto");closeSheet();if(curTab==="calendar"){calSel=date;calYM={y:parseInt(date.slice(0,4)),m:parseInt(date.slice(5,7))-1};}}
-    catch(e){toast("Errore");console.error(e);}
+    const payload={title,who:getWho(),date,time:$("#v-time").value||"",location:$("#v-loc").value.trim(),notes:$("#v-notes").value.trim(),recur};
+    try{if(ed){await updateDoc(doc(db,"families",family,"events",existing.id),payload);toast("Aggiornato");}else{payload.by=me;payload.createdMs=Date.now();payload.createdAt=serverTimestamp();await addDoc(collection(db,"families",family,"events"),payload);toast("Evento aggiunto");}
+      closeSheet();if(curTab==="calendar"){calSel=date;calYM={y:parseInt(date.slice(0,4)),m:parseInt(date.slice(5,7))-1};renderCalendar();}}catch(e){toast("Errore");console.error(e);}
   };
 }
+
 function openShopSheet(){
   openSheet(`<div class="grab"></div><h2>Aggiungi alla lista</h2>
     <div class="field" style="margin-top:12px"><label>Prodotto</label><input id="s-name" type="text" placeholder="es. Latte"></div>
@@ -717,9 +903,78 @@ function openShopSheet(){
     <button class="btn-primary" id="s-save">Aggiungi</button><button class="btn-ghost" id="s-cancel">Annulla</button>`);
   $("#s-cancel").onclick=closeSheet;$("#s-name").focus();
   const save=async()=>{const name=$("#s-name").value.trim();if(!name){toast("Inserisci un prodotto");return;}try{await addDoc(collection(db,"families",family,"shopping"),{name,qty:$("#s-qty").value.trim(),done:false,by:me,createdMs:Date.now(),createdAt:serverTimestamp()});toast("Aggiunto");closeSheet();}catch(e){toast("Errore");}};
-  $("#s-save").onclick=save;
-  $("#s-name").addEventListener("keydown",e=>{if(e.key==="Enter")save();});
+  $("#s-save").onclick=save;$("#s-name").addEventListener("keydown",e=>{if(e.key==="Enter")save();});
 }
+
+function openMealSheet(date,slot,existing){
+  const ed=existing&&existing.id;
+  openSheet(`<div class="grab"></div><h2>${slot==="pranzo"?"Pranzo":"Cena"} · ${fmtDate(date)}</h2>
+    <div class="field" style="margin-top:12px"><label>Piatto</label><input id="ml-title" type="text" placeholder="es. Pasta al pomodoro" value="${ed?escapeHtml(existing.title||""):""}"></div>
+    <div class="field"><label>Note</label><input id="ml-notes" type="text" placeholder="Facoltative" value="${ed?escapeHtml(existing.notes||""):""}"></div>
+    <button class="btn-primary" id="ml-save">Salva</button>
+    ${ed?'<button class="btn-ghost danger" id="ml-del">Rimuovi</button>':''}
+    <button class="btn-ghost" id="ml-cancel">Annulla</button>`);
+  $("#ml-cancel").onclick=closeSheet;$("#ml-title").focus();
+  if(ed)$("#ml-del").onclick=async()=>{try{await deleteDoc(doc(db,"families",family,"meals",existing.id));toast("Rimosso");}catch(e){}closeSheet();};
+  $("#ml-save").onclick=async()=>{const title=$("#ml-title").value.trim();if(!title){toast("Inserisci un piatto");return;}
+    try{if(ed){await updateDoc(doc(db,"families",family,"meals",existing.id),{title,notes:$("#ml-notes").value.trim()});}else{await addDoc(collection(db,"families",family,"meals"),{date,slot,title,notes:$("#ml-notes").value.trim(),createdMs:Date.now()});}toast("Salvato");closeSheet();}catch(e){toast("Errore");}
+  };
+}
+
+function openRecipeSheet(existing){
+  const ed=existing&&existing.id;
+  openSheet(`<div class="grab"></div><h2>${ed?"Modifica ricetta":"Nuova ricetta"}</h2>
+    <div class="field" style="margin-top:12px"><label>Nome</label><input id="rc-name" type="text" placeholder="es. Lasagne" value="${ed?escapeHtml(existing.name||""):""}"></div>
+    <div class="field"><label>Ingredienti (uno per riga)</label><textarea id="rc-ing" rows="4" placeholder="…">${ed?escapeHtml(existing.ingredients||""):""}</textarea></div>
+    <div class="field"><label>Preparazione</label><textarea id="rc-steps" rows="5" placeholder="…">${ed?escapeHtml(existing.steps||""):""}</textarea></div>
+    <button class="btn-primary" id="rc-save">Salva</button>
+    ${ed?'<button class="btn-ghost danger" id="rc-del">Elimina</button>':''}
+    <button class="btn-ghost" id="rc-cancel">Annulla</button>`);
+  $("#rc-cancel").onclick=closeSheet;$("#rc-name").focus();
+  if(ed)$("#rc-del").onclick=()=>del("recipes",existing.id);
+  $("#rc-save").onclick=async()=>{const name=$("#rc-name").value.trim();if(!name){toast("Inserisci un nome");return;}
+    const payload={name,ingredients:$("#rc-ing").value.trim(),steps:$("#rc-steps").value.trim()};
+    try{if(ed){await updateDoc(doc(db,"families",family,"recipes",existing.id),payload);}else{payload.createdMs=Date.now();await addDoc(collection(db,"families",family,"recipes"),payload);}toast("Salvata");closeSheet();}catch(e){toast("Errore");}
+  };
+}
+function openRecipeView(r){
+  openSheet(`<div class="grab"></div><h2>${escapeHtml(r.name||"")}</h2>
+    ${r.ingredients?`<div class="section-title" style="margin-top:14px"><span>Ingredienti</span></div><div class="muted" style="white-space:pre-wrap;font-size:14px">${escapeHtml(r.ingredients)}</div>`:""}
+    ${r.steps?`<div class="section-title"><span>Preparazione</span></div><div class="muted" style="white-space:pre-wrap;font-size:14px">${escapeHtml(r.steps)}</div>`:""}
+    <button class="btn-primary" id="rv-edit" style="margin-top:16px">Modifica</button><button class="btn-ghost" id="rv-close">Chiudi</button>`);
+  $("#rv-close").onclick=closeSheet;$("#rv-edit").onclick=()=>openRecipeSheet(r);
+}
+
+function openContactSheet(existing){
+  const ed=existing&&existing.id;
+  openSheet(`<div class="grab"></div><h2>${ed?"Modifica contatto":"Nuovo contatto"}</h2>
+    <div class="field" style="margin-top:12px"><label>Nome</label><input id="ct-name" type="text" placeholder="es. Pediatra" value="${ed?escapeHtml(existing.name||""):""}"></div>
+    <div class="field"><label>Telefono</label><input id="ct-phone" type="tel" placeholder="+39…" value="${ed?escapeHtml(existing.phone||""):""}"></div>
+    <div class="field"><label>Email</label><input id="ct-email" type="email" placeholder="Facoltativa" value="${ed?escapeHtml(existing.email||""):""}"></div>
+    <div class="field"><label>Note</label><input id="ct-note" type="text" placeholder="Facoltative" value="${ed?escapeHtml(existing.note||""):""}"></div>
+    <button class="btn-primary" id="ct-save">Salva</button>
+    ${ed?'<button class="btn-ghost danger" id="ct-del">Elimina</button>':''}
+    <button class="btn-ghost" id="ct-cancel">Annulla</button>`);
+  $("#ct-cancel").onclick=closeSheet;$("#ct-name").focus();
+  if(ed)$("#ct-del").onclick=()=>del("contacts",existing.id);
+  $("#ct-save").onclick=async()=>{const name=$("#ct-name").value.trim();if(!name){toast("Inserisci un nome");return;}
+    const payload={name,phone:$("#ct-phone").value.trim(),email:$("#ct-email").value.trim(),note:$("#ct-note").value.trim()};
+    try{if(ed){await updateDoc(doc(db,"families",family,"contacts",existing.id),payload);}else{payload.createdMs=Date.now();await addDoc(collection(db,"families",family,"contacts"),payload);}toast("Salvato");closeSheet();}catch(e){toast("Errore");}
+  };
+}
+function openContactView(c){
+  openSheet(`<div class="grab"></div><h2>${escapeHtml(c.name||"")}</h2>
+    <div style="display:flex;gap:10px;margin:14px 0">
+      ${c.phone?`<a class="btn-primary" style="text-decoration:none;text-align:center;display:block;flex:1" href="tel:${escapeHtml(c.phone)}">📞 Chiama</a>`:""}
+      ${c.phone?`<a class="btn-primary" style="text-decoration:none;text-align:center;display:block;flex:1;background:var(--green);color:#fff" href="sms:${escapeHtml(c.phone)}">💬 SMS</a>`:""}
+    </div>
+    ${c.phone?`<div class="item"><div class="emoji">📞</div><div class="body"><div class="t1">${escapeHtml(c.phone)}</div><div class="t2">Telefono</div></div></div>`:""}
+    ${c.email?`<a class="item tap" style="text-decoration:none;color:inherit" href="mailto:${escapeHtml(c.email)}"><div class="emoji">✉️</div><div class="body"><div class="t1">${escapeHtml(c.email)}</div><div class="t2">Email</div></div></a>`:""}
+    ${c.note?`<div class="item"><div class="emoji">📝</div><div class="body"><div class="t1" style="white-space:normal">${escapeHtml(c.note)}</div><div class="t2">Note</div></div></div>`:""}
+    <button class="btn-primary" id="cv-edit" style="margin-top:14px">Modifica</button><button class="btn-ghost" id="cv-close">Chiudi</button>`);
+  $("#cv-close").onclick=closeSheet;$("#cv-edit").onclick=()=>openContactSheet(c);
+}
+
 function openAddMenu(){
   openSheet(`<div class="grab"></div><h2>Cosa vuoi aggiungere?</h2><div class="add-menu" style="margin-top:14px">
     <button data-a="event"><span class="me">📅</span>Evento in calendario</button>
@@ -730,24 +985,32 @@ function openAddMenu(){
   $("#am-cancel").onclick=closeSheet;
   document.querySelectorAll(".add-menu button").forEach(b=>b.onclick=()=>{closeSheet();quickAdd(b.dataset.a);});
 }
-function quickAdd(a){if(a==="event")openEventSheet();else if(a==="task")openTaskSheet();else if(a==="shop")openShopSheet();else if(a==="expense")openExpenseSheet();}
+function quickAdd(a){if(a==="event")openEventSheet(null);else if(a==="task")openTaskSheet(null);else if(a==="shop")openShopSheet();else if(a==="expense")openExpenseSheet(null);}
 
-/* ---------- Impostazioni ---------- */
-function openNamesSheet(){
-  openSheet(`<div class="grab"></div><h2>Modifica nomi</h2>
-    <div class="field" style="margin-top:12px"><label>Nome 1</label><input id="n0" type="text" value="${escapeHtml(userName(0))}"></div>
-    <div class="field"><label>Nome 2</label><input id="n1" type="text" value="${escapeHtml(userName(1))}"></div>
-    <button class="btn-primary" id="n-save">Salva</button><button class="btn-ghost" id="n-cancel">Annulla</button>`);
-  $("#n-cancel").onclick=closeSheet;
-  $("#n-save").onclick=async()=>{const n0=$("#n0").value.trim()||"Io",n1=$("#n1").value.trim()||"Partner";try{await setDoc(doc(db,"families",family,"meta","config"),{members:[n0,n1]},{merge:true});toast("Nomi aggiornati");closeSheet();}catch(e){toast("Errore");}};
+function openMembersSheet(){
+  openSheet(`<div class="grab"></div><h2>Membri della famiglia</h2>
+    <div id="mem-list" style="margin:12px 0"></div>
+    <button class="btn-ghost" id="mem-add" style="border:1px dashed var(--line-2)">＋ Aggiungi membro</button>
+    <button class="btn-primary" id="mem-save" style="margin-top:12px">Salva</button><button class="btn-ghost" id="mem-cancel">Annulla</button>
+    <p class="note">Puoi aggiungere e rinominare i membri. I nomi sono condivisi con tutta la famiglia.</p>`);
+  let list=members().slice();
+  function draw(){const box=$("#mem-list");box.innerHTML="";list.forEach((nm,i)=>{
+    const row=el("div","split-row");row.innerHTML=`<div class="avatar" style="background:${userColor(i)};width:34px;height:34px;flex:0 0 34px;font-size:14px">${(nm[0]||"?").toUpperCase()}</div><input type="text" value="${escapeHtml(nm)}" data-i="${i}" style="flex:1;width:auto;text-align:left">`;
+    row.querySelector("input").oninput=(e)=>{list[i]=e.target.value;};
+    box.appendChild(row);});}
+  draw();
+  $("#mem-add").onclick=()=>{if(list.length>=PALETTE.length){toast("Massimo "+PALETTE.length+" membri");return;}list.push("Membro "+(list.length+1));draw();};
+  $("#mem-cancel").onclick=closeSheet;
+  $("#mem-save").onclick=async()=>{const clean=list.map(s=>s.trim()).filter(Boolean);if(clean.length<2){toast("Servono almeno 2 membri");return;}
+    try{await setDoc(doc(db,"families",family,"meta","config"),{members:clean},{merge:true});toast("Salvato");closeSheet();}catch(e){toast("Errore");}
+  };
 }
 function inviteLink(){return location.origin+location.pathname+"#join="+encodeURIComponent(b64encode({cfg,family}));}
 function openShareSheet(){
   const link=inviteLink();
-  openSheet(`<div class="grab"></div><h2>Invita il partner</h2>
-    <p class="muted" style="margin:6px 0 14px;font-size:14px">Il modo più semplice: invia questo <b>link d'invito</b> al partner (WhatsApp, ecc.). Aprendolo sul suo telefono, l'app si collega da sola alla vostra famiglia — dovrà solo scegliere il proprio nome.</p>
-    <div class="card" style="margin-bottom:12px"><div class="label">Link d'invito</div>
-      <div class="muted" style="font-size:12.5px;margin-top:6px;word-break:break-all">${escapeHtml(link)}</div></div>
+  openSheet(`<div class="grab"></div><h2>Invita in famiglia</h2>
+    <p class="muted" style="margin:6px 0 14px;font-size:14px">Invia il <b>link d'invito</b>. Aprendolo, l'app si collega da sola alla vostra famiglia: basterà scegliere il proprio nome.</p>
+    <div class="card" style="margin-bottom:12px"><div class="label">Link d'invito</div><div class="muted" style="font-size:12.5px;margin-top:6px;word-break:break-all">${escapeHtml(link)}</div></div>
     <button class="btn-primary" id="sh-share">📤 Invia link d'invito</button>
     <button class="btn-ghost" id="sh-copylink">Copia link</button>
     <div class="label" style="margin:18px 0 8px">In alternativa, a mano</div>
@@ -755,60 +1018,112 @@ function openShareSheet(){
     <button class="btn-ghost" id="sh-copycfg">Copia configurazione Firebase</button>
     <button class="btn-ghost" id="sh-close">Chiudi</button>`);
   $("#sh-close").onclick=closeSheet;
-  $("#sh-share").onclick=async()=>{
-    const payload={title:"Insieme — invito famiglia",text:"Ti invito su Insieme, il nostro organizer di famiglia. Apri questo link sul telefono:",url:link};
-    try{ if(navigator.share){await navigator.share(payload);} else {await navigator.clipboard.writeText(link);toast("Link copiato");} }
-    catch(e){ if(e&&e.name!=="AbortError")toast("Condivisione non riuscita"); }
-  };
+  $("#sh-share").onclick=async()=>{try{if(navigator.share){await navigator.share({title:"Insieme — invito famiglia",text:"Ti invito su Insieme, il nostro organizer di famiglia. Apri questo link:",url:link});}else{await navigator.clipboard.writeText(link);toast("Link copiato");}}catch(e){if(e&&e.name!=="AbortError")toast("Condivisione non riuscita");}};
   $("#sh-copylink").onclick=async()=>{try{await navigator.clipboard.writeText(link);toast("Link copiato");}catch(e){toast("Copia non riuscita");}};
-  $("#sh-copycfg").onclick=async()=>{try{await navigator.clipboard.writeText("Codice famiglia: "+family+"\n\nConfigurazione Firebase:\n"+JSON.stringify(cfg,null,2));toast("Configurazione copiata");}catch(e){toast("Copia non riuscita");}};
+  $("#sh-copycfg").onclick=async()=>{try{await navigator.clipboard.writeText("Codice famiglia: "+family+"\n\nConfigurazione:\n"+JSON.stringify(cfg,null,2));toast("Configurazione copiata");}catch(e){toast("Copia non riuscita");}};
 }
 
-/* ---------- UI binding ---------- */
+function firedSet(){try{return new Set(JSON.parse(localStorage.getItem(LS.fired)||"[]"));}catch(e){return new Set();}}
+function saveFired(s){try{localStorage.setItem(LS.fired,JSON.stringify([...s].slice(-200)));}catch(e){}}
+async function enableNotifications(){
+  if(!("Notification" in window)){toast("Notifiche non supportate su questo dispositivo");return;}
+  try{const p=await Notification.requestPermission();renderChrome();
+    if(p==="granted"){toast("Promemoria attivi");notify("Insieme","Promemoria attivati ✓");}
+    else toast("Permesso negato");}catch(e){toast("Errore");}
+}
+function notify(title,body){
+  try{if("Notification" in window && Notification.permission==="granted"){
+    if(navigator.serviceWorker&&navigator.serviceWorker.ready){navigator.serviceWorker.ready.then(r=>r.showNotification(title,{body,icon:"icon-192.png"})).catch(()=>{try{new Notification(title,{body,icon:"icon-192.png"});}catch(e){}});}
+    else new Notification(title,{body,icon:"icon-192.png"});
+  }}catch(e){}
+}
+function checkReminders(){
+  if(!("Notification" in window)||Notification.permission!=="granted")return;
+  const now=new Date();const today=todayStr();const fired=firedSet();let changed=false;
+  expandEvents(today,today).forEach(e=>{
+    if(!e.time)return;const key="ev:"+e._master+":"+e._date+":"+e.time;
+    const hm=e.time.split(":");const evt=new Date();evt.setHours(+hm[0],+hm[1],0,0);
+    const diff=(evt-now)/60000;
+    if(diff<=60&&diff>=-1&&!fired.has(key)){notify("📅 "+e.title,"Alle "+e.time+(e.location?" · "+e.location:""));fired.add(key);changed=true;}
+  });
+  tasks.filter(t=>!t.done&&t.date===today&&t.time).forEach(t=>{
+    const key="tk:"+t.id+":"+t.date+":"+t.time;const hm=t.time.split(":");const evt=new Date();evt.setHours(+hm[0],+hm[1],0,0);
+    const diff=(evt-now)/60000;
+    if(diff<=30&&diff>=-1&&!fired.has(key)){notify("✅ "+t.title,"Da fare alle "+t.time);fired.add(key);changed=true;}
+  });
+  if(changed)saveFired(fired);
+}
+function startReminders(){if(reminderTimer)clearInterval(reminderTimer);checkReminders();reminderTimer=setInterval(checkReminders,60000);document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkReminders();});}
+
 function bindUI(){
   document.querySelectorAll(".tabbar button").forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+  $("#hdr-back").onclick=()=>switchTab("settings");
   $("#fab").onclick=()=>{
-    if(curTab==="calendar")openEventSheet(calSel);
-    else if(curTab==="lists")listMode==="tasks"?openTaskSheet():openShopSheet();
-    else if(curTab==="expenses")openExpenseSheet();
+    if(curSub==="contacts")openContactSheet(null);
+    else if(curSub==="meals")mealsMode==="week"?toast("Tocca un pasto per aggiungerlo"):openRecipeSheet(null);
+    else if(curSub==="chat")return;
+    else if(curTab==="calendar")openEventSheet(null,calSel);
+    else if(curTab==="lists")listMode==="tasks"?openTaskSheet(null):openShopSheet();
+    else if(curTab==="expenses")openExpenseSheet(null);
     else openAddMenu();
   };
   $("#who-chip").onclick=()=>switchTab("settings");
-  // quick actions bacheca
   document.querySelectorAll(".qa").forEach(q=>q.onclick=()=>quickAdd(q.dataset.add));
   document.querySelectorAll("[data-goto]").forEach(x=>x.onclick=()=>switchTab(x.dataset.goto));
-  // nota bacheca
   $("#note-add").onclick=async()=>{const t=$("#note-input").value.trim();if(!t)return;try{await addDoc(collection(db,"families",family,"notes"),{text:t,by:me,createdMs:Date.now(),createdAt:serverTimestamp()});$("#note-input").value="";toast("Aggiunto");}catch(e){toast("Errore");}};
-  // calendario
   $("#cal-prev").onclick=()=>{calYM.m--;if(calYM.m<0){calYM.m=11;calYM.y--;}renderCalendar();};
   $("#cal-next").onclick=()=>{calYM.m++;if(calYM.m>11){calYM.m=0;calYM.y++;}renderCalendar();};
-  // liste seg
-  $("#seg-tasks").onclick=()=>setListMode("tasks");
-  $("#seg-shop").onclick=()=>setListMode("shop");
+  $("#seg-tasks").onclick=()=>setListMode("tasks");$("#seg-shop").onclick=()=>setListMode("shop");
   document.querySelectorAll("#task-chips .chip").forEach(ch=>ch.onclick=()=>{taskFilter=ch.dataset.f;document.querySelectorAll("#task-chips .chip").forEach(x=>x.classList.remove("active"));ch.classList.add("active");renderTasks();});
   $("#shop-clear").onclick=async()=>{const done=shop.filter(s=>s.done);for(const s of done){try{await deleteDoc(doc(db,"families",family,"shopping",s.id));}catch(e){}}toast("Rimossi");};
-  // spese month
   $("#m-prev").onclick=()=>{expMonth--;renderExpenses();renderHome();};
   $("#m-next").onclick=()=>{expMonth++;renderExpenses();renderHome();};
-  // settings
+  $("#go-chat").onclick=()=>openSub("chat");$("#go-meals").onclick=()=>openSub("meals");$("#go-contacts").onclick=()=>openSub("contacts");
+  $("#seg-week").onclick=()=>setMealsMode("week");$("#seg-recipes").onclick=()=>setMealsMode("recipes");
+  $("#wk-prev").onclick=()=>{weekOffset--;renderMeals();};$("#wk-next").onclick=()=>{weekOffset++;renderMeals();};
+  $("#chat-send").onclick=sendMessage;
+  $("#chat-input").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}});
+  $("#chat-input").addEventListener("input",e=>{e.target.style.height="44px";e.target.style.height=Math.min(e.target.scrollHeight,110)+"px";});
+  $("#set-notify").onclick=enableNotifications;
+  $("#set-members").onclick=openMembersSheet;
   $("#set-switch-user").onclick=()=>{localStorage.removeItem(LS.me);location.reload();};
-  $("#set-names").onclick=openNamesSheet;
   $("#set-share").onclick=openShareSheet;
-  $("#set-reset").onclick=()=>{
-    openSheet(`<div class="grab"></div><h2>Reimpostare?</h2><p class="muted" style="margin:4px 0 18px">Verrà cancellata la configurazione da <b>questo telefono</b>. I dati sul cloud restano.</p><button class="btn-primary danger" id="ry">Reimposta</button><button class="btn-ghost" id="rn">Annulla</button>`);
-    $("#ry").onclick=()=>{localStorage.removeItem(LS.cfg);localStorage.removeItem(LS.family);localStorage.removeItem(LS.me);location.reload();};
-    $("#rn").onclick=closeSheet;
-  };
+  $("#set-reset").onclick=()=>{openSheet(`<div class="grab"></div><h2>Reimpostare?</h2><p class="muted" style="margin:4px 0 18px">Verrà cancellata la configurazione da <b>questo telefono</b>. I dati sul cloud restano.</p><button class="btn-primary danger" id="ry">Reimposta</button><button class="btn-ghost" id="rn">Annulla</button>`);
+    $("#ry").onclick=()=>{localStorage.removeItem(LS.cfg);localStorage.removeItem(LS.family);localStorage.removeItem(LS.me);location.reload();};$("#rn").onclick=closeSheet;};
+}
+async function sendMessage(){const inp=$("#chat-input");const t=inp.value.trim();if(!t)return;inp.value="";inp.style.height="44px";
+  try{await addDoc(collection(db,"families",family,"messages"),{text:t,by:me,createdMs:Date.now(),createdAt:serverTimestamp()});}catch(e){toast("Errore invio");}
 }
 function setListMode(m){listMode=m;$("#seg-tasks").classList.toggle("on",m==="tasks");$("#seg-shop").classList.toggle("on",m==="shop");$("#list-tasks-wrap").classList.toggle("hidden",m!=="tasks");$("#list-shop-wrap").classList.toggle("hidden",m!=="shop");}
+function setMealsMode(m){mealsMode=m;$("#seg-week").classList.toggle("on",m==="week");$("#seg-recipes").classList.toggle("on",m==="recipes");$("#meals-week-wrap").classList.toggle("hidden",m!=="week");$("#meals-recipes-wrap").classList.toggle("hidden",m!=="recipes");if(curSub==="meals")$("#fab").classList.toggle("hidden",m==="week");}
+
+const MAIN=["home","calendar","lists","expenses","settings"];
+const SUBS=["chat","meals","contacts"];
 function switchTab(tab){
-  curTab=tab;
-  ["home","calendar","lists","expenses","settings"].forEach(t=>$("#page-"+t).classList.toggle("hidden",t!==tab));
+  curTab=tab;curSub=null;
+  MAIN.forEach(t=>$("#page-"+t).classList.toggle("hidden",t!==tab));
+  SUBS.forEach(t=>$("#page-"+t).classList.add("hidden"));
   document.querySelectorAll(".tabbar button").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  $("#hdr-back").classList.add("hidden");
+  $("#chat-bar").classList.add("hidden");
   $("#fab").classList.toggle("hidden",tab==="settings");
-  const titles={home:"Insieme",calendar:"Calendario",lists:"Liste",expenses:"Spese",settings:"Impostazioni"};
-  const subs={home:"La nostra famiglia",calendar:"Eventi e appuntamenti",lists:"Attività e spesa",expenses:"Budget condiviso",settings:""};
+  const titles={home:"Insieme",calendar:"Calendario",lists:"Liste",expenses:"Spese",settings:"Altro"};
+  const subs={home:"La nostra famiglia",calendar:"Eventi e appuntamenti",lists:"Attività e spesa",expenses:"Budget condiviso",settings:"Funzioni e impostazioni"};
   $("#app-title").textContent=titles[tab];$("#app-sub").textContent=subs[tab];
+  window.scrollTo({top:0});
+}
+function openSub(name){
+  curSub=name;
+  MAIN.forEach(t=>$("#page-"+t).classList.add("hidden"));
+  SUBS.forEach(t=>$("#page-"+t).classList.toggle("hidden",t!==name));
+  $("#hdr-back").classList.remove("hidden");
+  const titles={chat:"Chat",meals:"Pasti & Ricette",contacts:"Rubrica"};
+  const subs={chat:"Messaggi di famiglia",meals:"Pianifica la settimana",contacts:"Contatti condivisi"};
+  $("#app-title").textContent=titles[name];$("#app-sub").textContent=subs[name];
+  $("#chat-bar").classList.toggle("hidden",name!=="chat");
+  if(name==="chat"){$("#fab").classList.add("hidden");renderChat();setTimeout(()=>window.scrollTo({top:document.body.scrollHeight}),40);}
+  else if(name==="meals"){setMealsMode(mealsMode);}
+  else{$("#fab").classList.remove("hidden");}
   window.scrollTo({top:0});
 }
 
