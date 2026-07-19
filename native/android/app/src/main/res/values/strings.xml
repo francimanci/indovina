@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Insieme</string>
+    <string name="title_activity_main">Insieme</string>
+    <string name="package_name">com.insieme.famiglia</string>
+    <string name="custom_url_scheme">com.insieme.famiglia</string>
+</resources>

@@ -1,0 +1,6 @@
+{
+  "appId": "com.insieme.famiglia",
+  "appName": "Insieme",
+  "webDir": "www",
+  "server": { "androidScheme": "https" }
+}

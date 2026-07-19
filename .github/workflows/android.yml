@@ -1,0 +1,74 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ "claude/family-expense-task-app-leakqi" ]
+    paths:
+      - "native/**"
+      - "docs/**"
+      - ".github/workflows/android.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup Java (JDK 17)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Capacitor deps
+        working-directory: native
+        run: npm install
+
+      - name: Sync latest web app into the native shell
+        working-directory: native
+        run: |
+          rm -rf www && mkdir www
+          cp -r ../docs/* www/
+          rm -f www/buddy-preview.html www/README.md
+          npx cap sync android
+
+      - name: Build debug APK
+        working-directory: native/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Prepare APK
+        run: cp native/android/app/build/outputs/apk/debug/app-debug.apk Insieme.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Insieme-APK
+          path: Insieme.apk
+          if-no-files-found: error
+
+      - name: Publish APK to a downloadable release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-test
+          name: "Insieme — APK di test (Android)"
+          body: |
+            APK di test dell'app **Insieme** (Android).
+            Scaricalo dal telefono e installalo (potresti dover abilitare "Installa app sconosciute").
+            Ricostruito automaticamente a ogni modifica dell'app.
+          prerelease: true
+          files: Insieme.apk
