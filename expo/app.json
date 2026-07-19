@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "Insieme",
+    "slug": "insieme",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "assetBundlePatterns": ["**/*"],
+    "ios": { "supportsTablet": true, "bundleIdentifier": "com.insieme.famiglia" },
+    "android": { "package": "com.insieme.famiglia" }
+  }
+}
