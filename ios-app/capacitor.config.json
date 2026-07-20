@@ -1,0 +1,9 @@
+{
+  "appId": "com.francimanci.quorum",
+  "appName": "Quorum",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "always",
+    "backgroundColor": "#0c0f1c"
+  }
+}

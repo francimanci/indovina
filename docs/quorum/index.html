@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
 <title>Quorum · Il gioco della politica</title>
-<meta name="theme-color" content="#0b1020">
+<meta name="theme-color" content="#0c0f1c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Quorum">
@@ -13,9 +13,9 @@
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <style>
   :root{
-    --bg:#0b1020; --bg2:#0f1630; --card:#151c38; --card2:#1c244a; --line:#2a3466;
-    --txt:#eef1ff; --muted:#98a0cf; --accent:#7c8cff; --accent2:#a78bfa;
-    --green:#22c55e; --red:#f43f5e; --amber:#f59e0b; --cyan:#22d3ee; --gold:#fbbf24;
+    --bg:#0c0f1c; --bg2:#12172a; --card:#171d33; --card2:#20273f; --line:#2f3757;
+    --txt:#f2f1ea; --muted:#9aa1bd; --accent:#b3123f; --accent2:#d4af37;
+    --green:#22c55e; --red:#f43f5e; --amber:#f59e0b; --cyan:#22d3ee; --gold:#e6b422;
     --shadow:0 12px 40px rgba(0,0,0,.5);
     --safe-b:env(safe-area-inset-bottom);
     --safe-t:env(safe-area-inset-top);
@@ -24,7 +24,7 @@
   html,body{margin:0;padding:0;height:100%;overscroll-behavior:none}
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:radial-gradient(1200px 600px at 50% -10%,#1a2350 0%,var(--bg) 55%) fixed;
+    background:radial-gradient(1200px 600px at 50% -12%,#3a1230 0%,var(--bg) 55%) fixed;
     color:var(--txt); line-height:1.4; -webkit-font-smoothing:antialiased;
     user-select:none;
   }
@@ -32,8 +32,8 @@
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;font-size:16px}
   .btn{
     display:inline-flex;align-items:center;justify-content:center;gap:8px;
-    background:linear-gradient(180deg,var(--accent),#5a6bef);color:#fff;font-weight:700;
-    padding:14px 18px;border-radius:14px;box-shadow:0 6px 18px rgba(90,107,239,.35);
+    background:linear-gradient(180deg,#c21847,#8a0f30);color:#fff;font-weight:700;
+    padding:14px 18px;border-radius:14px;box-shadow:0 6px 18px rgba(179,18,63,.38);
     transition:transform .08s ease, filter .15s;width:100%;
   }
   .btn:active{transform:scale(.97)}
@@ -49,8 +49,8 @@
   /* ---------- HOME ---------- */
   .brand{text-align:center;margin:24px 0 6px}
   .logo{font-size:64px;line-height:1}
-  .brand h1{font-size:40px;margin:8px 0 2px;letter-spacing:1px;
-    background:linear-gradient(90deg,var(--accent2),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .brand h1{font-size:40px;margin:8px 0 2px;letter-spacing:2px;
+    background:linear-gradient(90deg,#f0d97a,#c9a233);-webkit-background-clip:text;background-clip:text;color:transparent}
   .brand p{color:var(--muted);margin:0;font-size:14px}
   .home-actions{margin-top:28px;display:flex;flex-direction:column;gap:12px}
   .home-actions .btn{padding:18px}
@@ -74,7 +74,7 @@
   .prow input{flex:1;background:var(--bg2);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:10px;font-size:15px;min-width:0}
   .toggle{display:flex;background:var(--bg2);border:1px solid var(--line);border-radius:10px;overflow:hidden}
   .toggle button{padding:8px 10px;font-size:13px;color:var(--muted);font-weight:700}
-  .toggle button.on{background:var(--accent2);color:#fff}
+  .toggle button.on{background:var(--accent);color:#fff}
   .toggle button.on.cpu{background:var(--amber)}
   .stepper{display:flex;align-items:center;gap:14px;justify-content:center}
   .stepper button{width:44px;height:44px;border-radius:12px;background:var(--card2);border:1px solid var(--line);font-size:24px;font-weight:700}

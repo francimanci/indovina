@@ -25,3 +25,8 @@ aggiungila alla schermata Home per installarla come app.
 - `icon.svg`, `icon-192/512/180.png` — icone app.
 
 Nessun backend richiesto: tutto gira sul dispositivo, salvataggio automatico via `localStorage`.
+
+## Portarla su TestFlight (iOS)
+La app è una PWA e non si carica direttamente su TestFlight. Nella cartella
+[`../../ios-app/`](../../ios-app/README.md) trovi un wrapper iOS (Capacitor) pronto
+da compilare su Mac + Xcode per distribuirla via TestFlight.

@@ -1,0 +1,21 @@
+{
+  "name": "quorum-ios",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Wrapper iOS nativo (Capacitor) per l'app Quorum, per distribuzione via TestFlight.",
+  "scripts": {
+    "sync-web": "bash scripts/sync-web.sh",
+    "add-ios": "npm run sync-web && npx cap add ios",
+    "sync": "npm run sync-web && npx cap sync ios",
+    "open": "npx cap open ios",
+    "icons": "npx @capacitor/assets generate --ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/ios": "^6.1.2"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^6.1.2"
+  }
+}
