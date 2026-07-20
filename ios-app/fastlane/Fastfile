@@ -1,0 +1,60 @@
+default_platform(:ios)
+
+# Build + upload su TestFlight, pensato per girare in CI (GitHub Actions, runner macOS).
+# Firma: certificato di distribuzione importato da dist_cert.p12 + profilo gestito
+# automaticamente da Xcode (-allowProvisioningUpdates) tramite la chiave API App Store Connect.
+
+platform :ios do
+  desc "Compila e carica la build su TestFlight"
+  lane :beta do
+    setup_ci  # crea e sblocca una keychain temporanea in CI (fastlane_tmp_keychain)
+
+    asc_key_path = File.expand_path("asc_key.p8")
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV.fetch("ASC_KEY_ID"),
+      issuer_id: ENV.fetch("ASC_ISSUER_ID"),
+      key_filepath: asc_key_path,
+      in_house: false
+    )
+
+    # importa il certificato di distribuzione nella keychain temporanea
+    import_certificate(
+      certificate_path: File.expand_path("dist_cert.p12"),
+      certificate_password: ENV["DIST_CERT_PASSWORD"].to_s,
+      keychain_name: "fastlane_tmp_keychain",
+      keychain_password: ""
+    )
+
+    # firma automatica sul target generato da Capacitor ("App")
+    update_code_signing_settings(
+      use_automatic_signing: true,
+      path: "ios/App/App.xcodeproj",
+      team_id: ENV.fetch("APPLE_TEAM_ID")
+    )
+
+    increment_build_number(
+      xcodeproj: "ios/App/App.xcodeproj",
+      build_number: ENV.fetch("BUILD_NUMBER", Time.now.strftime("%Y%m%d%H%M"))
+    )
+
+    build_app(
+      workspace: "ios/App/App.xcworkspace",
+      scheme: "App",
+      export_method: "app-store",
+      output_directory: "build",
+      clean: true,
+      xcargs: [
+        "-allowProvisioningUpdates",
+        "-authenticationKeyPath #{asc_key_path}",
+        "-authenticationKeyID #{ENV.fetch('ASC_KEY_ID')}",
+        "-authenticationKeyIssuerID #{ENV.fetch('ASC_ISSUER_ID')}"
+      ].join(" ")
+    )
+
+    upload_to_testflight(
+      api_key: api_key,
+      skip_waiting_for_build_processing: true
+    )
+  end
+end

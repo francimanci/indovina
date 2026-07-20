@@ -1,5 +1,11 @@
 node_modules/
 ios/
 www/
+build/
 *.log
 .DS_Store
+# file di firma decodificati in CI — non devono MAI finire nel repo
+dist_cert.p12
+asc_key.p8
+fastlane/report.xml
+fastlane/README.md

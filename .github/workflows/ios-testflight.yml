@@ -1,0 +1,56 @@
+name: iOS · TestFlight
+
+# Compila, firma e carica l'app Quorum su TestFlight usando un runner macOS.
+# Non serve avere un Mac: bastano i "Secrets" Apple configurati nel repo (vedi
+# ios-app/README.md → sezione "Caricamento automatico su TestFlight").
+
+on:
+  workflow_dispatch:      # avvio manuale dalla tab "Actions" di GitHub
+  push:
+    tags:
+      - "ios-v*"          # oppure push di un tag tipo ios-v1.0.0
+
+jobs:
+  testflight:
+    runs-on: macos-14
+    defaults:
+      run:
+        working-directory: ios-app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Installa dipendenze e genera il progetto iOS
+        run: |
+          npm install
+          npm run sync-web
+          npx cap add ios
+          npx cap sync ios
+
+      - name: Genera le icone dell'app
+        run: npx @capacitor/assets generate --ios || true
+
+      - name: Scrivi i file di firma (certificato + chiave API)
+        env:
+          DIST_CERT_P12_BASE64: ${{ secrets.DIST_CERT_P12_BASE64 }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+        run: |
+          echo "$DIST_CERT_P12_BASE64" | base64 --decode > dist_cert.p12
+          printf '%s' "$ASC_KEY_P8" > asc_key.p8
+
+      - name: Installa fastlane
+        run: gem install fastlane -N
+
+      - name: Build e upload su TestFlight
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          DIST_CERT_PASSWORD: ${{ secrets.DIST_CERT_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          BUILD_NUMBER: ${{ github.run_number }}
+        run: fastlane beta
