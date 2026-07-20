@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<title>Quorum · Il gioco della politica</title>
+<meta name="theme-color" content="#0b1020">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Quorum">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<style>
+  :root{
+    --bg:#0b1020; --bg2:#0f1630; --card:#151c38; --card2:#1c244a; --line:#2a3466;
+    --txt:#eef1ff; --muted:#98a0cf; --accent:#7c8cff; --accent2:#a78bfa;
+    --green:#22c55e; --red:#f43f5e; --amber:#f59e0b; --cyan:#22d3ee; --gold:#fbbf24;
+    --shadow:0 12px 40px rgba(0,0,0,.5);
+    --safe-b:env(safe-area-inset-bottom);
+    --safe-t:env(safe-area-inset-top);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;height:100%;overscroll-behavior:none}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1200px 600px at 50% -10%,#1a2350 0%,var(--bg) 55%) fixed;
+    color:var(--txt); line-height:1.4; -webkit-font-smoothing:antialiased;
+    user-select:none;
+  }
+  #app{max-width:520px;margin:0 auto;min-height:100%;position:relative}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;font-size:16px}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    background:linear-gradient(180deg,var(--accent),#5a6bef);color:#fff;font-weight:700;
+    padding:14px 18px;border-radius:14px;box-shadow:0 6px 18px rgba(90,107,239,.35);
+    transition:transform .08s ease, filter .15s;width:100%;
+  }
+  .btn:active{transform:scale(.97)}
+  .btn.sec{background:var(--card2);color:var(--txt);box-shadow:none;border:1px solid var(--line)}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted);box-shadow:none}
+  .btn.sm{padding:10px 12px;font-size:14px;border-radius:11px;width:auto}
+  .btn:disabled{opacity:.4;filter:grayscale(.4)}
+  .screen{display:none;padding:calc(16px + var(--safe-t)) 16px calc(20px + var(--safe-b))}
+  .screen.on{display:block}
+  .fade{animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* ---------- HOME ---------- */
+  .brand{text-align:center;margin:24px 0 6px}
+  .logo{font-size:64px;line-height:1}
+  .brand h1{font-size:40px;margin:8px 0 2px;letter-spacing:1px;
+    background:linear-gradient(90deg,var(--accent2),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .brand p{color:var(--muted);margin:0;font-size:14px}
+  .home-actions{margin-top:28px;display:flex;flex-direction:column;gap:12px}
+  .home-actions .btn{padding:18px}
+  .mode-desc{font-size:12.5px;color:var(--muted);font-weight:500;margin-top:2px}
+  .btn-col{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+  .foot{margin-top:26px;text-align:center;color:var(--muted);font-size:12px}
+  .foot a{color:var(--accent2)}
+
+  /* ---------- SETUP ---------- */
+  .head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .head h2{font-size:22px;margin:0;flex:1}
+  .back{width:40px;height:40px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:20px;display:flex;align-items:center;justify-content:center}
+  .sect{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:14px}
+  .sect h3{margin:0 0 10px;font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+  .seg{display:flex;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
+  .seg button{flex:1;padding:10px;border-radius:9px;color:var(--muted);font-weight:600;font-size:14px}
+  .seg button.on{background:var(--accent);color:#fff}
+  .prow{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+  .prow:first-of-type{border-top:none}
+  .dot{width:26px;height:26px;border-radius:50%;flex:none;box-shadow:0 0 0 3px rgba(255,255,255,.08)}
+  .prow input{flex:1;background:var(--bg2);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:10px;font-size:15px;min-width:0}
+  .toggle{display:flex;background:var(--bg2);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .toggle button{padding:8px 10px;font-size:13px;color:var(--muted);font-weight:700}
+  .toggle button.on{background:var(--accent2);color:#fff}
+  .toggle button.on.cpu{background:var(--amber)}
+  .stepper{display:flex;align-items:center;gap:14px;justify-content:center}
+  .stepper button{width:44px;height:44px;border-radius:12px;background:var(--card2);border:1px solid var(--line);font-size:24px;font-weight:700}
+  .stepper .val{font-size:26px;font-weight:800;min-width:36px;text-align:center}
+
+  /* ---------- GAME ---------- */
+  #screen-game{padding:0}
+  .topbar{position:sticky;top:0;z-index:20;padding:calc(8px + var(--safe-t)) 12px 8px;
+    background:linear-gradient(180deg,var(--bg) 60%,transparent);display:flex;align-items:center;gap:8px}
+  .rnd{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:6px 10px;font-size:12px;color:var(--muted);font-weight:700}
+  .rnd b{color:var(--txt)}
+  .quorbar{flex:1;height:14px;background:var(--bg2);border:1px solid var(--line);border-radius:8px;position:relative;overflow:hidden}
+  .quorbar .qfill{position:absolute;left:0;top:0;bottom:0;transition:width .5s ease;border-radius:8px}
+  .quorbar .qmark{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--gold);left:51%}
+  .icobtn{width:38px;height:38px;border-radius:11px;background:var(--card);border:1px solid var(--line);font-size:18px;display:flex;align-items:center;justify-content:center}
+
+  .players-strip{display:flex;gap:8px;overflow-x:auto;padding:4px 12px 10px;scrollbar-width:none}
+  .players-strip::-webkit-scrollbar{display:none}
+  .pchip{flex:none;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 10px;min-width:96px}
+  .pchip.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(124,140,255,.3)}
+  .pchip .pn{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pchip .pn .d{width:12px;height:12px;border-radius:50%;flex:none}
+  .pchip .seats{font-size:22px;font-weight:800;line-height:1.1}
+  .pchip .seats small{font-size:11px;color:var(--muted);font-weight:600}
+  .pchip .pc{font-size:11px;color:var(--muted);margin-top:1px}
+
+  .board{padding:2px 12px 8px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .region{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;position:relative;transition:transform .1s, box-shadow .2s, border-color .2s}
+  .region.sel{border-color:var(--accent);box-shadow:0 0 0 2px rgba(124,140,255,.35)}
+  .region.targetable{border-color:var(--cyan);animation:pulse 1.2s infinite}
+  .region.frozen{opacity:.55}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 2px rgba(34,211,238,.25)}50%{box-shadow:0 0 0 5px rgba(34,211,238,.12)}}
+  .region .rtop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+  .region .rname{font-size:13px;font-weight:700}
+  .region .rseats{font-size:12px;color:var(--gold);font-weight:800}
+  .region .rseats small{color:var(--muted);font-weight:600}
+  .infbars{display:flex;flex-direction:column;gap:3px;min-height:44px;justify-content:center}
+  .ib{display:flex;align-items:center;gap:5px;height:11px}
+  .ib .track{flex:1;height:7px;background:var(--bg2);border-radius:4px;overflow:hidden}
+  .ib .fill{height:100%;border-radius:4px;transition:width .5s ease}
+  .ib .v{font-size:9.5px;color:var(--muted);min-width:14px;text-align:right;font-variant-numeric:tabular-nums}
+  .region .leadtag{margin-top:6px;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:20px;display:inline-block}
+  .region .frozflag{position:absolute;top:8px;right:8px;font-size:14px}
+
+  .actionbar{position:sticky;bottom:0;z-index:30;background:linear-gradient(0deg,var(--bg) 65%,transparent);
+    padding:10px 12px calc(12px + var(--safe-b))}
+  .apinfo{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px}
+  .apdots{display:flex;gap:5px}
+  .apdots .ap{width:14px;height:14px;border-radius:50%;background:var(--card2);border:1px solid var(--line)}
+  .apdots .ap.on{background:var(--gold);border-color:var(--gold);box-shadow:0 0 8px rgba(251,191,36,.5)}
+  .acts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .act{background:var(--card2);border:1px solid var(--line);border-radius:13px;padding:11px 4px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--txt)}
+  .act .em{font-size:20px}
+  .act:disabled{opacity:.35}
+  .act.warn{border-color:var(--amber)}
+
+  /* sheets / modal */
+  .scrim{position:fixed;inset:0;background:rgba(4,6,16,.66);z-index:50;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px)}
+  .scrim.on{display:flex}
+  .sheet{width:100%;max-width:520px;background:var(--bg2);border:1px solid var(--line);border-bottom:none;
+    border-radius:22px 22px 0 0;padding:16px 16px calc(18px + var(--safe-b));box-shadow:var(--shadow);
+    animation:up .28s cubic-bezier(.2,.8,.2,1);max-height:86vh;overflow-y:auto}
+  @keyframes up{from{transform:translateY(100%)}to{transform:none}}
+  .modal .sheet{border-radius:22px;margin:auto;border-bottom:1px solid var(--line);max-width:440px}
+  .modal{align-items:center}
+  .sheet h3{margin:2px 0 4px;font-size:19px}
+  .sheet .sub{color:var(--muted);font-size:13px;margin:0 0 14px}
+  .grip{width:40px;height:4px;background:var(--line);border-radius:3px;margin:0 auto 12px}
+
+  .cards{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none}
+  .cards::-webkit-scrollbar{display:none}
+  .gcard{flex:none;width:132px;background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);
+    border-radius:14px;padding:11px;display:flex;flex-direction:column;gap:5px;transition:transform .1s}
+  .gcard:active{transform:translateY(-3px)}
+  .gcard .cem{font-size:26px}
+  .gcard .cnm{font-size:13.5px;font-weight:800}
+  .gcard .cdesc{font-size:11px;color:var(--muted);flex:1;line-height:1.35}
+  .gcard .ap-cost{font-size:10px;color:var(--gold);font-weight:700}
+  .empty{color:var(--muted);font-size:13px;text-align:center;padding:24px}
+
+  .amt-row{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px 0 14px}
+  .amt-row .slider{flex:1}
+  input[type=range]{-webkit-appearance:none;height:8px;background:var(--bg);border:1px solid var(--line);border-radius:6px;width:100%}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.5)}
+  .amt-big{font-size:30px;font-weight:800;min-width:52px;text-align:center}
+  .cost-note{text-align:center;font-size:12px;color:var(--muted);margin-bottom:10px}
+
+  /* pass device */
+  #screen-pass{display:none;position:fixed;inset:0;z-index:60;background:var(--bg);
+    flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
+  #screen-pass.on{display:flex}
+  .pass-dot{width:84px;height:84px;border-radius:50%;margin-bottom:18px;box-shadow:0 0 0 8px rgba(255,255,255,.06)}
+  #screen-pass h2{font-size:28px;margin:0 0 4px}
+  #screen-pass p{color:var(--muted);margin:0 0 26px}
+
+  .log{padding:0 12px 12px}
+  .log .li{font-size:12.5px;color:var(--muted);padding:5px 0;border-top:1px solid rgba(255,255,255,.05)}
+  .log .li b{color:var(--txt)}
+
+  .toast{position:fixed;left:50%;top:calc(64px + var(--safe-t));transform:translateX(-50%);z-index:80;
+    background:var(--card2);border:1px solid var(--line);color:var(--txt);padding:11px 16px;border-radius:14px;
+    font-size:14px;font-weight:600;box-shadow:var(--shadow);max-width:88%;text-align:center;
+    opacity:0;pointer-events:none;transition:opacity .25s, transform .25s}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(4px)}
+
+  /* win */
+  .win-wrap{text-align:center;padding-top:8vh}
+  .win-wrap .trophy{font-size:80px}
+  .win-wrap h2{font-size:30px;margin:8px 0 2px}
+  .win-wrap .wsub{color:var(--muted);margin-bottom:20px}
+  .rank{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 12px;margin:16px 0}
+  .rank .r{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-weight:600}
+  .rank .r:first-child{border-top:none}
+  .rank .r .pos{width:22px;color:var(--muted);font-weight:800}
+  .rank .r .d{width:14px;height:14px;border-radius:50%}
+  .rank .r .s{margin-left:auto;font-weight:800}
+  .conf{position:fixed;inset:0;pointer-events:none;z-index:70;overflow:hidden}
+  .conf i{position:absolute;top:-10px;width:9px;height:14px;border-radius:2px;animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+
+  .rules h4{margin:16px 0 6px;font-size:15px;color:var(--accent2)}
+  .rules p, .rules li{font-size:13.5px;color:var(--txt);opacity:.92}
+  .rules ul{margin:4px 0;padding-left:20px}
+  .rules .k{color:var(--gold);font-weight:700}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HOME -->
+  <section id="screen-home" class="screen on">
+    <div class="brand">
+      <div class="logo">🏛️</div>
+      <h1>QUORUM</h1>
+      <p>Il gioco della politica · versione moderna</p>
+    </div>
+    <div class="home-actions">
+      <button class="btn" onclick="startPreset('cpu')">
+        <span style="font-size:22px">🤖</span>
+        <span class="btn-col"><span>Sfida il Computer</span><span class="mode-desc">Offline · tu contro l'IA</span></span>
+      </button>
+      <button class="btn sec" onclick="startPreset('multi')">
+        <span style="font-size:22px">👥</span>
+        <span class="btn-col"><span>Multiplayer locale</span><span class="mode-desc">2-4 giocatori · stesso telefono</span></span>
+      </button>
+      <button id="continue-btn" class="btn ghost" style="display:none" onclick="continueGame()">↺ Continua partita</button>
+      <button class="btn ghost" onclick="show('rules')">📖 Come si gioca</button>
+    </div>
+    <div class="foot">Obiettivo: conquista <b style="color:var(--gold)">51 seggi</b> su 100 e forma il governo.</div>
+  </section>
+
+  <!-- SETUP -->
+  <section id="screen-setup" class="screen">
+    <div class="head">
+      <button class="back" onclick="show('home')">←</button>
+      <h2 id="setup-title">Nuova partita</h2>
+    </div>
+    <div class="sect">
+      <h3>Giocatori</h3>
+      <div class="stepper">
+        <button onclick="changeCount(-1)">−</button>
+        <div class="val" id="pcount">3</div>
+        <button onclick="changeCount(1)">+</button>
+      </div>
+    </div>
+    <div class="sect" id="players-cfg"></div>
+    <div class="sect" id="diff-sect">
+      <h3>Difficoltà IA</h3>
+      <div class="seg" id="diff-seg">
+        <button data-d="0">Facile</button>
+        <button data-d="1" class="on">Medio</button>
+        <button data-d="2">Difficile</button>
+      </div>
+    </div>
+    <button class="btn" style="margin-top:6px" onclick="beginGame()">▶ Inizia la campagna</button>
+  </section>
+
+  <!-- GAME -->
+  <section id="screen-game" class="screen">
+    <div class="topbar">
+      <div class="rnd">Round <b id="round-n">1</b></div>
+      <div class="quorbar" id="quorbar"><div class="qfill" id="qfill"></div><div class="qmark"></div></div>
+      <button class="icobtn" onclick="openMenu()">⋯</button>
+    </div>
+    <div class="players-strip" id="players-strip"></div>
+    <div class="board" id="board"></div>
+    <div class="log" id="log"></div>
+    <div class="actionbar" id="actionbar">
+      <div class="apinfo">
+        <div id="turn-label">Turno</div>
+        <div class="apdots" id="apdots"></div>
+      </div>
+      <div class="acts" id="acts"></div>
+    </div>
+  </section>
+
+  <!-- WIN -->
+  <section id="screen-win" class="screen">
+    <div class="win-wrap fade">
+      <div class="trophy" id="win-trophy">🏆</div>
+      <h2 id="win-title">Vittoria!</h2>
+      <div class="wsub" id="win-sub"></div>
+      <div class="rank" id="win-rank"></div>
+      <button class="btn" onclick="rematch()">↻ Rivincita</button>
+      <button class="btn ghost" style="margin-top:10px" onclick="quitToHome()">Torna al menu</button>
+    </div>
+  </section>
+
+  <!-- RULES -->
+  <section id="screen-rules" class="screen">
+    <div class="head">
+      <button class="back" onclick="show(lastScreen)">←</button>
+      <h2>Come si gioca</h2>
+    </div>
+    <div class="rules sect">
+      <p><b>Quorum</b> è una sfida elettorale. Vince chi per primo controlla <span class="k">51 seggi</span> su 100, distribuiti in 6 regioni.</p>
+      <h4>🗳️ Il tuo turno (2 azioni)</h4>
+      <ul>
+        <li><b>Campagna</b> — spendi Capitale Politico per aggiungere <span class="k">consenso</span> in una regione.</li>
+        <li><b>Raccogli Fondi</b> — ottieni +5 Capitale Politico.</li>
+        <li><b>Gioca Carta</b> — usa una carta evento a effetto immediato.</li>
+      </ul>
+      <p>All'inizio di ogni tuo turno incassi <b>Capitale = 4 + regioni controllate</b>, e peschi una carta.</p>
+      <h4>🏆 Controllo e seggi</h4>
+      <p>In ogni regione, chi ha <b>più consenso</b> ne conquista <b>tutti i seggi</b>. A fine round i seggi vengono riconteggiati: se qualcuno raggiunge il Quorum, la partita finisce.</p>
+      <h4>🃏 Le carte</h4>
+      <p>Comizio, Scandalo, Talk Show, Inchiesta, Voltagabbana e altre: rafforzano te o colpiscono gli avversari. Puoi tenere fino a 5 carte in mano.</p>
+      <h4>👥 Modalità</h4>
+      <p><b>Vs Computer</b>: gioca offline contro 1-3 IA. <b>Multiplayer locale</b>: passatevi il telefono a turno.</p>
+      <p style="margin-top:14px;color:var(--muted);font-size:12px">Reinterpretazione moderna e originale ispirata al classico gioco politico "Quorum".</p>
+    </div>
+  </section>
+
+  <!-- PASS DEVICE -->
+  <div id="screen-pass">
+    <div class="pass-dot" id="pass-dot"></div>
+    <h2 id="pass-name">Giocatore</h2>
+    <p>Passa il telefono e premi per iniziare il turno</p>
+    <button class="btn" style="max-width:280px" onclick="revealTurn()">👁️ Sono io — inizia</button>
+  </div>
+
+  <!-- SHEET (actions / cards / amounts) -->
+  <div class="scrim" id="scrim" onclick="closeSheetBg(event)">
+    <div class="sheet" id="sheet" onclick="event.stopPropagation()"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ============================================================
+   QUORUM — motore di gioco, IA e UI (vanilla JS)
+   ============================================================ */
+"use strict";
+
+// ---------- Config ----------
+const QUORUM = 51;
+const MAX_ROUNDS = 30;
+const HAND_LIMIT = 5;
+const CAMPAIGN_MAX = 6;      // consenso max per azione campagna
+const START_PC = 8;
+const START_INFLUENCE = 3;   // nella regione "roccaforte"
+const START_HAND = 3;
+
+const REGIONS = [
+  {id:0, name:"Nord-Ovest", seats:18, emoji:"🏔️"},
+  {id:1, name:"Nord-Est",   seats:14, emoji:"⛪"},
+  {id:2, name:"Centro",     seats:18, emoji:"🏛️"},
+  {id:3, name:"Sud",        seats:20, emoji:"☀️"},
+  {id:4, name:"Isole",      seats:12, emoji:"🏝️"},
+  {id:5, name:"Grandi Città",seats:18,emoji:"🌆"},
+]; // = 100 seggi
+
+const COLORS = [
+  {name:"Azzurri", hex:"#38bdf8", dot:"#38bdf8"},
+  {name:"Vermigli",hex:"#f43f5e", dot:"#f43f5e"},
+  {name:"Verdi",   hex:"#22c55e", dot:"#22c55e"},
+  {name:"Ambra",   hex:"#f59e0b", dot:"#f59e0b"},
+];
+
+// carta: needs = elenco target da toccare: 'region' o 'rivalRegion'
+const CARDS = {
+  comizio:   {name:"Comizio",     em:"📣", ap:1, desc:"+4 consenso in una regione a tua scelta.", needs:["region"]},
+  talkshow:  {name:"Talk Show",   em:"📺", ap:1, desc:"+2 consenso in due regioni diverse.", needs:["region","region"]},
+  fondi:     {name:"Fondi Neri",  em:"💰", ap:1, desc:"+7 Capitale Politico immediato.", needs:[]},
+  scandalo:  {name:"Scandalo",    em:"🗞️", ap:1, desc:"Togli 5 consenso al leader di una regione.", needs:["rivalRegion"]},
+  inchiesta: {name:"Inchiesta",   em:"⚖️", ap:1, desc:"Congela una regione: nessuno può farvi campagna nel prossimo giro.", needs:["region"]},
+  voltagab:  {name:"Voltagabbana",em:"🔄", ap:1, desc:"Sposta 4 del tuo consenso da una regione a un'altra.", needs:["region","region"]},
+  riforma:   {name:"Riforma",     em:"📜", ap:1, desc:"+3 consenso in ogni regione che controlli.", needs:[]},
+  sondaggio: {name:"Sondaggio",   em:"📊", ap:0, desc:"Gratis: pesca 2 carte.", needs:[]},
+  affluenza: {name:"Astensione",  em:"📉", ap:1, desc:"Dimezza il consenso di TUTTI (tu incluso) in una regione.", needs:["region"]},
+  base:      {name:"Base Militante",em:"✊",ap:1, desc:"+3 consenso nella tua roccaforte.", needs:[]},
+};
+const CARD_POOL = ["comizio","comizio","talkshow","fondi","scandalo","scandalo","inchiesta","voltagab","riforma","sondaggio","affluenza","base","comizio","talkshow","fondi"];
+
+// ---------- Stato ----------
+let S = null;            // stato partita
+let lastScreen = "home";
+let setupCfg = {count:3, players:[], diff:1, mode:"cpu"};
+let ui = {pending:null}; // stato UI temporaneo (targeting carte/campagna)
+
+// ---------- Util ----------
+const $ = s => document.querySelector(s);
+const el = (t,c)=>{const e=document.createElement(t); if(c)e.className=c; return e;};
+function rint(n){ return Math.floor(Math.random()*n); }
+function pick(a){ return a[rint(a.length)]; }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=rint(i+1);[a[i],a[j]]=[a[j],a[i]];} return a; }
+function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+
+function toast(msg, ms=1600){
+  const t=$("#toast"); t.textContent=msg; t.classList.add("on");
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("on"), ms);
+}
+
+// ---------- Navigazione schermate ----------
+function show(name){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on"));
+  const scr = $("#screen-"+name);
+  if(scr){ scr.classList.add("on","fade"); setTimeout(()=>scr.classList.remove("fade"),260); }
+  if(name!=="rules") lastScreen = name;
+  if(name==="home") refreshContinue();
+  window.scrollTo(0,0);
+}
+
+// ============================================================
+//  SETUP
+// ============================================================
+function startPreset(mode){
+  setupCfg.mode = mode;
+  if(mode==="cpu"){
+    setupCfg.count = 3;
+    setupCfg.players = [
+      {name:"Tu", human:true, color:0},
+      {name:"CPU Vermigli", human:false, color:1},
+      {name:"CPU Verdi", human:false, color:2},
+    ];
+    $("#setup-title").textContent = "Sfida il Computer";
+    $("#diff-sect").style.display = "";
+  } else {
+    setupCfg.count = 2;
+    setupCfg.players = [
+      {name:"Giocatore 1", human:true, color:0},
+      {name:"Giocatore 2", human:true, color:1},
+    ];
+    $("#setup-title").textContent = "Multiplayer locale";
+    $("#diff-sect").style.display = "none";
+  }
+  renderSetup();
+  show("setup");
+}
+
+function changeCount(d){
+  const n = clamp(setupCfg.count + d, 2, 4);
+  if(n === setupCfg.count) return;
+  if(n > setupCfg.count){
+    const i = setupCfg.count;
+    setupCfg.players.push({
+      name: setupCfg.mode==="cpu" ? "CPU "+COLORS[i].name : "Giocatore "+(i+1),
+      human: setupCfg.mode!=="cpu", color:i
+    });
+  } else {
+    setupCfg.players.pop();
+  }
+  setupCfg.count = n;
+  renderSetup();
+}
+
+function renderSetup(){
+  $("#pcount").textContent = setupCfg.count;
+  const box = $("#players-cfg"); box.innerHTML="";
+  const h=el("h3"); h.textContent="Partiti"; box.appendChild(h);
+  setupCfg.players.forEach((p,i)=>{
+    const row=el("div","prow");
+    const dot=el("div","dot"); dot.style.background=COLORS[p.color].hex; row.appendChild(dot);
+    const inp=el("input"); inp.value=p.name; inp.maxLength=16;
+    inp.oninput=()=>{ p.name=inp.value; };
+    row.appendChild(inp);
+    const tog=el("div","toggle");
+    const bh=el("button"); bh.textContent="Umano"; bh.className=p.human?"on":"";
+    const bc=el("button"); bc.textContent="CPU"; bc.className=!p.human?"on cpu":"";
+    bh.onclick=()=>{ if(i===0&&setupCfg.mode==="cpu")return; p.human=true; renderSetup(); };
+    bc.onclick=()=>{ p.human=false; if(!p.name||/^Giocatore/.test(p.name))p.name="CPU "+COLORS[p.color].name; renderSetup(); };
+    tog.appendChild(bh); tog.appendChild(bc); row.appendChild(tog);
+    box.appendChild(row);
+  });
+  // difficulty highlight
+  document.querySelectorAll("#diff-seg button").forEach(b=>{
+    b.classList.toggle("on", +b.dataset.d===setupCfg.diff);
+    b.onclick=()=>{ setupCfg.diff=+b.dataset.d; renderSetup(); };
+  });
+}
+
+// ============================================================
+//  NUOVA PARTITA
+// ============================================================
+function beginGame(){
+  const players = setupCfg.players.map((p,i)=>({
+    id:i, name:p.name.trim()||("Partito "+(i+1)), human:p.human, color:p.color,
+    pc:START_PC, seats:0, hand:[], stronghold:i%REGIONS.length,
+  }));
+  // roccaforti distinte
+  const strongholds = shuffle(REGIONS.map(r=>r.id)).slice(0,players.length);
+  players.forEach((p,i)=>p.stronghold=strongholds[i]);
+
+  const influence = REGIONS.map(()=>players.map(()=>0));
+  players.forEach(p=>{ influence[p.stronghold][p.id]=START_INFLUENCE; });
+
+  const deck = shuffle(CARD_POOL.slice());
+  const drawFrom = ()=>{ if(deck.length===0){ deck.push(...shuffle(CARD_POOL.slice())); } return deck.pop(); };
+
+  players.forEach(p=>{ for(let k=0;k<START_HAND;k++) p.hand.push(drawFrom()); });
+
+  S = {
+    players, influence, deck,
+    round:1, turn:0, ap:2,
+    frozen:[false,false,false,false,false,false],
+    frozenNext:[false,false,false,false,false,false],
+    diff:setupCfg.diff, mode:setupCfg.mode,
+    log:[], over:false, started:true,
+    incomeShown:false,
+  };
+  recountSeats();
+  save();
+  show("game");
+  logMsg(`La campagna elettorale ha inizio! Quorum a ${QUORUM} seggi.`);
+  beginTurn(true);
+}
+
+function drawCard(p){
+  if(S.deck.length===0) S.deck.push(...shuffle(CARD_POOL.slice()));
+  const c = S.deck.pop();
+  if(p.hand.length < HAND_LIMIT){ p.hand.push(c); return c; }
+  return null; // mano piena, carta scartata
+}
+
+// ============================================================
+//  FLUSSO TURNI
+// ============================================================
+function cur(){ return S.players[S.turn]; }
+
+function beginTurn(first){
+  if(S.over) return;
+  const p = cur();
+  // reddito + pesca (una volta per turno)
+  S.ap = 2;
+  ui.pending = null;
+  // scongela regioni programmate all'inizio del giro del primo giocatore
+  const p0 = S.players[0];
+  const income = 4 + regionsControlledBy(p.id);
+  p.pc += income;
+  const drawn = drawCard(p);
+
+  if(p.human){
+    if(needsPassScreen()){
+      showPassScreen(p, ()=>{ afterReveal(p, income, drawn); });
+    } else {
+      afterReveal(p, income, drawn);
+    }
+  } else {
+    render();
+    logMsg(`${p.name} incassa ${income} 💰 e pianifica le mosse…`);
+    setTimeout(()=>aiTurn(), 700);
+  }
+}
+
+function afterReveal(p, income, drawn){
+  render();
+  logMsg(`${p.name}: +${income} 💰${drawn?` · pesca ${CARDS[drawn].em} ${CARDS[drawn].name}`:""}.`);
+  toast(`È il turno di ${p.name}`);
+}
+
+function needsPassScreen(){
+  // schermata "passa telefono" solo se c'è più di un umano nella partita
+  return S.players.filter(x=>x.human).length > 1;
+}
+let passCb=null;
+function showPassScreen(p, cb){
+  passCb=cb;
+  $("#pass-dot").style.background = COLORS[p.color].hex;
+  $("#pass-name").textContent = p.name;
+  $("#screen-pass").classList.add("on");
+}
+function revealTurn(){
+  $("#screen-pass").classList.remove("on");
+  if(passCb){ const c=passCb; passCb=null; c(); }
+}
+
+function nextTurn(){
+  ui.pending=null;
+  if(S.over) return;
+  S.turn++;
+  if(S.turn >= S.players.length){
+    S.turn = 0;
+    endRound();
+    if(S.over) return;
+    S.round++;
+  }
+  save();
+  beginTurn();
+}
+
+function endTurnManual(){
+  ui.pending=null; closeSheet();
+  beginTurn && nextTurn();
+}
+
+// ---------- fine round: riconteggio + freeze ----------
+function endRound(){
+  // applica congelamenti programmati
+  S.frozen = S.frozenNext.slice();
+  S.frozenNext = [false,false,false,false,false,false];
+  recountSeats();
+  const winner = checkWin();
+  if(winner!==null){ endGame(winner); return; }
+  if(S.round >= MAX_ROUNDS){
+    // vince chi ha più seggi
+    let best=0; S.players.forEach(p=>{ if(p.seats>S.players[best].seats) best=p.id; });
+    endGame(best, true);
+    return;
+  }
+  logMsg(`— Fine round ${S.round}. Seggi riconteggiati. —`);
+}
+
+function recountSeats(){
+  S.players.forEach(p=>p.seats=0);
+  REGIONS.forEach(r=>{
+    const inf = S.influence[r.id];
+    let max=0, lead=-1, tie=false;
+    inf.forEach((v,pid)=>{ if(v>max){max=v;lead=pid;tie=false;} else if(v===max&&v>0){tie=true;} });
+    if(lead>=0 && max>0 && !tie){ S.players[lead].seats += r.seats; }
+  });
+}
+
+function regionsControlledBy(pid){
+  let n=0;
+  REGIONS.forEach(r=>{ if(leaderOf(r.id)===pid) n++; });
+  return n;
+}
+function leaderOf(rid){
+  const inf=S.influence[rid]; let max=0,lead=-1,tie=false;
+  inf.forEach((v,pid)=>{ if(v>max){max=v;lead=pid;tie=false;} else if(v===max&&v>0){tie=true;} });
+  return (lead>=0&&max>0&&!tie)?lead:-1;
+}
+function checkWin(){
+  let best=-1;
+  S.players.forEach(p=>{ if(p.seats>=QUORUM && (best<0||p.seats>S.players[best].seats)) best=p.id; });
+  return best<0?null:best;
+}
+
+// ============================================================
+//  AZIONI GIOCATORE
+// ============================================================
+function spendAP(n=1){ S.ap-=n; }
+
+function doCampaign(rid, amount){
+  const p=cur();
+  amount=clamp(amount,0,Math.min(p.pc,CAMPAIGN_MAX));
+  if(amount<=0) return false;
+  if(S.frozen[rid]){ toast("Regione congelata da un'Inchiesta"); return false; }
+  p.pc-=amount;
+  S.influence[rid][p.id]+=amount;
+  spendAP(1);
+  logMsg(`${p.name} fa campagna in ${REGIONS[rid].name}: +${amount} consenso.`);
+  afterAction();
+  return true;
+}
+function doFundraise(){
+  const p=cur(); p.pc+=5; spendAP(1);
+  logMsg(`${p.name} raccoglie fondi: +5 💰.`);
+  afterAction();
+}
+
+// --- carte ---
+function canPlayCard(id){ return CARDS[id].ap<=S.ap; }
+function playCardResolved(id, targets){
+  const p=cur(); const c=CARDS[id];
+  // rimuovi dalla mano
+  const idx=p.hand.indexOf(id); if(idx<0) return;
+  switch(id){
+    case "comizio": S.influence[targets[0]][p.id]+=4;
+      logMsg(`${p.name} · Comizio in ${REGIONS[targets[0]].name} (+4).`); break;
+    case "talkshow": targets.forEach(t=>S.influence[t][p.id]+=2);
+      logMsg(`${p.name} · Talk Show in ${REGIONS[targets[0]].name} e ${REGIONS[targets[1]].name} (+2).`); break;
+    case "fondi": p.pc+=7; logMsg(`${p.name} · Fondi Neri (+7 💰).`); break;
+    case "scandalo": {
+      const rid=targets[0]; const lead=leaderOf(rid);
+      if(lead>=0 && lead!==p.id){ S.influence[rid][lead]=Math.max(0,S.influence[rid][lead]-5);
+        logMsg(`${p.name} · Scandalo contro ${S.players[lead].name} in ${REGIONS[rid].name} (-5).`);
+      } else { logMsg(`${p.name} · Scandalo a vuoto in ${REGIONS[rid].name}.`); }
+      break; }
+    case "inchiesta": S.frozenNext[targets[0]]=true;
+      logMsg(`${p.name} · Inchiesta: ${REGIONS[targets[0]].name} congelata il prossimo giro.`); break;
+    case "voltagab": {
+      const [from,to]=targets; const mv=Math.min(4,S.influence[from][p.id]);
+      S.influence[from][p.id]-=mv; S.influence[to][p.id]+=mv;
+      logMsg(`${p.name} · Voltagabbana: ${mv} consenso da ${REGIONS[from].name} a ${REGIONS[to].name}.`); break; }
+    case "riforma": { let cnt=0;
+      REGIONS.forEach(r=>{ if(leaderOf(r.id)===p.id){ S.influence[r.id][p.id]+=3; cnt++; } });
+      logMsg(`${p.name} · Riforma: +3 in ${cnt} regioni controllate.`); break; }
+    case "sondaggio": { drawCard(p); drawCard(p); logMsg(`${p.name} · Sondaggio: pesca 2 carte.`); break; }
+    case "affluenza": { const rid=targets[0];
+      S.influence[rid]=S.influence[rid].map(v=>Math.floor(v/2));
+      logMsg(`${p.name} · Astensione in ${REGIONS[rid].name}: consenso dimezzato.`); break; }
+    case "base": S.influence[p.stronghold][p.id]+=3;
+      logMsg(`${p.name} · Base Militante: +3 nella roccaforte (${REGIONS[p.stronghold].name}).`); break;
+  }
+  p.hand.splice(idx,1);
+  if(c.ap>0) spendAP(c.ap);
+  afterAction();
+}
+
+function afterAction(){
+  ui.pending=null;
+  recountSeats(); // aggiornamento live seggi (provvisorio)
+  save();
+  const p=cur();
+  if(p.human){
+    render();
+    if(S.ap<=0){ setTimeout(()=>nextTurn(), 550); }
+  }
+}
+
+// ============================================================
+//  IA
+// ============================================================
+function aiTurn(){
+  if(S.over) return;
+  const p=cur();
+  const step=()=>{
+    if(S.ap<=0){ setTimeout(()=>nextTurn(), 500); return; }
+    const move = aiChooseMove(p);
+    aiExecute(p, move);
+    render();
+    setTimeout(step, 700);
+  };
+  step();
+}
+
+function boardScore(pid){
+  // seggi controllati + margine di consenso normalizzato
+  let seats=0, margin=0;
+  REGIONS.forEach(r=>{
+    const inf=S.influence[r.id];
+    const mine=inf[pid];
+    let bestOther=0; inf.forEach((v,i)=>{ if(i!==pid&&v>bestOther)bestOther=v; });
+    if(leaderOf(r.id)===pid) seats+=r.seats;
+    margin += (mine-bestOther)/ (r.seats); // regioni piccole pesano meno
+  });
+  return seats + margin*0.8;
+}
+
+function aiChooseMove(p){
+  const diff=S.diff; // 0 facile,1 medio,2 difficile
+  const cands=[];
+  const base=boardScore(p.id);
+
+  // opzione: raccogli fondi
+  cands.push({type:"fund", score: base + (p.pc<4?1.2:0.05)});
+
+  // opzione: campagna in ogni regione
+  const amt=Math.min(p.pc, CAMPAIGN_MAX);
+  if(amt>0){
+    REGIONS.forEach(r=>{
+      if(S.frozen[r.id]) return;
+      S.influence[r.id][p.id]+=amt;
+      let sc=boardScore(p.id);
+      S.influence[r.id][p.id]-=amt;
+      // bonus se conquista/consolida regione grande contro leader forte
+      cands.push({type:"camp", rid:r.id, amt, score:sc});
+    });
+  }
+
+  // opzione: carte
+  p.hand.forEach(cid=>{
+    if(!canPlayCard(cid)) return;
+    const opt=aiEvalCard(p, cid, base);
+    if(opt) cands.push(opt);
+  });
+
+  // difficoltà: rumore e scelta
+  cands.forEach(c=>{ c.score += (diff===0? (Math.random()*2.2) : diff===1? (Math.random()*0.6) : 0); });
+  cands.sort((a,b)=>b.score-a.score);
+
+  // leader avversario vicino al quorum → difficile blocca
+  if(diff===2){
+    const threat = S.players.find(o=>o.id!==p.id && o.seats>=QUORUM-14);
+    if(threat){
+      const block = aiBlockMove(p, threat);
+      if(block) return block;
+    }
+  }
+  if(diff===0 && Math.random()<0.35){ return pick(cands.slice(0,Math.min(4,cands.length))); }
+  return cands[0];
+}
+
+function aiEvalCard(p, cid, base){
+  const c=CARDS[cid];
+  const test=(fn)=>{ const undo=fn(); const sc=boardScore(p.id); undo(); return sc; };
+  const contestedRegions = REGIONS.map(r=>r.id);
+  switch(cid){
+    case "comizio": {
+      let best=null;
+      contestedRegions.forEach(rid=>{ const s=test(()=>{S.influence[rid][p.id]+=4; return ()=>S.influence[rid][p.id]-=4;});
+        if(!best||s>best.score) best={type:"card",cid,targets:[rid],score:s}; });
+      return best; }
+    case "base": { const rid=p.stronghold; const s=test(()=>{S.influence[rid][p.id]+=3; return ()=>S.influence[rid][p.id]-=3;});
+      return {type:"card",cid,targets:[],score:s}; }
+    case "fondi": return {type:"card",cid,targets:[],score: base + (p.pc<5?0.9:0.2)};
+    case "sondaggio": return {type:"card",cid,targets:[],score: base + 0.4};
+    case "riforma": { let cnt=0; REGIONS.forEach(r=>{if(leaderOf(r.id)===p.id)cnt++;});
+      return {type:"card",cid,targets:[],score: base + cnt*0.5}; }
+    case "scandalo": {
+      let best=null;
+      REGIONS.forEach(r=>{ const lead=leaderOf(r.id);
+        if(lead>=0 && lead!==p.id){
+          const s=test(()=>{const o=S.influence[r.id][lead];S.influence[r.id][lead]=Math.max(0,o-5);return ()=>S.influence[r.id][lead]=o;});
+          if(!best||s>best.score) best={type:"card",cid,targets:[r.id],score:s+0.3};
+        }});
+      return best; }
+    case "talkshow": {
+      // due migliori regioni
+      const scored=REGIONS.map(rid=>({rid:rid.id, s:test(()=>{S.influence[rid.id][p.id]+=2;return ()=>S.influence[rid.id][p.id]-=2;})}));
+      scored.sort((a,b)=>b.s-a.s);
+      return {type:"card",cid,targets:[scored[0].rid,scored[1].rid],score: base+0.6};
+    }
+    case "inchiesta": {
+      // congela la miglior regione del leader minaccioso
+      const threat=S.players.slice().filter(o=>o.id!==p.id).sort((a,b)=>b.seats-a.seats)[0];
+      if(!threat) return null;
+      let target=-1,bs=-1;
+      REGIONS.forEach(r=>{ if(leaderOf(r.id)===threat.id && r.seats>bs){bs=r.seats;target=r.id;} });
+      if(target<0) return null;
+      return {type:"card",cid,targets:[target],score: base + 0.4 + bs*0.02};
+    }
+    case "voltagab": {
+      // sposta da regione persa a regione contendibile
+      let from=-1,fbest=-1;
+      REGIONS.forEach(r=>{ const mine=S.influence[r.id][p.id]; if(mine>0 && leaderOf(r.id)!==p.id && mine>fbest){fbest=mine;from=r.id;} });
+      if(from<0) return null;
+      let best=null;
+      REGIONS.forEach(r=>{ if(r.id===from)return;
+        const s=test(()=>{const mv=Math.min(4,S.influence[from][p.id]);S.influence[from][p.id]-=mv;S.influence[r.id][p.id]+=mv;return ()=>{S.influence[from][p.id]+=mv;S.influence[r.id][p.id]-=mv;};});
+        if(!best||s>best.score) best={type:"card",cid,targets:[from,r.id],score:s}; });
+      return best; }
+    case "affluenza": {
+      // dimezza una regione dove sono in svantaggio netto
+      let best=null;
+      REGIONS.forEach(r=>{ const lead=leaderOf(r.id);
+        if(lead>=0 && lead!==p.id){
+          const s=test(()=>{const old=S.influence[r.id].slice();S.influence[r.id]=S.influence[r.id].map(v=>Math.floor(v/2));return ()=>S.influence[r.id]=old;});
+          if(!best||s>best.score) best={type:"card",cid,targets:[r.id],score:s};
+        }});
+      return best; }
+  }
+  return null;
+}
+
+function aiBlockMove(p, threat){
+  // trova regione del leader e prova scandalo/inchiesta/campagna per strapparla
+  let target=-1,bs=-1;
+  REGIONS.forEach(r=>{ if(leaderOf(r.id)===threat.id && r.seats>bs){bs=r.seats;target=r.id;} });
+  if(target<0) return null;
+  if(p.hand.includes("scandalo")&&canPlayCard("scandalo")) return {type:"card",cid:"scandalo",targets:[target]};
+  if(p.hand.includes("inchiesta")&&canPlayCard("inchiesta")) return {type:"card",cid:"inchiesta",targets:[target]};
+  const amt=Math.min(p.pc,CAMPAIGN_MAX);
+  if(amt>0 && !S.frozen[target]) return {type:"camp",rid:target,amt};
+  return null;
+}
+
+function aiExecute(p, move){
+  if(!move){ nextTurn(); return; }
+  if(move.type==="fund"){ doFundraise(); }
+  else if(move.type==="camp"){ if(!doCampaign(move.rid, move.amt)){ doFundraise(); } }
+  else if(move.type==="card"){ playCardResolved(move.cid, move.targets||[]); }
+  else { spendAP(1); }
+}
+
+// ============================================================
+//  RENDER
+// ============================================================
+function render(){
+  if(!S) return;
+  $("#round-n").textContent = S.round;
+  // quorum bar: leader
+  const lead=S.players.slice().sort((a,b)=>b.seats-a.seats)[0];
+  const pct=clamp(lead.seats/100*100,0,100);
+  const qf=$("#qfill"); qf.style.width=pct+"%"; qf.style.background=COLORS[lead.color].hex;
+
+  // players strip
+  const strip=$("#players-strip"); strip.innerHTML="";
+  S.players.forEach(p=>{
+    const c=el("div","pchip"+(p.id===S.turn?" active":""));
+    c.innerHTML=`<div class="pn"><span class="d" style="background:${COLORS[p.color].hex}"></span>${escapeHtml(p.name)}</div>
+      <div class="seats">${p.seats}<small>/${QUORUM}</small></div>
+      <div class="pc">💰 ${p.pc} · 🃏 ${p.hand.length}${p.human?"":" · 🤖"}</div>`;
+    strip.appendChild(c);
+  });
+
+  // board
+  const board=$("#board"); board.innerHTML="";
+  REGIONS.forEach(r=>{
+    const div=el("div","region");
+    if(S.frozen[r.id]) div.classList.add("frozen");
+    if(ui.pending && ui.pending.targetable && ui.pending.targetable(r.id)) div.classList.add("targetable");
+    if(ui.pending && ui.pending.selected && ui.pending.selected.includes(r.id)) div.classList.add("sel");
+    const lead=leaderOf(r.id);
+    const leadName = lead>=0 ? S.players[lead].name : "conteso";
+    const leadCol = lead>=0 ? COLORS[S.players[lead].color].hex : "var(--muted)";
+    let bars="";
+    const inf=S.influence[r.id];
+    const maxV=Math.max(1,...inf);
+    S.players.forEach(p=>{
+      const v=inf[p.id]; if(v===0 && S.players.length>3) {/*still show*/}
+      bars+=`<div class="ib"><div class="track"><div class="fill" style="width:${v/maxV*100}%;background:${COLORS[p.color].hex}"></div></div><div class="v">${v}</div></div>`;
+    });
+    div.innerHTML=`
+      <div class="rtop"><span class="rname">${r.emoji} ${r.name}</span><span class="rseats">${r.seats}<small> seggi</small></span></div>
+      <div class="infbars">${bars}</div>
+      <div class="leadtag" style="background:${hexA(leadCol,.18)};color:${leadCol}">${lead>=0?"● "+escapeHtml(leadName):"◌ conteso"}</div>
+      ${S.frozen[r.id]?'<div class="frozflag">❄️</div>':''}`;
+    div.onclick=()=>onRegionTap(r.id);
+    board.appendChild(div);
+  });
+
+  // log (ultimi 4)
+  const log=$("#log"); log.innerHTML="";
+  S.log.slice(-4).reverse().forEach(m=>{ const d=el("div","li"); d.innerHTML=m; log.appendChild(d); });
+
+  // action bar
+  renderActions();
+}
+
+function renderActions(){
+  const p=cur();
+  $("#turn-label").innerHTML = `<span class="d" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${COLORS[p.color].hex};margin-right:6px;vertical-align:middle"></span><b>${escapeHtml(p.name)}</b>`;
+  const dots=$("#apdots"); dots.innerHTML="";
+  for(let i=0;i<2;i++){ const d=el("div","ap"+(i<S.ap?" on":"")); dots.appendChild(d); }
+  const acts=$("#acts"); acts.innerHTML="";
+  const human = p.human && !S.over;
+  const mk=(em,label,fn,disabled,warn)=>{
+    const b=el("button","act"+(warn?" warn":"")); b.innerHTML=`<span class="em">${em}</span>${label}`;
+    b.disabled=!human||disabled; b.onclick=fn; acts.appendChild(b);
+  };
+  const noAP = S.ap<=0;
+  mk("📣","Campagna",()=>openCampaign(), noAP || p.pc<=0);
+  mk("💰","Fondi",()=>{doFundraise();}, noAP);
+  mk("🃏","Carte ("+p.hand.length+")",()=>openHand(), p.hand.length===0);
+  mk("⏭️","Passa",()=>nextTurn(), false);
+}
+
+// ---------- interazione regioni (targeting) ----------
+function onRegionTap(rid){
+  const p=cur();
+  if(!p.human || S.over) return;
+  if(!ui.pending){ // apri dettaglio/campagna rapida? apri campagna se ha AP
+    return;
+  }
+  const pend=ui.pending;
+  if(pend.type==="campaign"){
+    if(S.frozen[rid]){ toast("Regione congelata ❄️"); return; }
+    openCampaignAmount(rid);
+  } else if(pend.type==="card"){
+    if(!pend.targetable(rid)){ toast("Bersaglio non valido"); return; }
+    pend.selected.push(rid);
+    if(pend.selected.length>=pend.needs.length){
+      const id=pend.cid, targets=pend.selected.slice();
+      ui.pending=null; closeSheet();
+      playCardResolved(id, targets);
+    } else {
+      toast(`Scegli un'altra regione (${pend.selected.length}/${pend.needs.length})`);
+      render();
+    }
+  }
+}
+
+// ---------- Sheets ----------
+function openSheet(html){ $("#sheet").innerHTML=`<div class="grip"></div>`+html; $("#scrim").classList.add("on"); }
+function closeSheet(){ $("#scrim").classList.remove("on"); }
+function closeSheetBg(e){ if(e.target.id==="scrim"){ ui.pending=null; closeSheet(); render(); } }
+
+function openCampaign(){
+  const p=cur();
+  ui.pending={type:"campaign"};
+  render();
+  toast("📣 Tocca una regione dove fare campagna");
+}
+function openCampaignAmount(rid){
+  const p=cur();
+  const max=Math.min(p.pc,CAMPAIGN_MAX);
+  const start=Math.min(max, Math.max(1,Math.ceil(max/2)));
+  openSheet(`
+    <h3>${REGIONS[rid].emoji} Campagna · ${REGIONS[rid].name}</h3>
+    <p class="sub">Hai 💰 ${p.pc}. Ogni punto = +1 consenso (max ${CAMPAIGN_MAX}).</p>
+    <div class="amt-row">
+      <input class="slider" id="amt" type="range" min="1" max="${max}" value="${start}" oninput="syncAmt(${rid})">
+      <div class="amt-big" id="amt-big">${start}</div>
+    </div>
+    <div class="cost-note" id="amt-note">Costo: ${start} 💰 → +${start} consenso in ${REGIONS[rid].name}</div>
+    <button class="btn" onclick="confirmCampaign(${rid})">✔ Conferma campagna</button>
+    <button class="btn ghost" style="margin-top:8px" onclick="ui.pending=null;closeSheet();render()">Annulla</button>
+  `);
+}
+function syncAmt(rid){
+  const v=+$("#amt").value; $("#amt-big").textContent=v;
+  $("#amt-note").textContent=`Costo: ${v} 💰 → +${v} consenso in ${REGIONS[rid].name}`;
+}
+function confirmCampaign(rid){
+  const v=+$("#amt").value; ui.pending=null; closeSheet();
+  doCampaign(rid, v);
+}
+
+function openHand(){
+  const p=cur();
+  if(p.hand.length===0){ toast("Nessuna carta in mano"); return; }
+  let html=`<h3>🃏 Le tue carte</h3><p class="sub">${S.ap} azioni disponibili. Tocca una carta per giocarla.</p><div class="cards">`;
+  // conta duplicati mantenendo indice
+  p.hand.forEach((cid,i)=>{
+    const c=CARDS[cid]; const playable=canPlayCard(cid);
+    html+=`<div class="gcard" style="${playable?'':'opacity:.45'}" onclick="${playable?`chooseCard('${cid}')`:`toast('Servono più azioni')`}">
+      <div class="cem">${c.em}</div><div class="cnm">${c.name}</div>
+      <div class="cdesc">${c.desc}</div>
+      <div class="ap-cost">${c.ap>0?('⚡ '+c.ap+' azione'):'⚡ gratis'}</div></div>`;
+  });
+  html+=`</div><button class="btn ghost" style="margin-top:12px" onclick="closeSheet()">Chiudi</button>`;
+  openSheet(html);
+}
+
+function chooseCard(cid){
+  const c=CARDS[cid];
+  if(c.needs.length===0){ closeSheet(); playCardResolved(cid, []); return; }
+  // targeting
+  const targetable = (rid)=>{
+    if(c.needs[0]==="rivalRegion"){ const l=leaderOf(rid); return l>=0 && l!==cur().id; }
+    return true;
+  };
+  ui.pending={type:"card", cid, needs:c.needs.slice(), selected:[], targetable};
+  closeSheet();
+  render();
+  toast(`${c.em} ${c.name}: scegli ${c.needs.length>1?c.needs.length+' regioni':'una regione'}`);
+}
+
+// ---------- Menu ----------
+function openMenu(){
+  openSheet(`
+    <h3>Menu partita</h3>
+    <p class="sub">Round ${S.round} · ${S.players.length} partiti</p>
+    <button class="btn sec" onclick="closeSheet();show('rules')">📖 Regole</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="confirmQuit()">🏳️ Abbandona partita</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="closeSheet()">Continua a giocare</button>
+  `);
+}
+function confirmQuit(){
+  openSheet(`<h3>Abbandonare?</h3><p class="sub">La partita in corso verrà chiusa.</p>
+    <button class="btn" onclick="quitToHome()">Sì, torna al menu</button>
+    <button class="btn ghost" style="margin-top:10px" onclick="closeSheet()">No, continua</button>`);
+}
+function quitToHome(){ closeSheet(); clearSave(); S=null; show("home"); }
+
+// ============================================================
+//  FINE PARTITA
+// ============================================================
+function endGame(winnerId, byTimeout){
+  S.over=true; clearSave();
+  const w=S.players[winnerId];
+  logMsg(`🏆 ${w.name} raggiunge il Quorum con ${w.seats} seggi!`);
+  const ranking=S.players.slice().sort((a,b)=>b.seats-a.seats);
+  $("#win-trophy").textContent = w.human?"🎉":"🤖";
+  $("#win-title").textContent = w.human ? `${w.name} al governo!` : `${w.name} vince`;
+  $("#win-sub").textContent = byTimeout
+    ? `Round esauriti — maggioranza relativa con ${w.seats} seggi.`
+    : `Quorum raggiunto: ${w.seats} seggi su 100.`;
+  const rk=$("#win-rank"); rk.innerHTML="";
+  ranking.forEach((p,i)=>{
+    const row=el("div","r");
+    row.innerHTML=`<span class="pos">${i+1}</span><span class="d" style="background:${COLORS[p.color].hex}"></span>
+      <span>${escapeHtml(p.name)}${p.human?"":" 🤖"}</span><span class="s">${p.seats}</span>`;
+    rk.appendChild(row);
+  });
+  show("win");
+  if(w.human || S.players.filter(x=>x.human).length>1) confetti();
+}
+
+function confetti(){
+  const wrap=el("div","conf"); document.body.appendChild(wrap);
+  const cols=["#38bdf8","#f43f5e","#22c55e","#f59e0b","#a78bfa","#fbbf24"];
+  for(let i=0;i<80;i++){
+    const c=el("i"); c.style.left=Math.random()*100+"%";
+    c.style.background=cols[rint(cols.length)];
+    c.style.animationDuration=(1.6+Math.random()*1.8)+"s";
+    c.style.animationDelay=(Math.random()*0.6)+"s";
+    wrap.appendChild(c);
+  }
+  setTimeout(()=>wrap.remove(), 3600);
+}
+
+function rematch(){
+  // stessa configurazione
+  const savedCfg={players:S.players.map(p=>({name:p.name,human:p.human,color:p.color})),diff:S.diff,mode:S.mode};
+  setupCfg.players=savedCfg.players.map(p=>({...p}));
+  setupCfg.count=savedCfg.players.length; setupCfg.diff=savedCfg.diff; setupCfg.mode=savedCfg.mode;
+  beginGame();
+}
+
+// ============================================================
+//  LOG / PERSISTENZA
+// ============================================================
+function logMsg(m){ S.log.push(m); if(S.log.length>60)S.log.shift(); }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function hexA(hex,a){ if(!hex.startsWith("#"))return `rgba(150,160,200,${a})`;
+  const n=parseInt(hex.slice(1),16); return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`; }
+
+const SAVE_KEY="quorum_save_v1";
+function save(){ try{ if(S&&!S.over) localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){} }
+function clearSave(){ try{ localStorage.removeItem(SAVE_KEY); }catch(e){} }
+function refreshContinue(){
+  let has=false; try{ has=!!localStorage.getItem(SAVE_KEY); }catch(e){}
+  $("#continue-btn").style.display = has?"":"none";
+}
+function continueGame(){
+  try{
+    const raw=localStorage.getItem(SAVE_KEY); if(!raw)return;
+    S=JSON.parse(raw); S.over=false;
+    show("game"); render();
+    const p=cur();
+    if(!p.human){ setTimeout(()=>aiTurn(),600); }
+    else if(needsPassScreen()){ showPassScreen(p, ()=>render()); }
+    toast("Partita ripresa");
+  }catch(e){ toast("Salvataggio non valido"); clearSave(); }
+}
+
+// ---------- boot ----------
+window.addEventListener("load", ()=>{
+  refreshContinue();
+  renderSetup();
+  if("serviceWorker" in navigator){
+    navigator.serviceWorker.register("sw.js").catch(()=>{});
+  }
+});
+</script>
+</body>
+</html>
