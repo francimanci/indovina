@@ -263,7 +263,12 @@
   <div class="card" id="histCard">
     <h2>📜 Storico mani</h2>
     <div id="histBody"></div>
-    <button class="btn-ghost btn-sm" id="newGame" style="margin-top:12px">🗑 Nuova partita (azzera tutto)</button>
+    <div class="row" style="margin-top:12px">
+      <button class="btn-ghost btn-sm" id="share">📤 Condividi</button>
+      <button class="btn-ghost btn-sm" id="exportCsv">⬇️ Esporta CSV</button>
+    </div>
+    <button class="btn-ghost btn-sm" id="newGame" style="margin-top:8px">🗑 Nuova partita (azzera tutto)</button>
+    <div id="shareMsg" class="muted hidden" style="margin-top:8px;text-align:center"></div>
   </div>
 
   <p class="muted" style="text-align:center">Valori: Jolly 30 · 2 (pinella) 20 · Asso 15 · 8–K 10 · 3–7 5</p>
@@ -611,6 +616,48 @@ $("#newGame").addEventListener("click", ()=>{
   $("#analyzeErr").classList.add("hidden");
   saveState(); renderActive(); renderHistory();
   window.scrollTo({top:0, behavior:"smooth"});
+});
+
+/* ---------- esporta & condividi ---------- */
+function buildSummary(){
+  const n0=state.teams[0].name, n1=state.teams[1].name;
+  if(state.history.length===0) return "Burraco — nessuna mano registrata.";
+  let run0=0, run1=0, lines=[];
+  state.history.forEach((h,i)=>{ run0+=h.scores[0]; run1+=h.scores[1];
+    lines.push(`Mano ${i+1}: ${n0} ${fmt(h.scores[0])} (tot ${run0}) · ${n1} ${fmt(h.scores[1])} (tot ${run1})`); });
+  const leader = run0===run1 ? "Parità" : (run0>run1 ? n0 : n1) + " in testa";
+  return `🃏 Burraco — ${n0} vs ${n1}\n` + lines.join("\n") + `\n\nTotale: ${n0} ${run0} · ${n1} ${run1} — ${leader}`;
+}
+function buildCSV(){
+  const n0=state.teams[0].name, n1=state.teams[1].name;
+  let run0=0, run1=0;
+  const rows=[["Mano", n0, n0+" tot", n1, n1+" tot"]];
+  state.history.forEach((h,i)=>{ run0+=h.scores[0]; run1+=h.scores[1]; rows.push([i+1, h.scores[0], run0, h.scores[1], run1]); });
+  rows.push(["Totale", run0, "", run1, ""]);
+  return rows.map(r=>r.map(v=>{ const s=String(v); return /[",\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; }).join(",")).join("\r\n");
+}
+function flashShareMsg(txt){ const m=$("#shareMsg"); m.textContent=txt; m.classList.remove("hidden"); setTimeout(()=>m.classList.add("hidden"), 2500); }
+$("#share").addEventListener("click", async ()=>{
+  if(state.history.length===0){ flashShareMsg("Nessuna mano da condividere."); return; }
+  const text = buildSummary();
+  try {
+    if(navigator.share){ await navigator.share({ title:"Burraco — segnapunti", text }); return; }
+    await navigator.clipboard.writeText(text); flashShareMsg("Riepilogo copiato negli appunti ✅");
+  } catch(e){
+    if(e && e.name==="AbortError") return; // utente ha annullato la condivisione
+    try { await navigator.clipboard.writeText(text); flashShareMsg("Riepilogo copiato negli appunti ✅"); }
+    catch(e2){ flashShareMsg("Impossibile condividere su questo dispositivo."); }
+  }
+});
+$("#exportCsv").addEventListener("click", ()=>{
+  if(state.history.length===0){ flashShareMsg("Nessuna mano da esportare."); return; }
+  const blob = new Blob(["﻿"+buildCSV()], {type:"text/csv;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "burraco-storico.csv";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  flashShareMsg("CSV scaricato ✅");
 });
 
 /* ---------- render della squadra attiva ---------- */
