@@ -1,3 +1,7 @@
+> 🃏 **Burraco — Segnapunti**: app per calcolare i punti del Burraco fotografando le carte,
+> con due squadre e storico delle mani. Installabile come PWA.
+> → <https://francimanci.github.io/indovina/burraco.html>
+
 # Insieme — Organizer famiglia 🏡
 
 App **gratuita** (nessuna pubblicità, nessun abbonamento) per organizzare la vita di famiglia,
