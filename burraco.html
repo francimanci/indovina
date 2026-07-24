@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d9488">
+<title>Burraco — Calcola punti da foto</title>
+<style>
+  :root {
+    --bg: #f4f7f7;
+    --card: #ffffff;
+    --ink: #0f172a;
+    --soft: #334155;
+    --muted: #64748b;
+    --line: #e6ecec;
+    --accent: #0d9488;
+    --accent-700: #0f766e;
+    --accent-50: #ecfdf9;
+    --good: #16a34a;
+    --bad: #dc2626;
+    --warn: #d97706;
+    --shadow: 0 1px 2px rgba(15,23,42,.05), 0 8px 24px rgba(15,23,42,.06);
+    --radius: 16px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b1220; --card: #111a2b; --ink: #eef2f7; --soft: #c3ccd8;
+      --muted: #8b97a7; --line: #223047; --accent: #2dd4bf; --accent-700: #5eead4;
+      --accent-50: #10241f; --good:#4ade80; --bad:#f87171; --warn:#fbbf24;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.4);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg); color: var(--ink); line-height: 1.4;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 16px 16px 64px; }
+  header h1 { font-size: 1.5rem; margin: 8px 0 2px; }
+  header p { color: var(--muted); margin: 0 0 16px; font-size: .95rem; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 16px; margin-bottom: 16px;
+  }
+  .card h2 { font-size: 1.05rem; margin: 0 0 12px; display: flex; align-items: center; gap: 8px; }
+  label { display: block; font-size: .85rem; color: var(--soft); margin: 10px 0 4px; font-weight: 600; }
+  input[type=text], input[type=password], input[type=number], select {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px;
+    background: var(--bg); color: var(--ink); font-size: 16px; font-family: inherit;
+  }
+  button {
+    font-family: inherit; font-size: 1rem; font-weight: 600; cursor: pointer;
+    border: none; border-radius: 12px; padding: 12px 16px; transition: opacity .15s;
+  }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  .btn-primary { background: var(--accent); color: #fff; width: 100%; }
+  @media (prefers-color-scheme: dark) { .btn-primary { color: #05201c; } }
+  .btn-ghost { background: transparent; color: var(--accent-700); border: 1px solid var(--line); }
+  .btn-sm { padding: 7px 12px; font-size: .85rem; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .row > * { flex: 1; min-width: 0; }
+  .muted { color: var(--muted); font-size: .85rem; }
+  .hidden { display: none !important; }
+
+  /* dropzone */
+  #drop {
+    border: 2px dashed var(--line); border-radius: var(--radius); padding: 28px 16px;
+    text-align: center; color: var(--muted); cursor: pointer; transition: border-color .15s, background .15s;
+  }
+  #drop:hover, #drop.drag { border-color: var(--accent); background: var(--accent-50); }
+  #drop .big { font-size: 2.4rem; }
+  #preview { max-width: 100%; border-radius: 12px; margin-top: 12px; display: block; }
+
+  /* melds */
+  .meld { border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin-bottom: 12px; }
+  .meld-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .badge { font-size: .75rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
+  .badge.pulito { background: rgba(22,163,74,.15); color: var(--good); }
+  .badge.sporco { background: rgba(217,119,6,.15); color: var(--warn); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 4px; padding: 6px 8px; border-radius: 9px;
+    border: 1px solid var(--line); background: var(--bg); font-weight: 700; font-size: 1rem;
+    min-width: 42px; justify-content: center; cursor: pointer; user-select: none; position: relative;
+  }
+  .chip.red { color: #dc2626; } .chip.black { color: var(--ink); }
+  @media (prefers-color-scheme: dark){ .chip.black{ color:#eef2f7 } }
+  .chip.wild { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .chip .x {
+    position: absolute; top: -7px; right: -7px; background: var(--bad); color:#fff;
+    border-radius: 999px; width: 18px; height: 18px; font-size: 12px; line-height: 18px; text-align: center;
+  }
+  .totrow { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
+  .totrow.grand { font-size: 1.35rem; font-weight: 800; border-top: 2px solid var(--accent); margin-top: 4px; padding-top: 12px; }
+  .num { font-variant-numeric: tabular-nums; }
+  .pos { color: var(--good); } .neg { color: var(--bad); }
+  .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius: 50%; display: inline-block; animation: spin .8s linear infinite; vertical-align: -4px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .toggle { display:flex; align-items:center; justify-content:space-between; padding:8px 0; }
+  .switch { position: relative; width: 46px; height: 26px; flex: none; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position:absolute; inset:0; background:var(--line); border-radius:999px; transition:.2s; }
+  .slider:before { content:""; position:absolute; height:20px; width:20px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s; }
+  .switch input:checked + .slider { background: var(--accent); }
+  .switch input:checked + .slider:before { transform: translateX(20px); }
+  details summary { cursor: pointer; font-weight: 700; }
+  .err { background: rgba(220,38,38,.12); color: var(--bad); padding: 10px 12px; border-radius: 10px; font-size: .9rem; }
+  .addcard { display:flex; gap:6px; margin-top:8px; align-items:center; }
+  .addcard select { flex: 1; padding: 6px 8px; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🃏 Burraco — punti da foto</h1>
+    <p>Fotografa le carte calate sul tavolo: l'AI le legge, tu correggi al volo e l'app calcola i punti.</p>
+  </header>
+
+  <!-- ===== Impostazioni ===== -->
+  <div class="card">
+    <details id="settings">
+      <summary>⚙️ Impostazioni (chiave AI &amp; regole)</summary>
+      <div style="margin-top:12px">
+        <label for="apiKey">Chiave API Anthropic (Claude)</label>
+        <input type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off">
+        <p class="muted">Serve una chiave da <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a>. Resta salvata solo su questo dispositivo (localStorage) e viene inviata direttamente a Claude.</p>
+
+        <label for="model">Modello vision</label>
+        <select id="model">
+          <option value="claude-sonnet-5">claude-sonnet-5 (consigliato)</option>
+          <option value="claude-opus-4-8">claude-opus-4-8 (più accurato, costoso)</option>
+          <option value="claude-haiku-4-5-20251001">claude-haiku-4-5 (veloce/economico)</option>
+        </select>
+
+        <details style="margin-top:14px">
+          <summary class="muted" style="font-size:.85rem">Valori bonus (regole della casa)</summary>
+          <div class="row" style="margin-top:8px">
+            <div><label>Burraco pulito</label><input type="number" id="bPulito" value="200"></div>
+            <div><label>Burraco sporco</label><input type="number" id="bSporco" value="100"></div>
+          </div>
+          <div class="row">
+            <div><label>Chiusura</label><input type="number" id="bChiusura" value="100"></div>
+            <div><label>Pozzetto non preso</label><input type="number" id="bPozzetto" value="100"></div>
+          </div>
+        </details>
+      </div>
+    </details>
+  </div>
+
+  <!-- ===== Foto ===== -->
+  <div class="card">
+    <h2>📷 Foto delle carte</h2>
+    <div id="drop">
+      <div class="big">📸</div>
+      <div>Tocca per scattare o scegliere una foto</div>
+      <div class="muted" style="margin-top:4px">Inquadra bene tutte le carte di una calata</div>
+    </div>
+    <input type="file" id="file" accept="image/*" capture="environment" class="hidden">
+    <img id="preview" class="hidden" alt="anteprima">
+    <div id="analyzeErr" class="err hidden" style="margin-top:12px"></div>
+    <button class="btn-primary" id="analyze" style="margin-top:12px" disabled>Analizza foto</button>
+  </div>
+
+  <!-- ===== Combinazioni riconosciute ===== -->
+  <div class="card hidden" id="meldsCard">
+    <h2>🎴 Combinazioni <span class="muted" id="meldsHint" style="font-weight:400;font-size:.8rem"></span></h2>
+    <div id="melds"></div>
+    <button class="btn-ghost btn-sm" id="addMeld">+ Aggiungi combinazione</button>
+  </div>
+
+  <!-- ===== Extra & Totale ===== -->
+  <div class="card" id="scoreCard">
+    <h2>🧮 Punteggio</h2>
+    <div class="toggle">
+      <span>Ha chiuso la partita <span class="muted num" id="lblChiusura"></span></span>
+      <label class="switch"><input type="checkbox" id="chiusura"><span class="slider"></span></label>
+    </div>
+    <div class="toggle">
+      <span>Pozzetto <b>non</b> preso <span class="muted num" id="lblPozzetto"></span></span>
+      <label class="switch"><input type="checkbox" id="pozzetto"><span class="slider"></span></label>
+    </div>
+    <label for="mano">Punti carte rimaste in mano (da sottrarre)</label>
+    <input type="number" id="mano" value="0" min="0">
+
+    <div style="margin-top:16px">
+      <div class="totrow"><span>Valore carte in tavola</span><span class="num" id="tCards">0</span></div>
+      <div class="totrow"><span>Bonus burraco</span><span class="num pos" id="tBurraco">0</span></div>
+      <div class="totrow"><span>Chiusura</span><span class="num" id="tChiusura">0</span></div>
+      <div class="totrow"><span>Pozzetto non preso</span><span class="num" id="tPozzetto">0</span></div>
+      <div class="totrow"><span>Carte in mano</span><span class="num" id="tMano">0</span></div>
+      <div class="totrow grand"><span>Totale</span><span class="num" id="tTotal">0</span></div>
+    </div>
+    <button class="btn-ghost btn-sm" id="reset" style="margin-top:14px">↺ Nuovo calcolo</button>
+  </div>
+
+  <p class="muted" style="text-align:center">Valori: Jolly 30 · 2 (pinella) 20 · Asso 15 · 8–K 10 · 3–7 5</p>
+</div>
+
+<script>
+"use strict";
+const $ = s => document.querySelector(s);
+const SUITS = { S: {sym:"♠", color:"black"}, C: {sym:"♣", color:"black"}, H: {sym:"♥", color:"red"}, D: {sym:"♦", color:"red"} };
+const RANKS = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
+
+/* ---------- persistenza impostazioni ---------- */
+const store = {
+  keys: ["apiKey","model","bPulito","bSporco","bChiusura","bPozzetto"],
+  load(){ this.keys.forEach(k=>{ const v=localStorage.getItem("burraco_"+k); if(v!==null){ const el=$("#"+k); if(el) el.value=v; } }); },
+  save(){ this.keys.forEach(k=>{ const el=$("#"+k); if(el) localStorage.setItem("burraco_"+k, el.value); }); }
+};
+store.load();
+store.keys.forEach(k=>{ const el=$("#"+k); if(el) el.addEventListener("change", ()=>store.save()); });
+
+/* ---------- valore carta ---------- */
+function cardValue(rank){
+  if(rank==="JOLLY") return 30;
+  if(rank==="2") return 20;
+  if(rank==="A") return 15;
+  if(["8","9","10","J","Q","K"].includes(rank)) return 10;
+  if(["3","4","5","6","7"].includes(rank)) return 5;
+  return 0;
+}
+
+/* ---------- stato ---------- */
+let melds = []; // [{cards:[{rank,suit,wild}], override:'auto'|'pulito'|'sporco'|'none'}]
+let imgData = null; // {media_type, data}
+
+/* ---------- caricamento foto ---------- */
+const fileInput = $("#file"), drop = $("#drop"), preview = $("#preview"), analyzeBtn = $("#analyze");
+drop.addEventListener("click", ()=>fileInput.click());
+drop.addEventListener("dragover", e=>{ e.preventDefault(); drop.classList.add("drag"); });
+drop.addEventListener("dragleave", ()=>drop.classList.remove("drag"));
+drop.addEventListener("drop", e=>{ e.preventDefault(); drop.classList.remove("drag"); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener("change", ()=>{ if(fileInput.files[0]) handleFile(fileInput.files[0]); });
+
+function handleFile(file){
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      // downscale a max 1568px lato lungo per limitare i token
+      const max = 1568;
+      let {width:w, height:h} = img;
+      if(Math.max(w,h) > max){ const r = max/Math.max(w,h); w=Math.round(w*r); h=Math.round(h*r); }
+      const c = document.createElement("canvas"); c.width=w; c.height=h;
+      c.getContext("2d").drawImage(img,0,0,w,h);
+      const dataUrl = c.toDataURL("image/jpeg", 0.85);
+      preview.src = dataUrl; preview.classList.remove("hidden");
+      imgData = { media_type:"image/jpeg", data: dataUrl.split(",")[1] };
+      analyzeBtn.disabled = false;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ---------- chiamata AI ---------- */
+const PROMPT = `Sei un esperto di carte da gioco. Nell'immagine ci sono carte da Burraco calate sul tavolo, raggruppate in combinazioni (scale dello stesso seme, oppure tris/poker dello stesso valore).
+
+Identifica OGNI combinazione e OGNI carta. Per ciascuna carta indica:
+- "rank": uno tra A,2,3,4,5,6,7,8,9,10,J,Q,K oppure "JOLLY" per il jolly/joker.
+- "suit": uno tra S (picche ♠), C (fiori ♣), H (cuori ♥), D (quadri ♦). Per il JOLLY usa "".
+- "wild": true SOLO se quella carta sta facendo da matta/jolly nella combinazione (un 2 o un jolly usato come sostituto di un'altra carta). false se è una carta naturale (anche un 2 al suo posto naturale nella scala).
+
+Rispondi ESCLUSIVAMENTE con JSON valido, senza testo aggiuntivo, in questo formato:
+{"melds":[{"cards":[{"rank":"7","suit":"H","wild":false},{"rank":"8","suit":"H","wild":false}]}]}
+Se non riesci a leggere bene una carta, fai la tua migliore ipotesi. Non inventare combinazioni che non vedi.`;
+
+analyzeBtn.addEventListener("click", analyze);
+async function analyze(){
+  const key = $("#apiKey").value.trim();
+  const errBox = $("#analyzeErr");
+  errBox.classList.add("hidden");
+  if(!key){ $("#settings").open = true; showErr("Inserisci prima la chiave API Anthropic nelle impostazioni."); return; }
+  if(!imgData){ showErr("Carica prima una foto."); return; }
+  analyzeBtn.disabled = true;
+  analyzeBtn.innerHTML = '<span class="spinner"></span> Analisi in corso…';
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": key,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({
+        model: $("#model").value,
+        max_tokens: 2000,
+        messages: [{ role:"user", content:[
+          { type:"image", source:{ type:"base64", media_type: imgData.media_type, data: imgData.data } },
+          { type:"text", text: PROMPT }
+        ]}]
+      })
+    });
+    if(!res.ok){
+      const t = await res.text();
+      throw new Error("API " + res.status + ": " + t.slice(0,300));
+    }
+    const data = await res.json();
+    const text = (data.content||[]).map(b=>b.text||"").join("");
+    const parsed = extractJSON(text);
+    if(!parsed || !Array.isArray(parsed.melds)) throw new Error("Risposta non interpretabile:\n" + text.slice(0,300));
+    melds = parsed.melds.map(m => ({
+      cards: (m.cards||[]).map(c => ({
+        rank: normRank(c.rank), suit: (c.suit||"").toUpperCase(), wild: !!c.wild
+      })),
+      override: "auto"
+    })).filter(m => m.cards.length);
+    renderMelds();
+    $("#meldsHint").textContent = "· tocca una carta per marcarla matta, la ✕ per rimuoverla";
+    $("#meldsCard").classList.remove("hidden");
+    recalc();
+    $("#meldsCard").scrollIntoView({behavior:"smooth", block:"start"});
+  } catch(err){
+    showErr(err.message || String(err));
+  } finally {
+    analyzeBtn.disabled = false;
+    analyzeBtn.textContent = "Analizza foto";
+  }
+}
+function showErr(msg){ const e=$("#analyzeErr"); e.textContent = msg; e.classList.remove("hidden"); }
+function normRank(r){ r=(r||"").toString().toUpperCase(); if(r==="JOKER"||r==="JOLLY") return "JOLLY"; return r; }
+function extractJSON(text){
+  try { return JSON.parse(text); } catch(e){}
+  const m = text.match(/\{[\s\S]*\}/);
+  if(m){ try { return JSON.parse(m[0]); } catch(e){} }
+  return null;
+}
+
+/* ---------- rendering combinazioni ---------- */
+function meldStatus(m){
+  if(m.override !== "auto") return m.override; // pulito/sporco/none
+  if(m.cards.length >= 7) return m.cards.some(c=>c.wild || c.rank==="JOLLY") ? "sporco" : "pulito";
+  return "none";
+}
+function renderMelds(){
+  const wrap = $("#melds"); wrap.innerHTML = "";
+  melds.forEach((m, mi) => {
+    const st = meldStatus(m);
+    const div = document.createElement("div");
+    div.className = "meld";
+    const val = m.cards.reduce((s,c)=>s+cardValue(c.rank),0);
+    div.innerHTML = `
+      <div class="meld-head">
+        <span class="muted">Combinazione ${mi+1} · <b class="num">${val}</b> pt · ${m.cards.length} carte</span>
+        <span>
+          ${st==="pulito"?'<span class="badge pulito">BURRACO PULITO</span>':""}
+          ${st==="sporco"?'<span class="badge sporco">BURRACO SPORCO</span>':""}
+          <button class="btn-ghost btn-sm" data-del="${mi}" style="margin-left:6px">✕</button>
+        </span>
+      </div>
+      <div class="chips" data-chips="${mi}"></div>
+      <div class="addcard">
+        <select data-rank="${mi}">${["JOLLY",...RANKS].map(r=>`<option>${r}</option>`).join("")}</select>
+        <select data-suit="${mi}">${Object.keys(SUITS).map(s=>`<option value="${s}">${SUITS[s].sym}</option>`).join("")}<option value="">—</option></select>
+        <button class="btn-ghost btn-sm" data-add="${mi}">+ carta</button>
+        <select data-over="${mi}" title="Forza stato burraco" style="flex:0 0 auto;width:auto">
+          <option value="auto" ${m.override==="auto"?"selected":""}>auto</option>
+          <option value="pulito" ${m.override==="pulito"?"selected":""}>pulito</option>
+          <option value="sporco" ${m.override==="sporco"?"selected":""}>sporco</option>
+          <option value="none" ${m.override==="none"?"selected":""}>no burraco</option>
+        </select>
+      </div>`;
+    wrap.appendChild(div);
+    const chips = div.querySelector(`[data-chips="${mi}"]`);
+    m.cards.forEach((c, ci) => chips.appendChild(makeChip(c, mi, ci)));
+  });
+  // eventi
+  wrap.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{ melds.splice(+b.dataset.del,1); renderMelds(); recalc(); });
+  wrap.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{
+    const mi=+b.dataset.add;
+    const rank = normRank(wrap.querySelector(`[data-rank="${mi}"]`).value);
+    const suit = wrap.querySelector(`[data-suit="${mi}"]`).value;
+    melds[mi].cards.push({rank, suit: rank==="JOLLY"?"":suit, wild:false});
+    renderMelds(); recalc();
+  });
+  wrap.querySelectorAll("[data-over]").forEach(s=>s.onchange=()=>{ melds[+s.dataset.over].override=s.value; renderMelds(); recalc(); });
+}
+function makeChip(c, mi, ci){
+  const el = document.createElement("span");
+  const isJolly = c.rank==="JOLLY";
+  const suit = SUITS[c.suit];
+  const color = isJolly ? "red" : (suit ? suit.color : "black");
+  el.className = "chip " + color + (c.wild ? " wild" : "");
+  el.innerHTML = `${isJolly ? "★" : c.rank + (suit?suit.sym:"?")}<span class="x" data-x>✕</span>`;
+  el.title = c.wild ? "matta (tocca per renderla naturale)" : "tocca per marcarla come matta";
+  el.addEventListener("click", e=>{
+    if(e.target.hasAttribute("data-x")){ melds[mi].cards.splice(ci,1); if(!melds[mi].cards.length) melds.splice(mi,1); renderMelds(); recalc(); return; }
+    c.wild = !c.wild; renderMelds(); recalc();
+  });
+  return el;
+}
+
+/* ---------- calcolo punteggio ---------- */
+function recalc(){
+  const bPulito=+$("#bPulito").value||0, bSporco=+$("#bSporco").value||0;
+  const bChiusura=+$("#bChiusura").value||0, bPozzetto=+$("#bPozzetto").value||0;
+  let cards=0, burraco=0;
+  melds.forEach(m=>{
+    cards += m.cards.reduce((s,c)=>s+cardValue(c.rank),0);
+    const st = meldStatus(m);
+    if(st==="pulito") burraco += bPulito;
+    else if(st==="sporco") burraco += bSporco;
+  });
+  const chiusura = $("#chiusura").checked ? bChiusura : 0;
+  const pozzetto = $("#pozzetto").checked ? -bPozzetto : 0;
+  const mano = -(Math.abs(+$("#mano").value)||0);
+  const total = cards + burraco + chiusura + pozzetto + mano;
+
+  $("#tCards").textContent = cards;
+  $("#tBurraco").textContent = "+" + burraco;
+  setSigned("#tChiusura", chiusura);
+  setSigned("#tPozzetto", pozzetto);
+  setSigned("#tMano", mano);
+  $("#tTotal").textContent = total;
+  $("#lblChiusura").textContent = "(+" + bChiusura + ")";
+  $("#lblPozzetto").textContent = "(−" + bPozzetto + ")";
+}
+function setSigned(sel, v){
+  const el=$(sel);
+  el.textContent = (v>0?"+":v<0?"−":"") + Math.abs(v);
+  el.className = "num " + (v>0?"pos":v<0?"neg":"");
+}
+
+["chiusura","pozzetto"].forEach(id=>$("#"+id).addEventListener("change", recalc));
+$("#mano").addEventListener("input", recalc);
+["bPulito","bSporco","bChiusura","bPozzetto"].forEach(id=>$("#"+id).addEventListener("input", recalc));
+
+$("#addMeld").addEventListener("click", ()=>{ melds.push({cards:[{rank:"A",suit:"S",wild:false}], override:"auto"}); renderMelds(); recalc(); $("#meldsCard").classList.remove("hidden"); });
+
+$("#reset").addEventListener("click", ()=>{
+  melds=[]; imgData=null; preview.classList.add("hidden"); preview.src="";
+  fileInput.value=""; analyzeBtn.disabled=true; $("#meldsCard").classList.add("hidden");
+  $("#chiusura").checked=false; $("#pozzetto").checked=false; $("#mano").value=0;
+  $("#analyzeErr").classList.add("hidden");
+  renderMelds(); recalc();
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+recalc();
+</script>
+</body>
+</html>
