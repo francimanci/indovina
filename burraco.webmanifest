@@ -1,0 +1,20 @@
+{
+  "name": "Burraco — Segnapunti",
+  "short_name": "Burraco",
+  "description": "Segnapunti per il Burraco: calcola i punti fotografando le carte, gestisce due squadre e lo storico delle mani.",
+  "lang": "it",
+  "dir": "ltr",
+  "start_url": "./burraco.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f7f7",
+  "theme_color": "#0d9488",
+  "categories": ["games", "utilities"],
+  "icons": [
+    { "src": "burraco-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "burraco-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "burraco-icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "burraco-icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

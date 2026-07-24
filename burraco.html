@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0d9488">
 <title>Burraco — Segnapunti da foto</title>
+<link rel="manifest" href="burraco.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="burraco-favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="burraco-icon-192.png">
+<link rel="apple-touch-icon" href="burraco-icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Burraco">
 <style>
   :root {
     --bg: #f4f7f7;
@@ -148,6 +156,8 @@
     <h1>🃏 Burraco — segnapunti</h1>
     <p>Fotografa le carte di una squadra, correggi al volo, registra la mano. I punti si accumulano nello storico.</p>
   </header>
+
+  <button class="btn-primary hidden" id="installBtn" style="margin-bottom:16px">⬇️ Installa Burraco sul dispositivo</button>
 
   <!-- ===== Tabellone ===== -->
   <div class="card">
@@ -670,6 +680,27 @@ function renderActive(){
   renderMelds();
   updateTotals();
 }
+
+/* ---------- PWA: service worker + installazione ---------- */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("burraco-sw.js").catch(() => {});
+  });
+}
+let deferredPrompt = null;
+window.addEventListener("beforeinstallprompt", e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  $("#installBtn").classList.remove("hidden");
+});
+$("#installBtn").addEventListener("click", async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  try { await deferredPrompt.userChoice; } catch (e) {}
+  deferredPrompt = null;
+  $("#installBtn").classList.add("hidden");
+});
+window.addEventListener("appinstalled", () => { $("#installBtn").classList.add("hidden"); deferredPrompt = null; });
 
 /* ---------- avvio ---------- */
 renderActive();
